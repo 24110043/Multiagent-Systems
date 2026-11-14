@@ -1,10 +1,10 @@
-parameter,value,cluster_se,interpretation
-beta_0_intercept,-7.98373226401654,8.39806848589749,Baseline intercept
-beta_1_own_click_appeal,8.301958696181705,20.255364770594475,Linear marginal return to own click appeal
-beta_2_quadratic_own_appeal,-9.167701735811391,8.438075818187473,Quadratic diminishing returns (concavity parameter)
-beta_3_peer_click_appeal,3.80211987697972,18.587921483786847,Attention congestion from competing creators
-beta_4_log_subscribers,1.066772053929996,0.1141009115725143,Creator scale elasticity
-beta_5_interaction_own_peer,-0.7822444099693193,46.474655443706794,Strategic interaction (complements if > 0)
-x_Nash,0.434256282341901,,Symmetric Nash equilibrium
-x_Social_Optimum,0.6082484465654208,,Symmetric social optimum
-well_posedness_all_satisfied,1.0,,"1 if concavity, contraction, and welfare concavity hold; 0 otherwise"
+parameter,point_estimate,cluster_se,ci_lower_95,ci_upper_95,p_value,statistically_significant_0_05,interpretation
+beta_0_intercept,-7.98373226401654,8.39806848589749,-24.443644036076442,8.476179508043364,0.3417755197568374,0,Baseline constant (uncentered)
+beta_1_own_click_appeal,8.301958696181705,20.255364770594475,-31.39782674790488,48.00174414026829,0.681905212603105,0,Marginal return to own click appeal (uncentered)
+beta_2_quadratic_own_appeal,-9.167701735811391,8.438075818187473,-25.70602643827719,7.370622966654405,0.27727186639584256,0,Quadratic curvature / diminishing returns
+beta_3_competitor_click_appeal,3.80211987697972,18.587921483786847,-32.629536778700825,40.23377653266026,0.837925382353566,0,Competitor attention congestion (rolling 90d)
+beta_4_log_subscribers,1.066772053929996,0.1141009115725143,0.8431383766446786,1.2904057312153137,8.81683065646278e-21,1,Audience scale elasticity (overwhelmingly significant)
+beta_5_strategic_interaction,-0.7822444099693193,46.474655443706794,-91.870895273543,90.30640645360435,0.9865709328551231,0,Strategic interaction cross-partial
+gamma_1_log_duration,0.2743817526365198,0.2621299819531452,-0.2393835712597791,0.7881470765328187,0.295219834844497,0,Video length elasticity
+gamma_2_age_days,0.00010271581177280433,0.00035824610568275194,-0.0005994336529671194,0.0008048652765127281,0.7743278161346036,0,Elapsed publication days
+beta_1_centered_marginal_at_mean,0.7349151844072113,1.7746212783749435,-2.7432786074061077,4.21310897622053,0.6787825039083809,0,Marginal effect at sample means (centered)

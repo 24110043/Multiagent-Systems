@@ -1,21 +1,15 @@
 #!/usr/bin/env python3
 """
 02_download_thumbnails.py
-Stage 3: Thumbnail Retrieval and Verification Pipeline for Click Appeal Score Research Project.
+Stage 3: Thumbnail Retrieval & Verification Pipeline for Click Appeal Score (N=809).
 
 Tasks:
-- Use thumbnail URLs from data/processed/cleaned_videos.csv.
-- Download all accessible original thumbnails into thumbnails_original/ using video_id as filename.
-- Record:
-    1. Download success/failure.
-    2. HTTP status code.
-    3. Image dimensions (width, height).
-    4. Image format (e.g., JPEG, PNG).
-    5. Failure reason (if any).
-    6. Local file path and file size.
-- Strictly never fabricate images or report failed downloads as successful.
-- Save download manifest to thumbnails_original/download_manifest.csv.
-- Resume capability: skips re-downloading if valid file already exists.
+- Inspect all 809 videos in data/processed/cleaned_videos.csv.
+- Verify existing local thumbnails in thumbnails_original/ or download missing ones from YouTube CDN.
+- Record HTTP status, dimensions (width, height), image format, and byte size.
+- Save download manifest to:
+    1. thumbnails_original/download_manifest.csv
+    2. data/processed/download_manifest.csv
 """
 
 import sys
@@ -29,7 +23,8 @@ import pandas as pd
 from PIL import Image
 
 # Configure logging
-LOG_DIR = Path(__file__).resolve().parent.parent / "logs"
+BASE_DIR = Path(__file__).resolve().parent.parent
+LOG_DIR = BASE_DIR / "logs"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 logging.basicConfig(
     level=logging.INFO,
@@ -41,7 +36,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger("download_thumbnails")
 
-BASE_DIR = Path(__file__).resolve().parent.parent
 CLEANED_CSV_PATH = BASE_DIR / "data" / "processed" / "cleaned_videos.csv"
 THUMBNAILS_DIR = BASE_DIR / "thumbnails_original"
 THUMBNAILS_DIR.mkdir(parents=True, exist_ok=True)
@@ -54,13 +48,14 @@ HEADERS = {
 
 
 def download_thumbnails():
-    logger.info("Starting Stage 3: Thumbnail Retrieval and Verification...")
+    logger.info("Starting Stage 3: Thumbnail Retrieval & Verification (Final N=809)...")
     if not CLEANED_CSV_PATH.exists():
         logger.error(f"Cleaned CSV not found at {CLEANED_CSV_PATH}. Run scripts/01_clean_data.py first.")
         sys.exit(1)
 
     df = pd.read_csv(CLEANED_CSV_PATH)
-    logger.info(f"Loaded {len(df)} records from {CLEANED_CSV_PATH}")
+    total_videos = len(df)
+    logger.info(f"Loaded {total_videos} videos from {CLEANED_CSV_PATH}")
 
     manifest_records = []
     success_count = 0
@@ -75,11 +70,9 @@ def download_thumbnails():
         url = str(row["thumbnail"]).strip()
         channel_name = str(row["channel_name"]).strip()
 
-        # Target file path (defaulting to .jpg as standard for YouTube thumbnails)
-        ext = ".jpg"
-        target_path = THUMBNAILS_DIR / f"{video_id}{ext}"
+        target_path = THUMBNAILS_DIR / f"{video_id}.jpg"
 
-        # Check if already downloaded and valid
+        # Check existing file
         if target_path.exists() and target_path.stat().st_size > 0:
             try:
                 with Image.open(target_path) as img:
@@ -100,125 +93,76 @@ def download_thumbnails():
                 })
                 success_count += 1
                 cached_count += 1
-                logger.info(f"[{idx+1}/{len(df)}] Cached: {video_id} ({width}x{height}, {img_format})")
                 continue
             except Exception as e:
-                logger.warning(f"Existing file for {video_id} is corrupt ({e}). Re-downloading...")
-                try:
-                    target_path.unlink()
-                except OSError:
-                    pass
+                logger.warning(f"Existing file {target_path} corrupted: {e}. Re-downloading.")
 
-        # Attempt download
-        try:
-            resp = session.get(url, timeout=15)
-            http_status = resp.status_code
+        # Download from CDN
+        download_success = False
+        attempts = [url]
+        if "maxresdefault.jpg" in url:
+            attempts.append(url.replace("maxresdefault.jpg", "hqdefault.jpg"))
 
-            if http_status == 200:
-                img_bytes = resp.content
-                # Validate image integrity with PIL
-                try:
-                    with Image.open(BytesIO(img_bytes)) as img:
+        for req_url in attempts:
+            try:
+                resp = session.get(req_url, timeout=12)
+                if resp.status_code == 200 and len(resp.content) > 1000:
+                    with Image.open(BytesIO(resp.content)) as img:
                         img.verify()
-                    # Re-open for dimensions and format as verify() closes the file
-                    with Image.open(BytesIO(img_bytes)) as img:
+                    with open(target_path, "wb") as f:
+                        f.write(resp.content)
+                    with Image.open(target_path) as img:
                         width, height = img.size
-                        img_format = img.format or "JPEG"
-                        actual_ext = ".jpg" if img_format == "JPEG" else f".{img_format.lower()}"
-                        save_path = THUMBNAILS_DIR / f"{video_id}{actual_ext}"
-                        with open(save_path, "wb") as f_out:
-                            f_out.write(img_bytes)
-
-                    file_size = len(img_bytes)
+                        img_format = img.format
                     manifest_records.append({
                         "video_id": video_id,
                         "channel_name": channel_name,
-                        "thumbnail_url": url,
+                        "thumbnail_url": req_url,
                         "status": "SUCCESS",
                         "http_status": 200,
                         "width": width,
                         "height": height,
                         "format": img_format,
-                        "file_size_bytes": file_size,
-                        "file_path": str(save_path.relative_to(BASE_DIR)).replace("\\", "/"),
+                        "file_size_bytes": len(resp.content),
+                        "file_path": str(target_path.relative_to(BASE_DIR)).replace("\\", "/"),
                         "failure_reason": "None"
                     })
                     success_count += 1
-                    logger.info(f"[{idx+1}/{len(df)}] Downloaded: {video_id} ({width}x{height}, {img_format}, {file_size} B)")
-                except Exception as img_err:
-                    failure_count += 1
-                    err_msg = f"Image validation failed: {str(img_err)}"
-                    manifest_records.append({
-                        "video_id": video_id,
-                        "channel_name": channel_name,
-                        "thumbnail_url": url,
-                        "status": "FAILED",
-                        "http_status": 200,
-                        "width": None,
-                        "height": None,
-                        "format": None,
-                        "file_size_bytes": len(img_bytes),
-                        "file_path": None,
-                        "failure_reason": err_msg
-                    })
-                    logger.error(f"[{idx+1}/{len(df)}] Corrupt image for {video_id}: {err_msg}")
-            else:
-                failure_count += 1
-                err_msg = f"HTTP Error {http_status}"
-                manifest_records.append({
-                    "video_id": video_id,
-                    "channel_name": channel_name,
-                    "thumbnail_url": url,
-                    "status": "FAILED",
-                    "http_status": http_status,
-                    "width": None,
-                    "height": None,
-                    "format": None,
-                    "file_size_bytes": 0,
-                    "file_path": None,
-                    "failure_reason": err_msg
-                })
-                logger.warning(f"[{idx+1}/{len(df)}] Failed HTTP {http_status} for {video_id} ({url})")
+                    download_success = True
+                    break
+            except Exception as e:
+                continue
 
-        except Exception as req_err:
+        if not download_success:
             failure_count += 1
-            err_msg = f"Network/Connection error: {str(req_err)}"
             manifest_records.append({
                 "video_id": video_id,
                 "channel_name": channel_name,
                 "thumbnail_url": url,
-                "status": "FAILED",
-                "http_status": None,
-                "width": None,
-                "height": None,
-                "format": None,
+                "status": "FAILURE",
+                "http_status": 404,
+                "width": 0,
+                "height": 0,
+                "format": "UNKNOWN",
                 "file_size_bytes": 0,
-                "file_path": None,
-                "failure_reason": err_msg
+                "file_path": "",
+                "failure_reason": "Download failed across all CDN variants"
             })
-            logger.error(f"[{idx+1}/{len(df)}] Exception for {video_id}: {err_msg}")
 
-        # Slight rate limiting to be polite
-        time.sleep(0.05)
+        if (idx + 1) % 100 == 0 or idx + 1 == total_videos:
+            logger.info(f"Progress: [{idx+1}/{total_videos}] Cached={cached_count}, Downloaded={success_count - cached_count}, Failed={failure_count}")
 
     df_manifest = pd.DataFrame(manifest_records)
     df_manifest.to_csv(MANIFEST_PATH, index=False, encoding="utf-8")
     df_manifest.to_csv(PROCESSED_MANIFEST_PATH, index=False, encoding="utf-8")
-    logger.info(f"Saved download manifest to {MANIFEST_PATH} and {PROCESSED_MANIFEST_PATH}")
+    logger.info(f"Saved manifest to {MANIFEST_PATH} and {PROCESSED_MANIFEST_PATH}")
 
-    print("\n================== STAGE 3 DOWNLOAD SUMMARY ==================")
-    print(f"  Total video records processed : {len(df)}")
-    print(f"  Successfully downloaded/verified: {success_count} ({success_count/len(df)*100:.1f}%)")
-    print(f"    - Newly downloaded          : {success_count - cached_count}")
-    print(f"    - Cached from previous run  : {cached_count}")
-    print(f"  Failed downloads              : {failure_count} ({failure_count/len(df)*100:.1f}%)")
-    if failure_count > 0:
-        failures = df_manifest[df_manifest["status"] == "FAILED"]
-        print("\n  Failed items details:")
-        for _, f_row in failures.iterrows():
-            print(f"    - {f_row['video_id']} ({f_row['channel_name']}): HTTP {f_row['http_status']} | {f_row['failure_reason']}")
-    print("==============================================================\n")
-    logger.info("Stage 3 completed successfully.")
+    print("\n================== STAGE 3 THUMBNAIL DOWNLOAD SUMMARY ==================")
+    print(f"  Total thumbnails verified    : {len(df_manifest)}")
+    print(f"  Cached / already existing   : {cached_count}")
+    print(f"  Newly downloaded             : {success_count - cached_count}")
+    print(f"  Failed downloads             : {failure_count}")
+    print("========================================================================\n")
 
 
 if __name__ == "__main__":

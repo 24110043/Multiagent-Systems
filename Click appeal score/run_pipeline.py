@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 """
 run_pipeline.py
-Master End-to-End Orchestrator for Click Appeal Score Research Pipeline.
+Master End-to-End Orchestrator for Click Appeal Score Research Pipeline (Final Dataset, N=809).
 
 Executes all research stages in sequence:
-  Stage 2: 01_clean_data.py               -> Inspect & clean raw dataset
-  Stage 3: 02_download_thumbnails.py       -> Download all 186 thumbnails & manifest
+  Stage 2: 01_clean_data.py               -> Inspect, clean & merge raw datasets (recovering all 12 #NAME? IDs)
+  Stage 3: 02_download_thumbnails.py       -> Verify and download all 809 original thumbnails
   Stage 4: 03_extract_title_features.py    -> Linguistic & lexical feature extraction
-  Stage 5: 04_extract_thumbnail_features.py-> MediaPipe + FER vision features & visual audit
-  Stage 6: 05_calculate_scores.py          -> Winsorization, normalization, composite scores
-  Stage 7: 06_creator_analysis.py          -> Creator LOCO aggregation & 10 statistical figures
-  Stage 8: 07_validate_results.py          -> Exhaustive mathematical & data integrity validation
+  Stage 5: 04_extract_thumbnail_features.py-> MediaPipe face detection, FER emotion extraction & visual audit
+  Stage 6: 05_calculate_scores.py          -> Frozen scaling, composite scoring (X_v = 0.4*X_title + 0.6*X_thumb)
+  Stage 7: 06_creator_analysis.py          -> Channel-level aggregation, LOCO benchmarks & breakdown plots
+  Stage 8: 07_validate_results.py          -> Comprehensive mathematical & data integrity validation
 
-Designed for full reproducibility, transparent resumption, and beginner clarity.
+Designed for full reproducibility, transparent resumption, and publication-ready deliverables.
 """
 
 import sys
@@ -49,17 +49,23 @@ SCRIPTS = [
 
 def run_pipeline():
     print("\n" + "="*80)
-    print("      CLICK APPEAL SCORE — RESEARCH PIPELINE MASTER ORCHESTRATOR")
+    print("      CLICK APPEAL SCORE — RESEARCH PIPELINE MASTER ORCHESTRATOR (N=809)")
     print("="*80 + "\n")
 
-    # Select Python executable (prefer virtual environment)
-    venv_python = BASE_DIR / ".venv" / "Scripts" / "python.exe"
-    if not venv_python.exists():
-        venv_python = BASE_DIR / ".venv" / "bin" / "python"
-    python_cmd = str(venv_python) if venv_python.exists() else sys.executable
+    # Detect virtualenv python if available
+    possible_pythons = [
+        Path(r"C:\Users\bhavy\OneDrive\Desktop\Multiagent System\project\clickappeal_new\.venv\Scripts\python.exe"),
+        BASE_DIR / ".venv" / "Scripts" / "python.exe",
+        BASE_DIR / ".venv" / "bin" / "python",
+        Path(sys.executable)
+    ]
+    python_cmd = sys.executable
+    for p in possible_pythons:
+        if p.exists():
+            python_cmd = str(p)
+            break
 
     logger.info(f"Using Python runtime: {python_cmd}")
-
     total_start_time = time.time()
     stage_times = []
 

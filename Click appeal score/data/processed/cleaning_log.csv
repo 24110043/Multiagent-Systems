@@ -1,6 +1,18 @@
-row_index,field,original_value,cleaned_value,action,details
-0,channel_name,\,Airrack,channel_name_repaired,Channel ID UCyps-v4WNjWDnYRKmZ4BUGw matched to valid name 'Airrack'
-18,video_id,#NAME?,-Ad7lJ74XSE,video_id_recovered_from_thumbnail_url,Unambiguously extracted 11-character video ID from thumbnail URL: https://i.ytimg.com/vi/-Ad7lJ74XSE/maxresdefault.jpg
-47,video_id,#NAME?,-Lt0idIsJWo,video_id_recovered_from_thumbnail_url,Unambiguously extracted 11-character video ID from thumbnail URL: https://i.ytimg.com/vi/-Lt0idIsJWo/maxresdefault.jpg
-83,video_id,#NAME?,-gnzjVbYkgE,video_id_recovered_from_thumbnail_url,Unambiguously extracted 11-character video ID from thumbnail URL: https://i.ytimg.com/vi/-gnzjVbYkgE/maxresdefault.jpg
-152,video_id,#NAME?,-j8WOAHw5d4,video_id_recovered_from_thumbnail_url,Unambiguously extracted 11-character video ID from thumbnail URL: https://i.ytimg.com/vi/-j8WOAHw5d4/maxresdefault.jpg
+source_dataset,row_index,video_id_raw,video_id_cleaned,action,details
+original_186,0,oJ6ww2fmuJM,oJ6ww2fmuJM,channel_name_repaired,Channel ID UCyps-v4WNjWDnYRKmZ4BUGw matched to valid name 'Airrack'
+original_186,18,#NAME?,-Ad7lJ74XSE,corrupted_id_recovered,Recovered YouTube ID '-Ad7lJ74XSE' from thumbnail URL 'https://i.ytimg.com/vi/-Ad7lJ74XSE/maxresdefault.jpg'
+original_186,47,#NAME?,-Lt0idIsJWo,corrupted_id_recovered,Recovered YouTube ID '-Lt0idIsJWo' from thumbnail URL 'https://i.ytimg.com/vi/-Lt0idIsJWo/maxresdefault.jpg'
+original_186,83,#NAME?,-gnzjVbYkgE,corrupted_id_recovered,Recovered YouTube ID '-gnzjVbYkgE' from thumbnail URL 'https://i.ytimg.com/vi/-gnzjVbYkgE/maxresdefault.jpg'
+original_186,152,#NAME?,-j8WOAHw5d4,corrupted_id_recovered,Recovered YouTube ID '-j8WOAHw5d4' from thumbnail URL 'https://i.ytimg.com/vi/-j8WOAHw5d4/maxresdefault.jpg'
+new_raw_690,65,#NAME?,-lNyMSCfq7A,corrupted_id_recovered,Recovered YouTube ID '-lNyMSCfq7A' from thumbnail URL 'https://i.ytimg.com/vi/-lNyMSCfq7A/maxresdefault.jpg'
+new_raw_690,74,#NAME?,-Ad7lJ74XSE,corrupted_id_recovered,Recovered YouTube ID '-Ad7lJ74XSE' from thumbnail URL 'https://i.ytimg.com/vi/-Ad7lJ74XSE/maxresdefault.jpg'
+new_raw_690,105,#NAME?,-jhoOUzz868,corrupted_id_recovered,Recovered YouTube ID '-jhoOUzz868' from thumbnail URL 'https://i.ytimg.com/vi/-jhoOUzz868/maxresdefault.jpg'
+new_raw_690,114,#NAME?,-CbVVGreQMw,corrupted_id_recovered,Recovered YouTube ID '-CbVVGreQMw' from thumbnail URL 'https://i.ytimg.com/vi/-CbVVGreQMw/maxresdefault.jpg'
+new_raw_690,162,#NAME?,-DbtqoMUF50,corrupted_id_recovered,Recovered YouTube ID '-DbtqoMUF50' from thumbnail URL 'https://i.ytimg.com/vi/-DbtqoMUF50/maxresdefault.jpg'
+new_raw_690,306,#NAME?,-gnzjVbYkgE,corrupted_id_recovered,Recovered YouTube ID '-gnzjVbYkgE' from thumbnail URL 'https://i.ytimg.com/vi/-gnzjVbYkgE/maxresdefault.jpg'
+new_raw_690,376,#NAME?,-CX-T5fMtoY,corrupted_id_recovered,Recovered YouTube ID '-CX-T5fMtoY' from thumbnail URL 'https://i.ytimg.com/vi/-CX-T5fMtoY/maxresdefault.jpg'
+new_raw_690,482,#NAME?,-V8Wo2jUHeI,corrupted_id_recovered,Recovered YouTube ID '-V8Wo2jUHeI' from thumbnail URL 'https://i.ytimg.com/vi/-V8Wo2jUHeI/maxresdefault.jpg'
+new_raw_690,543,#NAME?,-TeuiK7eiBs,corrupted_id_recovered,Recovered YouTube ID '-TeuiK7eiBs' from thumbnail URL 'https://i.ytimg.com/vi/-TeuiK7eiBs/maxresdefault.jpg'
+new_raw_690,555,#NAME?,-kqvLzQKJPs,corrupted_id_recovered,Recovered YouTube ID '-kqvLzQKJPs' from thumbnail URL 'https://i.ytimg.com/vi/-kqvLzQKJPs/maxresdefault.jpg'
+new_raw_690,589,#NAME?,-scJfGVZmOg,corrupted_id_recovered,Recovered YouTube ID '-scJfGVZmOg' from thumbnail URL 'https://i.ytimg.com/vi/-scJfGVZmOg/maxresdefault.jpg'
+new_raw_690,616,#NAME?,-MD29TGjjqM,corrupted_id_recovered,Recovered YouTube ID '-MD29TGjjqM' from thumbnail URL 'https://i.ytimg.com/vi/-MD29TGjjqM/maxresdefault.jpg'

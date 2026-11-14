@@ -1,91 +1,261 @@
 {
-  "project": "Click Appeal as a Potential Game: Modeling Creator Incentives, Attention Congestion, and Social Welfare in YouTube",
-  "component": "Empirical Payoff Function Estimation",
-  "author": "Bhavya Shah (24110324)",
-  "handover_recipient": "Khushi Shah (24110326) - Game Theory Teammate",
-  "sample_size": 186,
-  "number_of_creators_n": 38,
-  "specification": {
-    "model_name": "M4_Full_Proposed",
-    "equation": "log(V_it) = beta_0 + beta_1*x_it + beta_2*x_it^2 + beta_3*x_bar_(-i,t) + beta_5*x_it*x_bar_(-i,t) + beta_4*log(s_i) + gamma_1*log(duration_it) + gamma_2*age_it + eps_it",
-    "peer_average_definition": "Rolling 90-day window (+/- 45 days) Leave-One-Creator-Out (LOCO)",
-    "inference": "Cluster-Robust Standard Errors (38 Channel Clusters)"
+  "metadata": {
+    "project": "Click Appeal as a Potential Game: Modeling Creator Incentives, Attention Congestion, and Social Welfare in YouTube",
+    "component": "Empirical Payoff Function Estimation",
+    "author": "Bhavya Shah (24110324)",
+    "handover_recipient": "Khushi Shah (24110326) - Game Theory Component",
+    "audit_date": "November 2026",
+    "boundary_note": "Per module boundaries, equilibrium derivation (Nash, Social Optimum, PoA) is reserved for the game-theory component. This payload supplies empirical parameters, standard errors, covariance, and uncertainty bounds."
   },
-  "coefficients": {
+  "sample_and_data_context": {
+    "sample_size_N": 186,
+    "number_of_channels_clusters": 38,
+    "repeated_observations_per_channel": "37 channels with 5 videos, 1 channel with 1 video",
+    "competitor_peer_variable_definition": "Rolling 90-day window (+/- 45 days) Leave-One-Creator-Out (LOCO) average",
+    "competitor_peer_variable_defense": "Captures contemporaneous peer packaging intensity in active YouTube recommendation window; strictly excludes focal creator; fallback to global LOCO used for 4 boundary cases where local peer count < 3.",
+    "subscriber_data_caveat": "Subscriber count is measured at data collection time (retrospective snapshot), not time-varying historical count at each video upload date."
+  },
+  "point_estimates_uncentered_model_5": {
+    "specification": "log(V_it) = beta_0 + beta_1*x_it + beta_2*x_it^2 + beta_3*x_bar_(-i,t) + beta_5*x_it*x_bar_(-i,t) + beta_4*log(s_i) + gamma_1*log(duration_it) + gamma_2*age_it + eps_it",
     "beta_0_intercept": -7.983732,
     "beta_1_own_click_appeal": 8.301959,
     "beta_2_quadratic_own_appeal": -9.167702,
-    "beta_3_peer_click_appeal": 3.80212,
+    "beta_3_competitor_click_appeal": 3.80212,
     "beta_4_log_subscribers": 1.066772,
-    "beta_5_interaction_own_peer": -0.782244,
-    "gamma_log_duration": 0.274382,
-    "gamma_age_days": 0.000103
+    "beta_5_strategic_interaction": -0.782244,
+    "gamma_1_log_duration": 0.274382,
+    "gamma_2_age_days": 0.000103
   },
-  "standard_errors_cluster_robust": {
+  "point_estimates_centered_model_5": {
+    "specification": "Centered at sample means: x_c = x - 0.3958, x_bar_c = x_bar - 0.3954",
+    "beta_0_centered_intercept": -4.753137,
+    "beta_1_c_marginal_effect_at_mean": 0.734915,
+    "beta_2_c_curvature": -9.167702,
+    "beta_3_c_peer_effect_at_mean": 3.492481,
+    "beta_5_c_interaction": -0.782244,
+    "note_on_centering": "Curvature beta_2 and interaction beta_5 are mathematically identical to uncentered model. Centering resolves structural collinearity (all VIFs < 1.25) and evaluates linear terms at the empirical mean rather than origin."
+  },
+  "cluster_robust_uncertainty": {
     "se_beta_0": 8.398068,
     "se_beta_1": 20.255365,
     "se_beta_2": 8.438076,
     "se_beta_3": 18.587921,
     "se_beta_4": 0.114101,
-    "se_beta_5": 46.474655
-  },
-  "confidence_intervals_95_cluster_robust": {
-    "ci_beta_1": [
+    "se_beta_5": 46.474655,
+    "p_val_beta_1": 0.6819,
+    "p_val_beta_2": 0.2773,
+    "p_val_beta_3": 0.8379,
+    "p_val_beta_4": 8.8168e-21,
+    "p_val_beta_5": 0.9866,
+    "ci_95_beta_1": [
       -31.3978,
       48.0017
     ],
-    "ci_beta_2": [
+    "ci_95_beta_2": [
       -25.706,
       7.3706
     ],
-    "ci_beta_3": [
+    "ci_95_beta_3": [
       -32.6295,
       40.2338
     ],
-    "ci_beta_5": [
+    "ci_95_beta_5": [
       -91.8709,
       90.3064
     ]
   },
-  "well_posedness_evaluation": {
-    "condition_1_concavity_beta2_negative": {
-      "formula": "beta_2 < 0",
-      "value": -9.1677,
-      "satisfied": true,
-      "notes": "Concavity is strictly satisfied (beta_2 = -9.1677 < 0)."
+  "game_theoretic_well_posedness_evaluation": {
+    "distinction_note": "A clear distinction must be made between whether the mathematical conditions hold on point estimates versus whether they are statistically established by data.",
+    "condition_1_strict_concavity": {
+      "condition": "beta_2 < 0",
+      "point_estimate_value": -9.1677,
+      "holds_on_point_estimates": true,
+      "statistically_established_at_alpha_0_05": false,
+      "assessment": "Holds strictly on point estimate (-9.1677 < 0). However, the 95% confidence interval [-25.71, +7.37] includes zero; therefore concavity is NOT statistically established at alpha=0.05 in the full model."
     },
-    "condition_2_unique_stable_nash_contraction": {
-      "formula": "-min(2, n-1)*|beta_2| < beta_5 < |beta_2|",
-      "lower_bound": -18.3354,
-      "beta_5_value": -0.7822,
-      "upper_bound": 9.1677,
-      "satisfied": true,
-      "contraction_rate": 0.0427,
-      "notes": "Contraction rate is 0.0427 < 1.0. Best-response map is a contraction; unique and stable symmetric Nash equilibrium guaranteed."
+    "condition_2_contraction_mapping": {
+      "condition": "-min(2, n-1)*|beta_2| < beta_5 < |beta_2|",
+      "bounds_on_point_estimates": [
+        -18.3354,
+        9.1677
+      ],
+      "point_estimate_beta_5": -0.7822,
+      "holds_on_point_estimates": true,
+      "statistically_established_at_alpha_0_05": false,
+      "assessment": "Holds strictly on point estimates (-18.335 < -0.7822 < 9.1677, contraction rate 0.0427 < 1). However, the 95% confidence interval for beta_5 [-91.87, +90.31] is extremely wide; contraction is NOT statistically proven."
     },
-    "condition_3_social_welfare_strict_concavity": {
-      "formula": "beta_2 + beta_5 < 0",
-      "value": -9.9499,
-      "satisfied": true,
-      "notes": "Total welfare concavity holds strictly (beta_2 + beta_5 = -9.9499 < 0)."
+    "condition_3_social_welfare_concavity": {
+      "condition": "beta_2 + beta_5 < 0",
+      "point_estimate_sum": -9.9499,
+      "holds_on_point_estimates": true,
+      "statistically_established_at_alpha_0_05": false,
+      "assessment": "Holds strictly on point estimates (-9.9499 < 0). Statistically inconclusive due to uncertainty in beta_2 and beta_5."
     },
-    "all_conditions_satisfied": true
+    "overall_game_theory_recommendation": "The point estimates define a mathematically well-posed potential game. Khushi Shah should use these as a calibrated empirical benchmark, but explicitly qualify in the paper that the packaging parameters carry high estimation variance once creator scale is controlled."
   },
-  "game_theoretic_equilibria": {
-    "x_Nash": 0.4343,
-    "raw_x_Nash_unclipped": 0.4343,
-    "is_interior_Nash": true,
-    "x_Social_Optimum": 0.6082,
-    "raw_x_SO_unclipped": 0.6082,
-    "is_interior_SO": true,
-    "x_dominant_strategy_no_interaction": 0.4528,
-    "x_star_from_M2_Quadratic": 0.4372
-  },
-  "empirical_benchmark": {
-    "empirical_mean_click_appeal": 0.3958,
-    "empirical_median_click_appeal": 0.3999,
-    "empirical_min_click_appeal": 0.0734,
-    "empirical_max_click_appeal": 0.6569,
-    "interpretation": "Fitted Nash equilibrium x_Nash = 0.4343 sits comfortably in the empirical distribution ([0.0734, 0.6569]), slightly above the empirical mean (0.3958), consistent with competitive click-appeal escalation."
+  "sensitivity_analysis_grid": [
+    {
+      "beta_2_tested": -15.0,
+      "beta_5_tested": -5.0,
+      "concavity_satisfied": true,
+      "contraction_satisfied": true,
+      "welfare_concavity_satisfied": true,
+      "implied_x_Nash_unclipped": 0.2372,
+      "implied_x_Nash_clipped": 0.2372
+    },
+    {
+      "beta_2_tested": -15.0,
+      "beta_5_tested": -0.7822,
+      "concavity_satisfied": true,
+      "contraction_satisfied": true,
+      "welfare_concavity_satisfied": true,
+      "implied_x_Nash_unclipped": 0.2697,
+      "implied_x_Nash_clipped": 0.2697
+    },
+    {
+      "beta_2_tested": -15.0,
+      "beta_5_tested": 3.0,
+      "concavity_satisfied": true,
+      "contraction_satisfied": true,
+      "welfare_concavity_satisfied": true,
+      "implied_x_Nash_unclipped": 0.3075,
+      "implied_x_Nash_clipped": 0.3075
+    },
+    {
+      "beta_2_tested": -9.1677,
+      "beta_5_tested": -5.0,
+      "concavity_satisfied": true,
+      "contraction_satisfied": true,
+      "welfare_concavity_satisfied": true,
+      "implied_x_Nash_unclipped": 0.3558,
+      "implied_x_Nash_clipped": 0.3558
+    },
+    {
+      "beta_2_tested": -9.1677,
+      "beta_5_tested": -0.7822,
+      "concavity_satisfied": true,
+      "contraction_satisfied": true,
+      "welfare_concavity_satisfied": true,
+      "implied_x_Nash_unclipped": 0.4343,
+      "implied_x_Nash_clipped": 0.4343
+    },
+    {
+      "beta_2_tested": -9.1677,
+      "beta_5_tested": 3.0,
+      "concavity_satisfied": true,
+      "contraction_satisfied": true,
+      "welfare_concavity_satisfied": true,
+      "implied_x_Nash_unclipped": 0.5414,
+      "implied_x_Nash_clipped": 0.5414
+    },
+    {
+      "beta_2_tested": -3.0,
+      "beta_5_tested": -5.0,
+      "concavity_satisfied": true,
+      "contraction_satisfied": true,
+      "welfare_concavity_satisfied": true,
+      "implied_x_Nash_unclipped": 0.7547,
+      "implied_x_Nash_clipped": 0.7547
+    },
+    {
+      "beta_2_tested": -3.0,
+      "beta_5_tested": -0.7822,
+      "concavity_satisfied": true,
+      "contraction_satisfied": true,
+      "welfare_concavity_satisfied": true,
+      "implied_x_Nash_unclipped": 1.2241,
+      "implied_x_Nash_clipped": 1.0
+    },
+    {
+      "beta_2_tested": -3.0,
+      "beta_5_tested": 3.0,
+      "concavity_satisfied": true,
+      "contraction_satisfied": false,
+      "welfare_concavity_satisfied": false,
+      "implied_x_Nash_unclipped": 2.7673,
+      "implied_x_Nash_clipped": 1.0
+    }
+  ],
+  "parameter_covariance_matrix_cluster_robust": {
+    "const": {
+      "const": 70.52755429,
+      "x": -157.45432267,
+      "x2": 16.67305022,
+      "x_bar_roll90": -148.81784225,
+      "x_inter_roll90": 364.76011164,
+      "log_subscribers": -0.19100238,
+      "log_duration": -0.78180642,
+      "age_days": -0.00123173
+    },
+    "x": {
+      "const": -157.45432267,
+      "x": 410.27980199,
+      "x2": -72.14956765,
+      "x_bar_roll90": 350.46330156,
+      "x_inter_roll90": -904.99880994,
+      "log_subscribers": -0.00206116,
+      "log_duration": 1.24386556,
+      "age_days": 0.00271844
+    },
+    "x2": {
+      "const": 16.67305022,
+      "x": -72.14956765,
+      "x2": 71.20112351,
+      "x_bar_roll90": -28.76431611,
+      "x_inter_roll90": 64.65102638,
+      "log_subscribers": 0.1814493,
+      "log_duration": -0.15733394,
+      "age_days": -0.0007586
+    },
+    "x_bar_roll90": {
+      "const": -148.81784225,
+      "x": 350.46330155,
+      "x2": -28.76431611,
+      "x_bar_roll90": 345.51082509,
+      "x_inter_roll90": -830.49817941,
+      "log_subscribers": 0.06064458,
+      "log_duration": 0.87168523,
+      "age_days": 0.00212862
+    },
+    "x_inter_roll90": {
+      "const": 364.76011165,
+      "x": -904.99880993,
+      "x2": 64.65102638,
+      "x_bar_roll90": -830.49817943,
+      "x_inter_roll90": 2159.89359861,
+      "log_subscribers": -0.18085618,
+      "log_duration": -2.97262406,
+      "age_days": -0.00591231
+    },
+    "log_subscribers": {
+      "const": -0.19100238,
+      "x": -0.00206116,
+      "x2": 0.1814493,
+      "x_bar_roll90": 0.06064458,
+      "x_inter_roll90": -0.18085618,
+      "log_subscribers": 0.01301902,
+      "log_duration": -0.00519629,
+      "age_days": 1.53e-06
+    },
+    "log_duration": {
+      "const": -0.78180642,
+      "x": 1.24386556,
+      "x2": -0.15733394,
+      "x_bar_roll90": 0.87168523,
+      "x_inter_roll90": -2.97262406,
+      "log_subscribers": -0.00519629,
+      "log_duration": 0.06871213,
+      "age_days": 4.062e-05
+    },
+    "age_days": {
+      "const": -0.00123173,
+      "x": 0.00271844,
+      "x2": -0.0007586,
+      "x_bar_roll90": 0.00212862,
+      "x_inter_roll90": -0.00591231,
+      "log_subscribers": 1.53e-06,
+      "log_duration": 4.062e-05,
+      "age_days": 1.3e-07
+    }
   }
 }

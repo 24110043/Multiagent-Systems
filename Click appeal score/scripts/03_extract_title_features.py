@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 03_extract_title_features.py
-Stage 4: Title Feature Extraction for Click Appeal Score Research Project.
+Stage 4: Title Feature Extraction for Click Appeal Score Pipeline (N=809).
 
 Features:
 1. Capitalization Ratio:
@@ -14,7 +14,7 @@ Features:
    f_symbol = (! count + ? count + emoji count) / L
 
 Where L is the number of title whitespace tokens (minimum 1).
-Documented English and Hindi lexicons are used (labeled researcher-defined baseline).
+Documented English and Hindi lexicons are used.
 Saves intermediate counts and raw feature ratios to features/title_features.csv.
 """
 
@@ -24,14 +24,11 @@ import re
 import logging
 from pathlib import Path
 import pandas as pd
-try:
-    import emoji
-except ImportError:
-    emoji = None
-    import regex as unicode_regex
+import emoji
 
 # Configure logging
-LOG_DIR = Path(__file__).resolve().parent.parent / "logs"
+BASE_DIR = Path(__file__).resolve().parent.parent
+LOG_DIR = BASE_DIR / "logs"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 logging.basicConfig(
     level=logging.INFO,
@@ -43,14 +40,13 @@ logging.basicConfig(
 )
 logger = logging.getLogger("title_features")
 
-BASE_DIR = Path(__file__).resolve().parent.parent
 CLEANED_CSV_PATH = BASE_DIR / "data" / "processed" / "cleaned_videos.csv"
 FEATURES_DIR = BASE_DIR / "features"
 FEATURES_DIR.mkdir(parents=True, exist_ok=True)
 OUTPUT_CSV_PATH = FEATURES_DIR / "title_features.csv"
 
 # ==============================================================================
-# RESEARCHER-DEFINED BASELINE LEXICONS (Documented & Non-Scientifically Validated)
+# RESEARCHER-DEFINED BASELINE LEXICONS
 # ==============================================================================
 
 ENGLISH_TRIGGER_WORDS = {
@@ -113,22 +109,14 @@ def clean_token(token: str) -> str:
 
 
 def count_emojis(text: str) -> int:
-    """Count emoji grapheme clusters; use the emoji package when available.
-
-    The regex fallback counts grapheme clusters containing an extended
-    pictographic character or a regional-indicator flag pair.
-    """
-    if emoji is not None:
-        return emoji.emoji_count(text)
-    clusters = unicode_regex.findall(r"\X", text)
-    return sum(bool(unicode_regex.search(r"\p{Extended_Pictographic}|\p{Regional_Indicator}", c)) for c in clusters)
+    """Count emoji grapheme clusters using emoji package."""
+    return emoji.emoji_count(text)
 
 
 def match_phrases_and_words(text: str, phrases, words):
     """Match phrases first, then words outside phrase spans (no overlap double-count)."""
     phrase_matches = []
     occupied = []
-    # Longest phrases first; case-insensitive and bounded by non-word characters.
     for phrase in sorted(phrases, key=len, reverse=True):
         pattern = re.compile(r"(?<!\w)" + re.escape(phrase) + r"(?!\w)", re.IGNORECASE)
         for match in pattern.finditer(text):
@@ -139,9 +127,6 @@ def match_phrases_and_words(text: str, phrases, words):
             phrase_matches.append(phrase)
 
     word_matches = []
-    # Preserve the project's original whitespace-tokenization rule. Strip only
-    # leading/trailing punctuation as before; do not split internal apostrophes
-    # or ellipses into new lexicon hits.
     for match in re.finditer(r"\S+", text, flags=re.UNICODE):
         span = match.span()
         if any(span[0] < end and span[1] > start for start, end in occupied):
@@ -153,13 +138,24 @@ def match_phrases_and_words(text: str, phrases, words):
 
 
 def extract_title_features():
-    logger.info("Starting Stage 4: Title Feature Extraction...")
+    logger.info("Starting Stage 4: Title Feature Extraction (Final N=809)...")
     if not CLEANED_CSV_PATH.exists():
         logger.error(f"Cleaned CSV not found at {CLEANED_CSV_PATH}. Run Stage 2 first.")
         sys.exit(1)
 
     df = pd.read_csv(CLEANED_CSV_PATH)
     logger.info(f"Loaded {len(df)} titles from {CLEANED_CSV_PATH}")
+
+    # Resume cache check
+    existing_records = {}
+    if OUTPUT_CSV_PATH.exists():
+        try:
+            df_exist = pd.read_csv(OUTPUT_CSV_PATH)
+            for _, r in df_exist.iterrows():
+                existing_records[str(r["video_id"]).strip()] = r.to_dict()
+            logger.info(f"Loaded {len(existing_records)} existing title feature records for resumption.")
+        except Exception as e:
+            logger.warning(f"Could not read existing title features: {e}")
 
     records = []
 
@@ -168,12 +164,15 @@ def extract_title_features():
         channel_name = str(row["channel_name"]).strip()
         title = str(row["title"]).strip()
 
+        if video_id in existing_records:
+            records.append(existing_records[video_id])
+            continue
+
         # Whitespace tokenization
         raw_tokens = title.split()
         L = max(1, len(raw_tokens))
 
         # 1. Capitalization Feature (f_caps)
-        # Count uppercase alphabetic tokens containing at least two letters
         uppercase_tokens = []
         for t in raw_tokens:
             cleaned = clean_token(t)
@@ -239,7 +238,6 @@ def extract_title_features():
     print(f"  f_sensitive  -> Min: {df_out['f_sensitive'].min():.4f}, Mean: {df_out['f_sensitive'].mean():.4f}, Max: {df_out['f_sensitive'].max():.4f}, >0: {(df_out['f_sensitive'] > 0).sum()} ({(df_out['f_sensitive'] > 0).mean()*100:.1f}%)")
     print(f"  f_symbol     -> Min: {df_out['f_symbol'].min():.4f}, Mean: {df_out['f_symbol'].mean():.4f}, Max: {df_out['f_symbol'].max():.4f}, >0: {(df_out['f_symbol'] > 0).sum()} ({(df_out['f_symbol'] > 0).mean()*100:.1f}%)")
     print("====================================================================\n")
-    logger.info("Stage 4 completed successfully.")
 
 
 if __name__ == "__main__":
