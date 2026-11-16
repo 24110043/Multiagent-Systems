@@ -3,10 +3,9 @@
 **CS 329: Foundations of AI: Multi-Agent Systems (Autumn 2026)**  
 *Indian Institute of Technology Gandhinagar*  
 **Project:** Click Appeal as a Potential Game: Modeling Creator Incentives, Attention Congestion, and Social Welfare in YouTube  
-**Author:** Bhavya Shah (Roll: 24110324) — *Payoff Function Estimation, Econometric Regression Analysis & Statistical Inference*  
 **Collaborators:**  
 - Ankita Kushwaha (24110043) — *Multimodal Scoring & Data Preprocessing*  
-- Khushi Shah (24110326) — *Game-Theoretic Formulation & Social Welfare Analysis*  
+- Bhavya Shah 
 - Harshita Singh (24110342) — *Platform Mediation & Multi-Agent Simulation*  
 
 ---
