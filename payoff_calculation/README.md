@@ -19,7 +19,7 @@ The fitted parameters, delta-method covariance matrices, and well-posedness cond
 
 > [!NOTE]
 > **Data vs. Proposal Scope Clarification:**  
-> The dataset covers 38 channels from **global English-language digital entertainment** (Gaming, Comedy, General Entertainment, Food/Tech Lifestyle) rather than the Indian tech-review market proposed in the initial proposal. The analyzed sample comprises 809 videos across creators spanning from $118\text{K}$ to $150\text{M}$ subscribers, capturing real-world cross-channel competition across global attention categories.
+> The dataset covers 38 channels from **global English-language digital entertainment** (Gaming, Comedy, General Entertainment, Food/Tech Lifestyle) rather than the Indian tech-review market proposed in the initial proposal. The analyzed sample comprises 809 videos across creators spanning from $118\text{K}$ to $526\text{M}$ subscribers, capturing real-world cross-channel competition across global attention categories.
 
 ---
 
@@ -32,7 +32,7 @@ Our empirical pipeline follows a pre-registered, leak-free design across 10 sequ
 3. **Stage 3 (`03_train_models.py`): Primary Model Development (Training Sample):** Fits progressive OLS models (M0 through M5) on the 26 training channels. Applies mean-centering to eliminate structural multicollinearity (VIFs drop from $1{,}334.9$ to $1.15$).
 4. **Stage 4 (`04_evaluate_loco_cv.py`): 26-Fold LOCO-CV on Training Cohort:** Evaluates predictive generalization via strict Leave-One-Channel-Out Cross-Validation within the training cohort with zero data leakage.
 5. **Stage 5 (`05_validate_and_freeze.py`): Validation Evaluation & Specification Freezing:** Evaluates candidate models on the 6 validation channels ($N = 136$) and formally locks **Model 4-Centered (Strategic Payoff Function)** based on theoretical necessity.
-6. **Stage 6 (`06_evaluate_test_holdout.py`): Final Holdout Test Evaluation:** Evaluates the locked Model 4 specification on the untouched 6 test channels ($N = 132$) after refitting on the pooled 32 training+validation channels ($R^2_{\mathrm{OOS}} = 0.7537$, $\mathrm{RMSE} = 1.1382$).
+6. **Stage 6 (`06_evaluate_test_holdout.py`): Final Holdout Test Evaluation:** Evaluates the locked Model 4 specification on the internal holdout of 6 test channels ($N = 132$) after refitting on the pooled 32 training+validation channels ($R^2_{\mathrm{OOS}} = 0.7537$, $\mathrm{RMSE} = 1.1382$).
 7. **Stage 7 (`07_post_test_structural_calibration.py`): Full Calibration & Bootstrap Inference:** Estimates Model 4-Centered on all 38 channels ($N = 809$), derives uncentered parameters analytically for paper Eq. 2, executes Wild Cluster Bootstrap tests ($B = 2{,}000$), and computes cluster-pairs bootstrap confidence intervals.
 8. **Stage 8 (`08_generate_plots.py`): Publication Figures:** Generates 6 high-resolution (300 DPI) publication-quality econometric figures in `plots/`.
 9. **Stage 9 (`09_backward_looking_robustness.py`): Backward-Looking Peer Window Robustness:** Compares the primary contemporaneous peer window $[t - 30\text{d}, t + 30\text{d}]$ against a retrospective $[t - 60\text{d}, t)$ window.

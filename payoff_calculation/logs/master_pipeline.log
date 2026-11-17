@@ -1,76 +1,61 @@
-2026-11-18 01:33:06,440 [INFO] ======================================================================
-2026-11-18 01:33:06,440 [INFO]  EMPIRICAL PAYOFF FUNCTION ESTIMATION - MASTER RESEARCH PIPELINE
-2026-11-18 01:33:06,440 [INFO]  CS 329: Multi-Agent Systems | IIT Gandhinagar (Autumn 2026)
-2026-11-18 01:33:06,440 [INFO]  Bhavya Shah (24110324) - Payoff Estimation & Statistical Evaluation
-2026-11-18 01:33:06,440 [INFO] ======================================================================
+2026-11-18 03:43:38,303 [INFO] ======================================================================
+2026-11-18 03:43:38,304 [INFO]  EMPIRICAL PAYOFF FUNCTION ESTIMATION - MASTER RESEARCH PIPELINE
+2026-11-18 03:43:38,304 [INFO]  CS 329: Multi-Agent Systems | IIT Gandhinagar (Autumn 2026)
+2026-11-18 03:43:38,304 [INFO]  Bhavya Shah (24110324) - Payoff Estimation & Statistical Evaluation
+2026-11-18 03:43:38,305 [INFO] ======================================================================
 
-2026-11-18 01:33:06,440 [INFO] ======================================================================
-2026-11-18 01:33:06,440 [INFO] STARTING STAGE: Stage 1: Data Preparation & Integrity Audit (01_prepare_payoff_data.py)
-2026-11-18 01:33:06,440 [INFO] ======================================================================
-2026-11-18 01:33:06,966 [INFO] STAGE COMPLETED: Stage 1: Data Preparation & Integrity Audit in 0.53 seconds.
+2026-11-18 03:43:38,305 [INFO] ======================================================================
+2026-11-18 03:43:38,305 [INFO] STARTING STAGE: Stage 1: Data Preparation & Integrity Audit (01_prepare_payoff_data.py)
+2026-11-18 03:43:38,305 [INFO] ======================================================================
+2026-11-18 03:43:39,453 [INFO] STAGE COMPLETED: Stage 1: Data Preparation & Integrity Audit in 1.15 seconds.
 
-2026-11-18 01:33:06,966 [INFO] ======================================================================
-2026-11-18 01:33:06,966 [INFO] STARTING STAGE: Stage 2: Channel-Stratified Splitting (26/6/6) (02_create_stratified_split.py)
-2026-11-18 01:33:06,966 [INFO] ======================================================================
-2026-11-18 01:33:07,472 [INFO] STAGE COMPLETED: Stage 2: Channel-Stratified Splitting (26/6/6) in 0.51 seconds.
+2026-11-18 03:43:39,453 [INFO] ======================================================================
+2026-11-18 03:43:39,453 [INFO] STARTING STAGE: Stage 2: Channel-Stratified Splitting (26/6/6) (02_create_stratified_split.py)
+2026-11-18 03:43:39,453 [INFO] ======================================================================
+2026-11-18 03:43:40,754 [INFO] STAGE COMPLETED: Stage 2: Channel-Stratified Splitting (26/6/6) in 1.30 seconds.
 
-2026-11-18 01:33:07,472 [INFO] ======================================================================
-2026-11-18 01:33:07,472 [INFO] STARTING STAGE: Stage 3: Primary Model Development (Training Sample) (03_train_models.py)
-2026-11-18 01:33:07,472 [INFO] ======================================================================
-2026-11-18 01:33:09,493 [INFO] STAGE COMPLETED: Stage 3: Primary Model Development (Training Sample) in 2.02 seconds.
+2026-11-18 03:43:40,755 [INFO] ======================================================================
+2026-11-18 03:43:40,756 [INFO] STARTING STAGE: Stage 3: Primary Model Development (Training Sample) (03_train_models.py)
+2026-11-18 03:43:40,756 [INFO] ======================================================================
+2026-11-18 03:43:45,297 [INFO] STAGE COMPLETED: Stage 3: Primary Model Development (Training Sample) in 4.54 seconds.
 
-2026-11-18 01:33:09,493 [INFO] ======================================================================
-2026-11-18 01:33:09,493 [INFO] STARTING STAGE: Stage 4: 26-Fold LOCO-CV on Training Cohort (04_evaluate_loco_cv.py)
-2026-11-18 01:33:09,493 [INFO] ======================================================================
-2026-11-18 01:33:26,347 [INFO] STAGE COMPLETED: Stage 4: 26-Fold LOCO-CV on Training Cohort in 16.85 seconds.
+2026-11-18 03:43:45,298 [INFO] ======================================================================
+2026-11-18 03:43:45,298 [INFO] STARTING STAGE: Stage 4: 26-Fold LOCO-CV on Training Cohort (04_evaluate_loco_cv.py)
+2026-11-18 03:43:45,301 [INFO] ======================================================================
+2026-11-18 03:44:44,012 [INFO] STAGE COMPLETED: Stage 4: 26-Fold LOCO-CV on Training Cohort in 58.71 seconds.
 
-2026-11-18 01:33:26,347 [INFO] ======================================================================
-2026-11-18 01:33:26,347 [INFO] STARTING STAGE: Stage 5: Validation Evaluation & Model Locking (05_validate_and_freeze.py)
-2026-11-18 01:33:26,348 [INFO] ======================================================================
-2026-11-18 01:33:28,460 [INFO] STAGE COMPLETED: Stage 5: Validation Evaluation & Model Locking in 2.11 seconds.
+2026-11-18 03:44:44,013 [INFO] ======================================================================
+2026-11-18 03:44:44,013 [INFO] STARTING STAGE: Stage 5: Validation Evaluation & Model Locking (05_validate_and_freeze.py)
+2026-11-18 03:44:44,013 [INFO] ======================================================================
+2026-11-18 03:44:48,040 [INFO] STAGE COMPLETED: Stage 5: Validation Evaluation & Model Locking in 4.03 seconds.
 
-2026-11-18 01:33:28,461 [INFO] ======================================================================
-2026-11-18 01:33:28,461 [INFO] STARTING STAGE: Stage 6: Final Holdout Test Evaluation (06_evaluate_test_holdout.py)
-2026-11-18 01:33:28,461 [INFO] ======================================================================
-2026-11-18 01:33:30,677 [INFO] STAGE COMPLETED: Stage 6: Final Holdout Test Evaluation in 2.22 seconds.
+2026-11-18 03:44:48,041 [INFO] ======================================================================
+2026-11-18 03:44:48,041 [INFO] STARTING STAGE: Stage 6: Final Holdout Test Evaluation (06_evaluate_test_holdout.py)
+2026-11-18 03:44:48,041 [INFO] ======================================================================
+2026-11-18 03:44:52,549 [INFO] STAGE COMPLETED: Stage 6: Final Holdout Test Evaluation in 4.51 seconds.
 
-2026-11-18 01:33:30,677 [INFO] ======================================================================
-2026-11-18 01:33:30,677 [INFO] STARTING STAGE: Stage 7: Full-Sample Calibration & Bootstrap (07_post_test_structural_calibration.py)
-2026-11-18 01:33:30,677 [INFO] ======================================================================
-2026-11-18 01:33:46,010 [INFO] STAGE COMPLETED: Stage 7: Full-Sample Calibration & Bootstrap in 15.33 seconds.
+2026-11-18 03:44:52,549 [INFO] ======================================================================
+2026-11-18 03:44:52,549 [INFO] STARTING STAGE: Stage 7: Full-Sample Calibration & Bootstrap (07_post_test_structural_calibration.py)
+2026-11-18 03:44:52,549 [INFO] ======================================================================
+2026-11-18 03:45:21,501 [INFO] STAGE COMPLETED: Stage 7: Full-Sample Calibration & Bootstrap in 28.95 seconds.
 
-2026-11-18 01:33:46,010 [INFO] ======================================================================
-2026-11-18 01:33:46,010 [INFO] STARTING STAGE: Stage 8: Publication-Quality Econometric Figures (08_generate_plots.py)
-2026-11-18 01:33:46,010 [INFO] ======================================================================
-2026-11-18 01:33:51,263 [INFO] STAGE COMPLETED: Stage 8: Publication-Quality Econometric Figures in 5.25 seconds.
+2026-11-18 03:45:21,501 [INFO] ======================================================================
+2026-11-18 03:45:21,502 [INFO] STARTING STAGE: Stage 8: Publication-Quality Econometric Figures (08_generate_plots.py)
+2026-11-18 03:45:21,502 [INFO] ======================================================================
+2026-11-18 03:45:31,464 [INFO] STAGE COMPLETED: Stage 8: Publication-Quality Econometric Figures in 9.96 seconds.
 
-2026-11-18 01:33:51,263 [INFO] ======================================================================
-2026-11-18 01:33:51,263 [INFO] STARTING STAGE: Stage 9: Backward-Looking Peer Window Robustness (09_backward_looking_robustness.py)
-2026-11-18 01:33:51,263 [INFO] ======================================================================
-2026-11-18 01:33:54,657 [INFO] STAGE COMPLETED: Stage 9: Backward-Looking Peer Window Robustness in 3.39 seconds.
+2026-11-18 03:45:31,464 [INFO] ======================================================================
+2026-11-18 03:45:31,464 [INFO] STARTING STAGE: Stage 9: Backward-Looking Peer Window Robustness (09_backward_looking_robustness.py)
+2026-11-18 03:45:31,465 [INFO] ======================================================================
+2026-11-18 03:45:40,369 [INFO] STAGE COMPLETED: Stage 9: Backward-Looking Peer Window Robustness in 8.90 seconds.
 
-2026-11-18 01:33:54,657 [INFO] ======================================================================
-2026-11-18 01:33:54,657 [INFO] STARTING STAGE: Stage 10: Potential Game Well-Posedness & Contraction Audit (10_wellposedness_check.py)
-2026-11-18 01:33:54,657 [INFO] ======================================================================
-2026-11-18 01:33:55,079 [INFO] STAGE COMPLETED: Stage 10: Potential Game Well-Posedness & Contraction Audit in 0.42 seconds.
+2026-11-18 03:45:40,370 [INFO] ======================================================================
+2026-11-18 03:45:40,370 [INFO] STARTING STAGE: Stage 10: State-Dependent Peer Congestion Test E(x) (10_congestion_test.py)
+2026-11-18 03:45:40,370 [INFO] ======================================================================
+2026-11-18 03:45:43,894 [INFO] STAGE COMPLETED: Stage 10: State-Dependent Peer Congestion Test E(x) in 3.52 seconds.
 
-2026-11-18 01:33:55,079 [INFO] ======================================================================
-2026-11-18 01:33:55,079 [INFO] STARTING STAGE: Stage 11: Equilibrium Analysis, Option B Sweep & Extrapolation Guard (11_equilibrium_analysis.py)
-2026-11-18 01:33:55,079 [INFO] ======================================================================
-2026-11-18 01:33:56,351 [INFO] STAGE COMPLETED: Stage 11: Equilibrium Analysis, Option B Sweep & Extrapolation Guard in 1.27 seconds.
-
-2026-11-18 01:33:56,351 [INFO] ======================================================================
-2026-11-18 01:33:56,351 [INFO] STARTING STAGE: Stage 12: Bootstrap Uncertainty Propagation Across B=2,000 Draws (12_bootstrap_equilibrium_distribution.py)
-2026-11-18 01:33:56,352 [INFO] ======================================================================
-2026-11-18 01:33:56,941 [INFO] STAGE COMPLETED: Stage 12: Bootstrap Uncertainty Propagation Across B=2,000 Draws in 0.59 seconds.
-
-2026-11-18 01:33:56,941 [INFO] ======================================================================
-2026-11-18 01:33:56,941 [INFO] STARTING STAGE: Stage 13: Option A (No-Cost) Equilibria & Best-Response Visualization (13_option_a_equilibria.py)
-2026-11-18 01:33:56,941 [INFO] ======================================================================
-2026-11-18 01:33:57,650 [INFO] STAGE COMPLETED: Stage 13: Option A (No-Cost) Equilibria & Best-Response Visualization in 0.71 seconds.
-
-2026-11-18 01:33:57,651 [INFO] ======================================================================
-2026-11-18 01:33:57,651 [INFO]  ALL 10 PIPELINE STAGES COMPLETED SUCCESSFULLY IN 51.21s
-2026-11-18 01:33:57,651 [INFO]  Master log saved to: C:\Github Backup\Multiagent-Systems\payoff_calculation\logs\master_pipeline.log
-2026-11-18 01:33:57,651 [INFO]  Deliverables directory: C:\Github Backup\Multiagent-Systems\payoff_calculation
-2026-11-18 01:33:57,651 [INFO] ======================================================================
+2026-11-18 03:45:43,895 [INFO] ======================================================================
+2026-11-18 03:45:43,895 [INFO]  ALL 10 PIPELINE STAGES COMPLETED SUCCESSFULLY IN 125.59s
+2026-11-18 03:45:43,895 [INFO]  Master log saved to: C:\Github Backup\Multiagent-Systems\payoff_calculation\logs\master_pipeline.log
+2026-11-18 03:45:43,895 [INFO]  Deliverables directory: C:\Github Backup\Multiagent-Systems\payoff_calculation
+2026-11-18 03:45:43,895 [INFO] ======================================================================

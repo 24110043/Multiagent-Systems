@@ -38,7 +38,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[
-        logging.FileHandler(LOG_FILE, encoding="utf-8"),
+        logging.FileHandler(LOG_FILE, mode="w", encoding="utf-8"),
         logging.StreamHandler(sys.stdout)
     ]
 )
@@ -59,10 +59,12 @@ def run_backward_looking_robustness():
     N = len(df)
     G = df["channel_id"].nunique()
 
-    # 1. Construct Backward-Looking Peer Appeal [t - 60d, t)
-    logger.info("Constructing backward-looking peer appeal [t - 60d, t) for all 809 videos...")
-    back_peers = []
-    back_counts = []
+    # ---------------------------------------------------------
+    # 1. Full Sample Peers (All 38 channels)
+    # ---------------------------------------------------------
+    logger.info("Constructing full-sample backward-looking peer appeal [t - 60d, t) for all 809 videos...")
+    back_peers_full = []
+    back_counts_full = []
     for _, row in df.iterrows():
         c_id = row["channel_id"]
         t_pub = row["published_at_dt"]
@@ -72,25 +74,23 @@ def run_backward_looking_robustness():
             (df["published_at_dt"] < t_pub)
         ]
         if len(w) > 0:
-            back_peers.append(float(w.groupby("channel_id")["x"].mean().mean()))
-            back_counts.append(len(w))
+            back_peers_full.append(float(w.groupby("channel_id")["x"].mean().mean()))
+            back_counts_full.append(len(w))
         else:
-            # Fallback to LOCO channel mean among videos published strictly before t_pub
             hist = df[(df["channel_id"] != c_id) & (df["published_at_dt"] < t_pub)]
             if len(hist) > 0:
-                back_peers.append(float(hist.groupby("channel_id")["x"].mean().mean()))
-                back_counts.append(len(hist))
+                back_peers_full.append(float(hist.groupby("channel_id")["x"].mean().mean()))
+                back_counts_full.append(len(hist))
             else:
                 loco = df[df["channel_id"] != c_id]
-                back_peers.append(float(loco.groupby("channel_id")["x"].mean().mean()))
-                back_counts.append(0)
+                back_peers_full.append(float(loco.groupby("channel_id")["x"].mean().mean()))
+                back_counts_full.append(0)
 
-    df["x_bar_back"] = back_peers
-    df["back_peer_count"] = back_counts
+    df["x_bar_back"] = back_peers_full
+    df["back_peer_count"] = back_counts_full
 
-    # 2. Construct Contemporaneous Peer Appeal [t - 30d, t + 30d]
-    logger.info("Constructing contemporaneous peer appeal [t - 30d, t + 30d] for comparison...")
-    contemp_peers = []
+    logger.info("Constructing full-sample contemporaneous peer appeal [t - 30d, t + 30d]...")
+    contemp_peers_full = []
     for _, row in df.iterrows():
         c_id = row["channel_id"]
         t_pub = row["published_at_dt"]
@@ -100,16 +100,64 @@ def run_backward_looking_robustness():
             (df["published_at_dt"] <= t_pub + pd.Timedelta(days=30))
         ]
         if len(w) > 0:
-            contemp_peers.append(float(w.groupby("channel_id")["x"].mean().mean()))
+            contemp_peers_full.append(float(w.groupby("channel_id")["x"].mean().mean()))
         else:
             loco = df[df["channel_id"] != c_id]
-            contemp_peers.append(float(loco.groupby("channel_id")["x"].mean().mean()))
-    df["x_bar_contemp"] = contemp_peers
+            contemp_peers_full.append(float(loco.groupby("channel_id")["x"].mean().mean()))
+    df["x_bar_contemp"] = contemp_peers_full
 
-    # 3. Fit on Training Sample (G = 26, N = 541)
+    # ---------------------------------------------------------
+    # 2. Training Sample Peers (Strictly among the 25 OTHER training channels)
+    # ---------------------------------------------------------
+    logger.info("Constructing training peer appeals strictly within 26 training channels (peer isolation)...")
     train_df = df[df["partition"] == "train"].copy()
-    
-    # Contemporaneous centering for train
+
+    # Training Contemporaneous [t - 30d, t + 30d]
+    contemp_peers_tr = []
+    for _, row in train_df.iterrows():
+        c_id = row["channel_id"]
+        t_pub = row["published_at_dt"]
+        w = train_df[
+            (train_df["channel_id"] != c_id) &
+            (train_df["published_at_dt"] >= t_pub - pd.Timedelta(days=30)) &
+            (train_df["published_at_dt"] <= t_pub + pd.Timedelta(days=30))
+        ]
+        if len(w) > 0:
+            ch_means = w.groupby("channel_id")["x"].mean()
+            contemp_peers_tr.append(float(ch_means.mean()))
+        else:
+            loco_df = train_df[train_df["channel_id"] != c_id]
+            ch_means = loco_df.groupby("channel_id")["x"].mean()
+            contemp_peers_tr.append(float(ch_means.mean()))
+    train_df["x_bar_contemp"] = contemp_peers_tr
+
+    # Training Backward-Looking [t - 60d, t)
+    back_peers_tr = []
+    for _, row in train_df.iterrows():
+        c_id = row["channel_id"]
+        t_pub = row["published_at_dt"]
+        w = train_df[
+            (train_df["channel_id"] != c_id) &
+            (train_df["published_at_dt"] >= t_pub - pd.Timedelta(days=60)) &
+            (train_df["published_at_dt"] < t_pub)
+        ]
+        if len(w) > 0:
+            ch_means = w.groupby("channel_id")["x"].mean()
+            back_peers_tr.append(float(ch_means.mean()))
+        else:
+            hist = train_df[(train_df["channel_id"] != c_id) & (train_df["published_at_dt"] < t_pub)]
+            if len(hist) > 0:
+                ch_means = hist.groupby("channel_id")["x"].mean()
+                back_peers_tr.append(float(ch_means.mean()))
+            else:
+                loco_df = train_df[train_df["channel_id"] != c_id]
+                ch_means = loco_df.groupby("channel_id")["x"].mean()
+                back_peers_tr.append(float(ch_means.mean()))
+    train_df["x_bar_back"] = back_peers_tr
+
+    # ---------------------------------------------------------
+    # 3. Fit on Training Sample (G = 26, N = 541)
+    # ---------------------------------------------------------
     mu_x_tr = float(train_df["x"].mean())
     mu_contemp_tr = float(train_df["x_bar_contemp"].mean())
     mu_back_tr = float(train_df["x_bar_back"].mean())
@@ -137,7 +185,9 @@ def run_backward_looking_robustness():
         cov_type="cluster", cov_kwds={"groups": train_df["channel_id"]}
     )
 
+    # ---------------------------------------------------------
     # 4. Fit on Full Sample (G = 38, N = 809)
+    # ---------------------------------------------------------
     mu_x_full = float(df["x"].mean())
     mu_contemp_full = float(df["x_bar_contemp"].mean())
     mu_back_full = float(df["x_bar_back"].mean())
@@ -211,15 +261,30 @@ def run_backward_looking_robustness():
         })
 
     logger.info("-" * 105)
-    logger.info(
+    
+    # Dynamic values for methodological verdict
+    b2_full_c = float(fit_full_contemp.params["x2_c"])
+    b2_full_b = float(fit_full_back.params["x2_c"])
+    p_b5_full_c = float(fit_full_contemp.pvalues["x_inter_c_contemp"])
+    p_b5_full_b = float(fit_full_back.pvalues["x_inter_c_back"])
+    gamma_full_c = float(fit_full_contemp.params["log_subscribers"])
+    gamma_full_b = float(fit_full_back.params["log_subscribers"])
+    gamma_tr_c = float(fit_tr_contemp.params["log_subscribers"])
+    gamma_tr_b = float(fit_tr_back.params["log_subscribers"])
+
+    verdict_text = (
         "METHODOLOGICAL VERDICT:\n"
-        "1. In both training and full samples, the qualitative sign pattern is completely preserved:\n"
-        "   - Own appeal curvature (beta_2) remains negative in the full sample (-8.1974 contemp vs -8.0812 backward).\n"
-        "   - Strategic interaction (beta_5) remains statistically insignificant under both windows (p > 0.50).\n"
-        "   - Subscriber elasticity (gamma_s) remains robustly pegged at ~1.04 - 1.05 with p < 0.0001.\n"
-        "2. The contemporaneous window [t - 30d, t + 30d] provides a tighter fit and directly reflects\n"
+        "1. In the full sample, the qualitative sign pattern is completely preserved:\n"
+        f"   - Own appeal curvature (beta_2) remains strictly negative ({b2_full_c:.4f} contemp vs {b2_full_b:.4f} backward).\n"
+        f"   - Strategic interaction (beta_5) remains statistically insignificant under both windows (p = {p_b5_full_c:.4f} contemp vs p = {p_b5_full_b:.4f} backward).\n"
+        f"   - Subscriber elasticity (gamma_s) remains robustly estimated around ~1.02 - 1.04 with p < 0.0001 "
+        f"(training: {gamma_tr_c:.4f} vs {gamma_tr_b:.4f}; full: {gamma_full_c:.4f} vs {gamma_full_b:.4f}).\n"
+        "2. In the training sample with strict peer isolation (only 25 peers), contemporaneous fit yields R² = "
+        f"{fit_tr_contemp.rsquared:.4f} vs backward R² = {fit_tr_back.rsquared:.4f}.\n"
+        "3. The contemporaneous window [t - 30d, t + 30d] provides a tighter fit and directly reflects\n"
         "   the recommendation algorithm's competitive window during a video's primary viewership lifecycle."
     )
+    logger.info(verdict_text)
 
     df_out = pd.DataFrame(records)
     out_csv = RESULTS_DIR / "backward_looking_peer_robustness.csv"
