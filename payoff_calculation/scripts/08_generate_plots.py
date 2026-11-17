@@ -258,14 +258,15 @@ def generate_plots():
     x2_c_grid = x_c_grid ** 2
 
     # Point estimates from full structural model
-    b0 = gt_data["locked_centered_coefficients"]["beta_0_c_intercept"]
-    b1 = gt_data["locked_centered_coefficients"]["beta_1_c_own_appeal_at_mean"]
-    b2 = gt_data["locked_centered_coefficients"]["beta_2_c_quadratic_curvature"]
-    b3 = gt_data["locked_centered_coefficients"]["beta_3_c_peer_congestion_at_mean"]
-    b5 = gt_data["locked_centered_coefficients"]["beta_5_c_strategic_interaction"]
-    g_s = gt_data["locked_centered_coefficients"]["gamma_subscribers"]
-    g_d = gt_data["locked_centered_coefficients"]["gamma_duration"]
-    g_a = gt_data["locked_centered_coefficients"]["gamma_age_days"]
+    coef_block = gt_data.get("centered_estimation_coefficients", gt_data.get("locked_centered_coefficients", {}))
+    b0 = coef_block.get("b0_c_intercept", coef_block.get("beta_0_c_intercept"))
+    b1 = coef_block.get("b1_c_own_appeal_at_mean", coef_block.get("beta_1_c_own_appeal_at_mean"))
+    b2 = coef_block.get("b2_c_quadratic_curvature", coef_block.get("beta_2_c_quadratic_curvature"))
+    b3 = coef_block.get("b3_c_peer_congestion_at_mean", coef_block.get("beta_3_c_peer_congestion_at_mean"))
+    b5 = coef_block.get("b5_c_strategic_interaction", coef_block.get("beta_5_c_strategic_interaction"))
+    g_s = coef_block.get("gamma_subscribers")
+    g_d = coef_block.get("gamma_duration")
+    g_a = coef_block.get("gamma_age_days")
 
     # Fixed representative controls at sample medians
     med_subs = float(df["log_subscribers"].median())
@@ -314,8 +315,8 @@ def generate_plots():
     opt_convex_idx = np.argmax(payoff_convex)
 
     ax_bot.plot(x_grid, y_rev, label="Gross Revenue $\\ln V_i(x_i, \\bar{x}_{50})$", color="#1f77b4", linestyle="--", linewidth=1.8)
-    ax_bot.plot(x_grid, payoff_linear, label=f"Net Payoff (Linear Cost $C=x$): Peak at $x^* = {x_grid[opt_linear_idx]:.2f}$", color="#ff7f0e", linewidth=2.0)
-    ax_bot.plot(x_grid, payoff_convex, label=f"Net Payoff (Convex Cost $C=x+4x^2$): Peak at $x^* = {x_grid[opt_convex_idx]:.2f}$", color="#2ca02c", linewidth=2.0)
+    ax_bot.plot(x_grid, payoff_linear, label=f"Net Payoff (Linear Cost $C=x$): Peak at $x^* = {x_grid[opt_linear_idx]:.2f}$ (No slope change; contraction not restored)", color="#ff7f0e", linewidth=2.0)
+    ax_bot.plot(x_grid, payoff_convex, label=f"Net Payoff (Convex Cost $C=x+4x^2$, $\\kappa=8.0 > 4.40$): Peak at $x^* = {x_grid[opt_convex_idx]:.2f}$ (Contraction restored)", color="#2ca02c", linewidth=2.0)
 
     ax_bot.axvline(x_grid[opt_linear_idx], color="#ff7f0e", linestyle=":", alpha=0.8)
     ax_bot.axvline(x_grid[opt_convex_idx], color="#2ca02c", linestyle=":", alpha=0.8)
@@ -325,7 +326,7 @@ def generate_plots():
 
     ax_bot.set_xlabel("Own Click Appeal Score $x_i$")
     ax_bot.set_ylabel("Creator Payoff $\\Pi_i(x_i, \\bar{x}_{-i})$")
-    ax_bot.set_title("B: Net Payoff Tradeoff: Linear vs. Strictly Convex Production Cost", fontweight="bold")
+    ax_bot.set_title("B: Net Payoff Tradeoff: Linear vs. Strictly Convex Cost (Assumed $\\kappa > 4.40$ Restores Contraction)", fontweight="bold")
     ax_bot.legend(loc="lower left", frameon=True)
 
     plt.tight_layout()

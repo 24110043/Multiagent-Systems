@@ -1,16 +1,17 @@
 # Empirical Payoff Function Estimation: Final Comprehensive Research Report
 
-**Course:** CS 329: Foundations of AI: Multi-Agent Systems (Autumn 2026)  
-**Institution:** Indian Institute of Technology Gandhinagar  
-**Project Title:** *Click Appeal as a Potential Game: Modeling Creator Incentives, Attention Congestion, and Social Welfare in YouTube Recommendation*  
-**Module:** Empirical Payoff Function Estimation, Econometric Regression Analysis & Statistical Inference  
-**Author:** Bhavya Shah (Roll: 24110324)  
-**Collaborators:**  
-- Ankita Kushwaha (Roll: 24110043) — *Multimodal Scoring & Data Preprocessing*  
-- Khushi Shah (Roll: 24110326) — *Game-Theoretic Formulation & Potential Game Calibration*  
-- Harshita Singh (Roll: 24110342) — *Platform Mediation & Multi-Agent Simulation*  
-**Date of Completion:** November 16, 2026  
-**Status:** Phase 2 Fully Completed, Validated, and Audited End-to-End
+**CS 329: Foundations of AI: Multi-Agent Systems (Autumn 2026)**  
+*Indian Institute of Technology Gandhinagar*  
+**Research Project:** Click Appeal as a Potential Game: Modeling Creator Incentives, Attention Congestion, and Social Welfare in YouTube  
+**Author:** Bhavya Shah (Roll: 24110324) — *Empirical Payoff Function Estimation & Econometric Analysis*  
+**Co-Investigators:**  
+- Ankita Kushwaha (24110043) — *Multimodal Feature Extraction & Scoring*  
+- Harshita Singh (24110342) — *Platform Mediation & Algorithmic Simulation*  
+- Khushi Shah (24110326) — *Game Theory, Potential Function Analysis & Social Welfare*  
+
+**Report Status:** Post-Audit Final Econometric Calibration & Verification  
+**Authoritative Artifact Directory:** `payoff_calculation/`  
+**Latest Pipeline Run Timestamp:** November 2026  
 
 ---
 
@@ -18,15 +19,38 @@
 
 This report establishes the empirical foundation for the project *"Click Appeal as a Potential Game"*. The central purpose of this econometric component is to estimate the structural payoff function of YouTube video creators directly from multimodal feature data ($N = 809$ videos across $G = 38$ distinct YouTube channels), replacing arbitrary or synthetic payoff functions with real-world empirical parameters.
 
-### Core Achievements
-1. **Full-Pipeline Execution:** Successfully implemented and audited Steps 1 through 8 of the Phase 2 Empirical Payoff Estimation architecture.
-2. **Channel-Stratified Partitioning:** Partitioned the 38 channels into 26 Training channels ($N = 541$), 6 Validation channels ($N = 136$), and 6 Held-Out Test channels ($N = 132$), preserving exact subscriber-tier distributions and preventing channel leakage.
-3. **Rigorous Cross-Validation:** Completed 26-fold Leave-One-Channel-Out Cross-Validation (LOCO-CV) strictly within the training cohort ($R^2_{\mathrm{OOS}} = 0.5565$, $\mathrm{RMSE} = 1.6031$ for Model 4-Centered).
-4. **Validation Freezing:** Evaluated candidate specifications on the 6 validation channels and formally locked **Model 4-Centered (Strategic Payoff Function)** prior to any test-set access ($R^2_{\mathrm{OOS}} = 0.3965$, $\mathrm{RMSE} = 1.6908$).
-5. **Holdout Test Evaluation:** Evaluated the locked specification on the untouched 6 test channels after refitting on the pooled 32 training+validation channels, achieving a strong out-of-sample fit ($R^2_{\mathrm{OOS}} = 0.7537$, $\mathrm{RMSE} = 1.1382$).
-6. **Full-Sample Structural Calibration:** Calibrated structural game-theoretic coefficients on all 38 channels ($N = 809$), executed $B = 2{,}000$ Null-Restricted Wild Cluster Bootstrap (WCB) tests and unrestricted bootstrap confidence intervals, and audited the contraction mapping condition ($\rho = 1.2683$).
-7. **Game Theory Handoff:** Exported complete parameter payloads, variance-covariance matrices, and exact convex cost conditions ($\kappa_{\min} > 4.40$) to Khushi Shah for potential game simulation and social optimum derivation.
-
+### Core Achievements & Key Empirical Findings
+1. **Full-Pipeline Execution:** Successfully implemented, audited, and executed all 10 stages of the empirical payoff estimation architecture with zero data leakage.
+2. **Channel-Stratified Partitioning:** Partitioned the 38 channels into 26 Training channels ($N = 541$), 6 Validation channels ($N = 136$), and 6 Held-Out Test channels ($N = 132$), preserving exact subscriber-tier distributions.
+3. **Honest Out-of-Sample Performance Assessment:**
+   - **Test Set Evaluation ($N = 132$, $G = 6$):** The baseline controls-only model (Model 0) achieves $R^2_{\mathrm{OOS}} = 0.7535$, while the full strategic model (Model 4) achieves $R^2_{\mathrm{OOS}} = 0.7537$ ($\Delta R^2_{\mathrm{OOS}} = +0.0002$). Packaging terms add only $0.02$ percentage points of predictive power out-of-sample.
+   - **26-Fold LOCO-CV on Training Cohort ($N = 541$):** Model 0 achieves $R^2_{\mathrm{OOS}} = 0.5741$, outperforming Model 4 ($R^2_{\mathrm{OOS}} = 0.5565$).
+   - **Validation Cohort ($N = 136$, $G = 6$):** Model 0 achieves $R^2_{\mathrm{OOS}} = 0.4768$ and Model 1 achieves $0.4035$, both outperforming Model 4 ($R^2_{\mathrm{OOS}} = 0.3965$).
+   - **Specification Locking Decision:** Model 4-Centered was locked **strictly by theoretical necessity**, not because it achieved the highest predictive score. It is the minimal specification that incorporates the required game-theoretic terms: quadratic own curvature ($\beta_2$), peer attention congestion ($\beta_3$), and strategic cross-packaging interaction ($\beta_5$).
+4. **Variance Decomposition & Joint Hypothesis Testing:**
+   - Creator scale (subscribers) and production controls explain $99.3\%$ of the total explained variance ($R^2_{\mathrm{controls}} = 0.6308$ vs. $R^2_{\mathrm{full}} = 0.6353$, $\Delta R^2 = 0.0045$).
+   - A joint Wald/F-test on all four packaging parameters in the full model yields $F = 0.4739$ ($p = 0.7546$), confirming that packaging variables are jointly statistically insignificant.
+5. **Analytical Uncentering of Payoff Parameters:**
+   - In accordance with the project paper (Equation 2), the uncentered structural payoff function parameters for click appeal $x \in [0, 1]$ were derived analytically:
+     $$\hat{\beta}_{1\_u} = -2.0190, \quad \hat{\beta}_{2\_u} = -8.1974, \quad \hat{\beta}_{3\_u} = -5.5424, \quad \hat{\beta}_{5\_u} = +20.7942, \quad \hat{\beta}_{0\_u} = -1.7604$$
+   - Delta-method covariance matrices $\mathbf{\Sigma}_u$ and clustered standard errors were derived and exported for downstream error propagation.
+6. **Hypothesis Tests & Identification Challenges:**
+   - None of the proposal's original hypotheses (H1–H4) are statistically supported by the data:
+     - *H1 ($\beta_1 > 0$, positive own return):* not supported ($p = 0.92$) (uncentered point estimate $\hat{\beta}_{1\_u} = -2.0190$, $\mathrm{SE} = 20.9201$).
+     - *H2 ($\beta_2 < 0$, diminishing returns):* Point estimate is concave ($\hat{\beta}_2 = -8.1974$), but statistically insignificant ($p_{\mathrm{CRSE}} = 0.3297$; Wild Cluster Bootstrap $p_{\mathrm{WCB}} = 0.2600$). Concavity is a calibrated modeling choice, not an established empirical fact.
+     - *H3 ($\beta_3 < 0$, attention congestion):* Uncentered point estimate is negative ($\hat{\beta}_{3\_u} = -5.5424$), but statistically insignificant ($p = 0.8097$).
+     - *H4 ($\beta_5 < 0$, strategic substitutes):* Point estimate is positive ($\hat{\beta}_5 = +20.7942$, suggesting strategic complements) and statistically insignificant ($p_{\mathrm{CRSE}} = 0.7318$; $p_{\mathrm{WCB}} = 0.7795$).
+   - *Weak Identification of Peer Effects:* Across the 809 videos, own click appeal exhibits substantial variation ($\mathrm{SD}(x) = 0.1037$), but peer click appeal exhibits almost zero variation ($\mathrm{SD}(\bar{x}) = 0.0074$). Averaging over $\sim 32$ competing channels within a rolling 60-day window washes out peer variance, causing high standard errors and sample sensitivity ($\hat{\beta}_2 = +1.13, \hat{\beta}_5 = -82.17$ on training vs. $\hat{\beta}_2 = -8.20, \hat{\beta}_5 = +20.79$ on full sample).
+7. **Corrected Bootstrap Inference ($B = 2{,}000$):**
+   - Corrected cluster-pairs bootstrap (without within-cluster residual demeaning) yields standard errors that match cluster-robust standard errors across all regressors ($0.95 \le \mathrm{SE}_{\mathrm{boot}} / \mathrm{SE}_{\mathrm{CRSE}} \le 1.06$).
+   - Across $2{,}000$ draws, $81.40\%$ ($1{,}628/2{,}000$) satisfy concavity ($\beta_2 < 0$).
+   - Across $2{,}000$ draws, only $18.65\%$ ($373/2{,}000$) satisfy both concavity ($\beta_2 < 0$) and the contraction mapping condition ($\rho < 1$). The claim that the empirical estimates are "100% concave" was an artifact of flawed within-cluster demeaning and has been retracted.
+8. **Output for Downstream Use (Game-Theoretic Parameters):**
+   The uncentered structural payoff function parameters (for paper Eq. 2) and centering sample means derived from the full sample ($N = 809, G = 38$) are:
+   $$b_{1\_u} = -2.0190, \quad b_{2\_u} = -8.1974, \quad b_{3\_u} = -5.5424, \quad b_{5\_u} = +20.7942$$
+   $$b_{0\_u} = -1.7604, \quad \gamma_s = 1.0417, \quad \gamma_d = 0.0454, \quad \gamma_a = 0.0003$$
+   $$\mu_x = 0.392395, \quad \mu_{\bar{x}} = 0.391390$$
+   with delta-method covariance matrix $\mathbf{\Sigma}_u$ exported for downstream error propagation. Factually, $b_{5\_u} > 2|b_{2\_u}|$ and $b_{2\_u} + b_{5\_u} > 0$ at the point estimates, and only $18.65\%$ of bootstrap draws satisfy $|b_5| < 2|b_2|$. 
 ---
 
 ## 2. Step 3 Audit Reconciliation & Methodological Clarifications
@@ -34,7 +58,7 @@ This report establishes the empirical foundation for the project *"Click Appeal 
 Before finalizing Phase 2, two outstanding verification items from the Step 3 audit were resolved:
 
 ### 2.1 Resolution of Specification C Interaction $p$-Value Discrepancy
-In the Step 3 exploratory audit, an apparent discrepancy was noted between a reported interaction $p$-value of $0.3868$ and $0.3948$ (or $0.3950$). The exact mathematical origin has been verified:
+In the Step 3 exploratory audit, an apparent discrepancy was noted between a reported interaction $p$-value of $0.3868$ and $0.3950$. The exact mathematical origin has been verified:
 
 For Specification C (Channel Fixed Effects, within-channel estimation):
 - Point estimate: $\hat{\beta}_5 = -30.070106$
@@ -50,10 +74,10 @@ The two values reflect different reference distributions:
    $$p_t = 2 \times (1 - F_{t(25)}(|-0.865500|)) = 2 \times (1 - 0.802503) = \mathbf{0.394994} \approx 0.3950$$
    This is the small-sample adjusted $p$-value recommended by Cameron and Miller (2015) for moderate cluster counts ($G = 26$).
 
-**Conclusion:** Both calculations are mathematically correct and lead to the identical substantive conclusion: the strategic interaction term under within-channel fixed effects is statistically indistinguishable from zero ($p \approx 0.39$).
+**Conclusion:** Both calculations are mathematically consistent and lead to the identical substantive conclusion: the strategic interaction term under within-channel fixed effects is statistically indistinguishable from zero ($p \approx 0.39$).
 
 ### 2.2 Backward-Looking Peer Window $[t - 60\text{d}, t)$ Robustness Analysis
-We investigated whether defining competitor packaging contemporaneously ($[t - 30\text{d}, t + 30\text{d}]$) versus retrospectively ($[t - 60\text{d}, t)$) alters the empirical estimates:
+We investigated whether defining competitor packaging contemporaneously ($[t - 30\text{d}, t + 30\text{d}]$) versus retrospectively ($[t - 60\text{d}, t)$) alters the empirical estimates. This robustness check was fully implemented in `scripts/09_backward_looking_robustness.py` and exported to `results/backward_looking_peer_robustness.csv`:
 
 ```
 +--------------------------------+--------------------------------+------------+------------+------------+------------+--------+
@@ -67,16 +91,16 @@ We investigated whether defining competitor packaging contemporaneously ($[t - 3
 ```
 
 **Key Findings:**
-1. Across both samples, the qualitative curvature and interaction signs are preserved. In the full sample, $\beta_2$ is strictly negative under both specifications ($-8.1974$ vs. $-8.2613$), and $\beta_5$ remains statistically insignificant ($p = 0.73$ vs. $p = 0.56$).
-2. Creator scale elasticity ($\gamma_s$) remains remarkably stable at $1.0417$ (contemporaneous) vs. $1.0423$ (backward-looking), with $p < 0.0001$.
-3. The contemporaneous window $[t - 30\text{d}, t + 30\text{d}]$ is retained as the primary specification because YouTube's recommendation algorithm evaluates viewer impressions against competing videos actively circulating within the same 60-day window, regardless of whether a competing video was uploaded 15 days before or 15 days after the focal video.
+1. In the full sample, $\beta_2$ remains strictly negative under both specifications ($-8.1974$ vs. $-8.2613$), and $\beta_5$ remains statistically insignificant ($p = 0.73$ vs. $p = 0.56$).
+2. Creator scale elasticity ($\gamma_s$) remains stable at $1.0417$ (contemporaneous) vs. $1.0423$ (backward-looking), with $p < 0.0001$.
+3. The contemporaneous window $[t - 30\text{d}, t + 30\text{d}]$ is retained as the primary specification because YouTube's recommendation algorithm evaluates viewer impressions against competing videos actively circulating within the same 60-day window.
 
-### 2.3 Strict Concavity vs. Interior Optimality
-We correct the theoretical distinction between concavity and interior optimality:
-- **Strict Concavity** of the revenue function ($\beta_2 < 0$) guarantees that any critical point is a global maximum on $\mathbb{R}$ and that a unique maximizer exists on any compact interval $[x_{\min}, x_{\max}]$.
-- **Interior Optimality** ($x^* \in (0, 1)$) additionally requires that the marginal payoff changes sign within the feasible strategy space $[0, 1]$:
+### 2.3 Strict Concavity vs. Interior Optimality & Cost Function Role
+We clarify the exact theoretical distinction between concavity and interior optimality:
+- **Strict Concavity** of the revenue function ($\beta_2 < 0$) guarantees that any unconstrained critical point is a unique global maximum on $\mathbb{R}$.
+- **Interior Optimality** ($x^* \in (0, 1)$) requires that marginal net payoff crosses zero strictly within $(0, 1)$:
   $$\left. \frac{\partial \Pi_i}{\partial x_i} \right|_{x_i = 0} > 0 \quad \text{and} \quad \left. \frac{\partial \Pi_i}{\partial x_i} \right|_{x_i = 1} < 0$$
-  Under linear cost $C(x) = cx$, if $\beta_1^* - c + \beta_5^* \tilde{\bar{x}} > 0$ and $2|\beta_2|$ is small, the optimal click appeal may hit the upper boundary $x^* = 1.0$. Incorporating convex costs $C(x) = cx + \frac{\kappa}{2} x^2$ with $\kappa > 0$ steepens marginal costs and guarantees an interior solution $x^* \in (0, 1)$ for realistic creator production budgets.
+- **Role of Linear Costs ($C(x) = cx$):** Linear cost shifts the intercept and gradient of the marginal payoff curve downwards by $c$, but does NOT alter the second derivative ($\frac{\partial^2 \Pi_i}{\partial x_i^2} = 2 \beta_2$). Linear costs cannot alter the contraction ratio $\rho = \frac{|\beta_5|}{2|\beta_2|}$ and **cannot restore a contraction mapping**.
 
 ---
 
@@ -88,6 +112,10 @@ The data pipeline merges multimodal packaging metrics from `video_scores.csv` wi
 - **Dependent Variable:** Video view counts range from $\min = 898$ to $\max = 215{,}604{,}900$ (median $= 1{,}342{,}322$). Zero non-positive views; $\ln(V_{it})$ is smooth, approximately Gaussian, and requires zero clipping.
 - **Creator Scale:** Channel subscriber counts range from $118{,}000$ to $150{,}000{,}000$. Standardized to channel-level median to eliminate minor temporal snapshot drift.
 - **Video Duration:** Corrected data dictionary range: $\min = 181$ seconds (3.0 minutes) to $\max = 59{,}251$ seconds (16.46 hours, Ludwig charity livestream).
+
+> [!NOTE]
+> **Data vs. Proposal Scope Clarification:**  
+> The empirical dataset covers 38 channels from **global English-language digital entertainment** (Gaming, Comedy, General Entertainment, Food/Tech Lifestyle) rather than the Indian tech-review niche originally proposed. The analyzed sample comprises 809 videos across creators spanning from $118\text{K}$ to $150\text{M}$ subscribers, capturing real-world cross-channel competition across global attention categories.
 
 ### 3.2 Channel-Level Stratified Partition Map
 To prevent data leakage caused by repeated observations from the same creator, partitioning was executed strictly at the **channel level** ($seed = 42$) across three subscriber tiers:
@@ -161,11 +189,9 @@ $$\% \Delta V = 100 \times \left( \exp(\beta \cdot \Delta X) - 1 \right)$$
    $$\% \Delta V = 100 \times (\exp(1.6357 \times 0.10) - 1) = +17.77\%$$
    *Statistical Caveat:* Because $\mathrm{SE} = 1.5738$ ($p = 0.30$), this estimate carries substantial sampling variance and is not statistically established at $\alpha = 0.05$.
 2. **Peer Attention Congestion ($\hat{\beta}_3^* = -5.6031$, $p = 0.4771$):**
-   A $+0.10$ increase in competitor average packaging predicts an estimated view change of:
-   $$\% \Delta V = 100 \times (\exp(-5.6031 \times 0.10) - 1) = -42.89\%$$
-   *Statistical Caveat:* Insignificant at $\alpha = 0.05$ ($\mathrm{SE} = 7.8808$, $p = 0.48$).
+   Peer appeal exhibits very small cross-channel variation ($\mathrm{SD}(\bar{x}) \approx 0.0074$); a $+0.10$ hypothetical shift would represent approximately $13.5$ standard deviations of the peer variable and is not an empirically supported counterfactual. At the point estimate $\hat{\beta}_3^* = -5.6031$, the coefficient is statistically indistinguishable from zero ($\mathrm{SE} = 7.8808, p = 0.48$). Because of the interaction term $\beta_5 x \bar{x}$, peer congestion cannot be evaluated from $\beta_3$ alone, but must be assessed via the state-dependent marginal effect $E(x) = \beta_3 + \beta_5 x$.
 3. **Strategic Interaction ($\hat{\beta}_5^* = -82.1695$, $p = 0.1792$):**
-   Suggests negative interaction (strategic substitutability), but carries a large standard error ($\mathrm{SE} = 61.1742$).
+   Suggests negative interaction (strategic substitutability) on the training cohort, but carries a large standard error ($\mathrm{SE} = 61.1742$).
 4. **Creator Scale Elasticity ($\hat{\gamma}_s = +1.0238$, $p < 0.0001$):**
    A $1\%$ increase in subscriber count is associated with a $+1.02\%$ increase in views. Creator scale is the single dominant predictive driver ($t = 8.22$).
 
@@ -181,26 +207,22 @@ Mean-centering completely eliminates artificial collinearity ($VIF < 1.20$ for a
 ## 5. Model Evaluation: 26-Fold LOCO-CV & Validation Freezing (Steps 4 & 5)
 
 ### 5.1 Step 4: 26-Fold LOCO-CV on Training Cohort ($N = 541$)
-To evaluate out-of-sample predictive power without data leakage, we executed 26-fold Leave-One-Channel-Out Cross-Validation strictly within the training cohort. In each fold $k \in \{1, \dots, 26\}$:
-- Channel $k$ is held out completely.
-- Peer averages for the remaining 25 channels are computed strictly within those 25 channels.
-- Centering means $\mu_x^{(k)}, \mu_{\bar{x}}^{(k)}$ and baseline mean $\bar{y}^{(k)}$ are computed strictly from the 25 training channels.
-- Total out-of-sample sum of squares: $\mathrm{SST}_{\mathrm{OOS}} = \sum_{k=1}^{26} \sum_{i \in \mathrm{fold}_k} (y_i - \bar{y}^{(k)})^2 = 3{,}135.25$.
+To evaluate out-of-sample predictive power without data leakage, we executed 26-fold Leave-One-Channel-Out Cross-Validation strictly within the training cohort. Total out-of-sample sum of squares: $\mathrm{SST}_{\mathrm{OOS}} = 3{,}135.25$.
 
 ```
 +--------------------------+-------------+-------------+------------+------------+------------+
 | Candidate Model          |   SSE_OOS   |   SST_OOS   |   R²_OOS   |  RMSE_OOS  |  MAE_OOS   |
 +--------------------------+-------------+-------------+------------+------------+------------+
-| Model 0 (Controls Base)  |   1335.25   |   3135.25   |   0.5741   |   1.5710   |   1.2963   |
-| Model 1 (Linear Appeal)  |   1345.54   |   3135.25   |   0.5708   |   1.5771   |   1.3056   |
-| Model 2 (Quadratic)      |   1379.46   |   3135.25   |   0.5600   |   1.5969   |   1.3215   |
-| Model 3 (Peer Congestion)|   1382.88   |   3135.25   |   0.5589   |   1.5988   |   1.3225   |
-| Model 4 (Interaction)    |   1390.41   |   3135.25   |   0.5565   |   1.6031   |   1.3280   |
-| Model 5 (Full Tags)      |   1429.62   |   3135.25   |   0.5440   |   1.6257   |   1.3401   |
+| Model 0 (Controls Base)  |   1335.20   |   3135.25   |   0.5741   |   1.5710   |   1.2963   |
+| Model 1 (Linear Appeal)  |   1345.52   |   3135.25   |   0.5708   |   1.5771   |   1.3056   |
+| Model 2 (Quadratic)      |   1379.62   |   3135.25   |   0.5600   |   1.5969   |   1.3215   |
+| Model 3 (Peer Congestion)|   1382.87   |   3135.25   |   0.5589   |   1.5988   |   1.3225   |
+| Model 4 (Interaction)    |   1390.40   |   3135.25   |   0.5565   |   1.6031   |   1.3280   |
+| Model 5 (Full Tags)      |   1429.81   |   3135.25   |   0.5440   |   1.6257   |   1.3401   |
 +--------------------------+-------------+-------------+------------+------------+------------+
 ```
 
-*Key Insight:* In pure out-of-sample prediction, Model 0 achieves $R^2_{\mathrm{OOS}} = 0.5741$. Adding packaging terms incurs a slight shrinkage penalty ($R^2_{\mathrm{OOS}} = 0.5565$), common in econometric specifications where packaging effects are localized relative to massive creator scale differentials.
+**Key Finding:** Out-of-sample predictive accuracy is highest in **Model 0** ($R^2_{\mathrm{OOS}} = 0.5741$). Adding packaging terms systematically reduces generalization accuracy ($R^2_{\mathrm{OOS}}$ drops to $0.5565$ in Model 4). This confirms that packaging variables carry negligible out-of-sample signal compared to channel scale.
 
 ### 5.2 Step 5: Validation Evaluation & Specification Freezing (6 Channels, $N = 136$)
 We evaluated candidate models on the 6 validation channels (Max Fosh, Michelle Khare, Nick DiGiovanni, Randy Santel, Sorted Food, Wake'N'Bite). Centering means and peer pools were drawn strictly from the 26 training channels:
@@ -221,15 +243,14 @@ $$\mathrm{SST}_{\mathrm{Val}} = \sum_{j \in \mathrm{Val}} (y_j - \bar{y}_{\mathr
 ```
 
 #### Specification Locking Decision: Model 4-Centered
-We formally lock **Model 4-Centered** as the final specification for the potential game payoff function:
-1. **Theoretical Necessity:** Model 4 contains the quadratic curvature $\beta_2$ and strategic interaction $\beta_5$ required to formalize diminishing returns and evaluate the contraction mapping condition ($\rho < 1$). Models 0–1 lack these structural terms.
-2. **Empirical Performance:** On the validation cohort, Model 4 achieves $R^2_{\mathrm{OOS}} = 0.3965$ (improving over Model 2 and Model 3).
-3. **Parsimony:** Model 5 (tags) adds noise without structural game-theoretic necessity.
-4. **Specification Lock:** Model exploration is terminated; Model 4-Centered is frozen.
+We formally locked **Model 4-Centered** prior to testing. Crucially, this choice was dictated by **theoretical necessity**, not predictive dominance:
+1. **Theoretical Necessity:** Model 4 contains the quadratic curvature $\beta_2$ and strategic interaction $\beta_5$ required to formalize diminishing returns and evaluate the contraction mapping condition ($\rho < 1$). Models 0–1 lack these structural terms and cannot be used for game-theoretic analysis.
+2. **Predictive Context:** Model 0 outperforms all other models out-of-sample ($R^2_{\mathrm{OOS}} = 0.4768$ vs. $0.3965$). However, locking Model 0 would defeat the entire purpose of the potential game project. Among models containing peer packaging terms (M2–M4), Model 4 achieves the lowest validation error ($R^2_{\mathrm{OOS}} = 0.3965$ vs. $0.3836$ in M2 and $0.3881$ in M3).
+3. **Specification Lock:** Model exploration was terminated; Model 4-Centered was frozen.
 
 ---
 
-## 6. Final Holdout Evaluation on Untouched Test Set (Step 6)
+## 6. Internal Holdout Evaluation on Test Channels (Step 6)
 
 ### 6.1 Methodological Disclosure of Exploratory History
 In adherence to scientific integrity, we explicitly disclose that all 809 observations were initially examined during early exploratory Phase 1 feasibility analyses before the channel-stratified train/validation/test protocol was finalized. Consequently, this Step 6 evaluation represents an **internal holdout validation** of the frozen Model 4-Centered specification rather than a pure pre-registered ex-ante clinical trial.
@@ -252,6 +273,8 @@ The locked Model 4-Centered specification was refitted on the combined **Trainin
 +--------------------------+-------------+-------------+-------------+-----------+-----------+
 ```
 
+**Discussion:** While Model 4 yields $R^2_{\mathrm{OOS}} = 0.7537$, Model 0 (controls alone) yields $R^2_{\mathrm{OOS}} = 0.7535$. The incremental out-of-sample predictive contribution of the entire set of packaging variables ($x, x^2, \bar{x}, x \cdot \bar{x}$) is a negligible $\Delta R^2_{\mathrm{OOS}} = +0.0002$ ($0.02$ percentage points). The apparent high test $R^2$ is almost entirely driven by the creator scale control ($\ln(s_i)$).
+
 ### 6.3 Test Channel Error Dispersion
 Channel-by-channel performance of the locked specification across the 6 held-out test channels:
 
@@ -268,215 +291,244 @@ Channel-by-channel performance of the locked specification across the 6 held-out
 +------------------+---------------------+---------------+---------+----------+----------+----------+
 ```
 
-**Discussion:** The locked Model 4 achieves a strong out-of-sample $R^2_{\mathrm{OOS}} = 0.7537$ on the test cohort. Across all tiers, MAE remains bounded between $0.53$ and $1.08$ log-views, confirming that the locked specification generalizes well to unseen creators without overfitting.
+Across all tiers, MAE remains bounded between $0.53$ and $1.08$ log-views, confirming that the model makes stable predictions across subscriber scales.
 
 ---
 
 ## 7. Post-Test Full-Sample Structural Calibration & Inference (Step 7)
 
-Following the completion of holdout evaluation, Model 4-Centered was estimated on the full dataset ($N = 809$, $G = 38$) for structural parameter calibration and game-theoretic integration.
+Following holdout test evaluation, Model 4-Centered was estimated on all 38 channels ($N = 809$) to calibrate structural parameters for game-theoretic analysis.
 
-### 7.1 Full-Sample Structural Estimates ($N = 809, G = 38$)
-Centering means: $\mu_x = 0.392395, \mu_{\bar{x}} = 0.391390$.
+### 7.1 Full-Sample Estimates ($N = 809, G = 38$)
+Sample means: $\mu_x = 0.392395, \mu_{\bar{x}} = 0.391390$.
 
-$$\ln(V_{it}) = \beta_0^* + \beta_1^* \tilde{x}_{it} + \beta_2^* \tilde{x}_{it}^2 + \beta_3^* \tilde{\bar{x}}_{-i,t} + \beta_5^* (\tilde{x}_{it} \cdot \tilde{\bar{x}}_{-i,t}) + \gamma_s \ln(s_i) + \gamma_d \ln(\text{dur}_{it}) + \gamma_a \text{age}_{it} + \varepsilon_{it}$$
+$$\ln(V_{it}) = \beta_0^* + \beta_1^* (x_{it} - \mu_x) + \beta_2^* (x_{it} - \mu_x)^2 + \beta_3^* (\bar{x}_{-i,t} - \mu_{\bar{x}}) + \beta_5^* (x_{it} - \mu_x)(\bar{x}_{-i,t} - \mu_{\bar{x}}) + \gamma_s \ln(s_i) + \gamma_d \ln(\text{dur}_{it}) + \gamma_a \text{age}_{it} + \varepsilon_{it}$$
 
 ```
 +--------------------+------------+------------+-----------+-----------+---------------------+
 | Regressor          | Coeff (b)  | CRSE (SE)  |  t-stat   | p (df=37) | 95% Conf. Interval  |
 +--------------------+------------+------------+-----------+-----------+---------------------+
-| Intercept (b0*)    |   -2.7904  |   2.4168   |  -1.155   |  0.2557   | [ -7.687,  +2.106]  |
-| Own Appeal (b1*)   |   -0.3135  |   1.9191   |  -0.163   |  0.8711   | [ -4.202,  +3.575]  |
-| Curvature (b2*)    |   -8.1974  |   8.2994   |  -0.988   |  0.3297   | [-25.014,  +8.619]  |
-| Peer Congest (b3*) |   +2.6172  |   6.0386   |  +0.433   |  0.6672   | [ -9.618, +14.853]  |
-| Interaction (b5*)  |  +20.7942  |  60.2260   |  +0.345   |  0.7318   | [-101.23, +142.82]  |
+| Intercept (b0_c)   |   -2.7904  |   2.4168   |  -1.155   |  0.2557   | [ -7.687,  +2.106]  |
+| Own Appeal (b1_c)  |   -0.3135  |   1.9191   |  -0.163   |  0.8711   | [ -4.202,  +3.575]  |
+| Curvature (b2_c)   |   -8.1974  |   8.2994   |  -0.988   |  0.3297   | [-25.014,  +8.619]  |
+| Peer Congest (b3_c)|   +2.6172  |   6.0386   |  +0.433   |  0.6672   | [ -9.618, +14.853]  |
+| Interaction (b5_c) |  +20.7942  |  60.2260   |  +0.345   |  0.7318   | [-101.23, +142.82]  |
 | Log Subs (gamma_s) |   +1.0417  |   0.1147   |  +9.079   |  0.0000   | [ +0.809,  +1.274]  |
 | Log Dur (gamma_d)  |   +0.0454  |   0.2534   |  +0.179   |  0.8588   | [ -0.468,  +0.559]  |
 | Age Days (gamma_a) |   +0.0003  |   0.0003   |  +1.013   |  0.3178   | [ -0.000,  +0.001]  |
 +--------------------+------------+------------+-----------+-----------+---------------------+
 ```
 
-*Model Diagnostics:* $R^2 = 0.6353$, $\mathrm{AIC} = 2838.0$, $\mathrm{BIC} = 2875.6$. All centered VIFs $< 1.22$.
+### 7.2 Analytical Uncentering of Payoff Parameters (Paper Eq. 2)
+The paper's structural game-theoretic payoff (Equation 2) is formulated for uncentered click appeal $x, \bar{x} \in [0, 1]$:
+$$\pi_i(x_i, \bar{x}) = b_{0\_u} + b_{1\_u} x_i + b_{2\_u} x_i^2 + b_{3\_u} \bar{x} + b_{5\_u} x_i \bar{x} + \gamma_s \ln(s_i) + \gamma_d \ln(\text{dur}) + \gamma_a \text{age}$$
 
-### 7.2 Null-Restricted Wild Cluster Bootstrap (WCB) Hypothesis Tests ($B = 2{,}000$)
-Using Rademacher cluster weights ($\pm 1$) and the global finite-sample residual scaling factor:
-$$c = \sqrt{\frac{G}{G - 1} \cdot \frac{N - 1}{N - K}} = \sqrt{\frac{38}{37} \cdot \frac{808}{801}} = 1.017842$$
+Expanding the centered regression equation reveals the exact analytical uncentering identities:
+$$\begin{aligned}
+b_{1\_u} &= b_{1c} - 2 b_2 \mu_x - b_5 \mu_{\bar{x}} = -0.3135 - 2(-8.1974)(0.392395) - 20.7942(0.391390) = \mathbf{-2.0190} \\
+b_{3\_u} &= b_{3c} - b_5 \mu_x = +2.6172 - 20.7942(0.392395) = \mathbf{-5.5424} \\
+b_{2\_u} &= b_2 = \mathbf{-8.1974} \\
+b_{5\_u} &= b_5 = \mathbf{+20.7942} \\
+b_{0\_u} &= b_{0c} - b_{1c}\mu_x + b_2 \mu_x^2 - b_{3c}\mu_{\bar{x}} + b_5 \mu_x \mu_{\bar{x}} = \mathbf{-1.7604}
+\end{aligned}$$
 
-1. **Test A: Diminishing Returns / Strict Concavity**
-   - $H_0: \beta_2 \ge 0$ (weakly convex / no diminishing returns) vs. $H_1: \beta_2 < 0$ (strictly concave).
-   - Sample $t$-statistic: $t = -0.9877$.
-   - **WCB One-Sided $p$-Value:** $p_{\mathrm{WCB}} = \mathbf{0.2480}$.
-   - **Conclusion:** $H_0$ is retained at $\alpha = 0.05$. Although the point estimate is negative ($\hat{\beta}_2^* = -8.1974$), strict revenue concavity is **not statistically established**.
-2. **Test B: Strategic Interaction**
-   - $H_0: \beta_5 = 0$ (no strategic interaction) vs. $H_1: \beta_5 \neq 0$.
-   - Sample $t$-statistic: $t = +0.3453$.
-   - **WCB Two-Sided $p$-Value:** $p_{\mathrm{WCB}} = \mathbf{0.7835}$.
-   - **Conclusion:** $H_0$ is retained at $\alpha = 0.05$. Packaging strategic interdependence cannot be statistically distinguished from zero in observational data once creator scale is controlled.
-
-### 7.3 Unrestricted Bootstrap: Confidence Intervals & Contraction Ratio $\rho$ ($B = 2{,}000$)
-Parameter draws from $B = 2{,}000$ cluster-centered unrestricted bootstrap replications:
+Prediction equivalence between centered and uncentered models is verified to machine precision ($\max |\hat{y}_c - \hat{y}_u| = 5.33 \times 10^{-15} < 10^{-8}$).
 
 ```
-+--------------------+------------+------------+----------------------+
-| Regressor          | Point Est. |  Boot SE   | 95% Percentile CI    |
-+--------------------+------------+------------+----------------------+
-| Intercept (b0*)    |   -2.7904  |   0.3302   | [  -3.410,   -2.172] |
-| Own Appeal (b1*)   |   -0.3135  |   0.3852   | [  -1.028,   +0.433] |
-| Curvature (b2*)    |   -8.1974  |   2.6536   | [ -13.120,   -3.193] |
-| Peer Congest (b3*) |   +2.6172  |   3.0564   | [  -3.278,   +8.533] |
-| Interaction (b5*)  |  +20.7942  |  31.8162   | [ -40.686,  +82.960] |
-| Log Subs (gamma_s) |   +1.0417  |   0.0097   | [  +1.023,   +1.061] |
-| Log Dur (gamma_d)  |   +0.0454  |   0.0531   | [  -0.056,   +0.146] |
-| Age Days (gamma_a) |   +0.0003  |   0.0002   | [  -0.000,   +0.001] |
-+--------------------+------------+------------+----------------------+
++--------------------+------------+------------+-----------+-----------+---------------------+
+| Regressor          | Coeff (b)  | Delta SE   |  t-stat   | p (df=37) | 95% Conf. Interval  |
++--------------------+------------+------------+-----------+-----------+---------------------+
+| Intercept (b0_u)   |   -1.7604  |     —    |     —   |     —   |          —         |
+| Own Appeal (b1_u)  |   -2.0190  |  20.9201   |  -0.097   |  0.9236   | [ -44.407, +40.369] |
+| Curvature (b2_u)   |   -8.1974  |   8.2994   |  -0.988   |  0.3297   | [ -25.014,  +8.619] |
+| Peer Congest (b3_u)|   -5.5424  |  22.8522   |  -0.243   |  0.8097   | [ -51.845, +40.760] |
+| Interaction (b5_u) |  +20.7942  |  60.2260   |  +0.345   |  0.7318   | [-101.235,+142.824] |
++--------------------+------------+------------+-----------+-----------+---------------------+
 ```
 
-#### Contraction Ratio Evaluation
-The contraction condition for continuous games on compact strategy sets is:
-$$\rho = \frac{|\beta_5|}{2 |\beta_2|} < 1$$
+### 7.3 Variance Decomposition & Weak Identification Diagnostics
+1. **Variance Decomposition:**
+   - Controls-only model: $R^2 = 0.6308$.
+   - Full strategic model: $R^2 = 0.6353$.
+   - Incremental $R^2$ from packaging: $\Delta R^2 = 0.0045$ ($0.45$ percentage points). Controls explain $99.3\%$ of the predictable variance in view counts.
+2. **Joint Hypothesis Test on Packaging:**
+   - $H_0: \beta_1 = \beta_2 = \beta_3 = \beta_5 = 0$.
+   - $F(4, 37) = 0.4739$, $p = \mathbf{0.7546}$. The hypothesis that video packaging terms exert zero joint influence on views cannot be rejected.
+3. **Severe Attenuation of Peer Variation:**
+   - Standard deviation of own click appeal: $\mathrm{SD}(x) = 0.1037$.
+   - Standard deviation of peer click appeal: $\mathrm{SD}(\bar{x}) = 0.0074$ (14 times smaller).
+   - Because each video's peer average is calculated across $\sim 32$ competing channels, idiosyncratic packaging variations wash out, creating weak empirical identification for peer congestion ($\beta_3$) and interaction ($\beta_5$).
+4. **Instability Across Partitions:**
+   - In the training cohort ($N = 541, G = 26$): $\hat{\beta}_2 = +1.1345, \hat{\beta}_5 = -82.1695$ (apparent convexity and strategic substitutability).
+   - In the full sample ($N = 809, G = 38$): $\hat{\beta}_2 = -8.1974, \hat{\beta}_5 = +20.7942$ (concavity and strategic complementarity).
+   - This sign instability illustrates the large sampling variance documented by the standard errors ($\mathrm{SE}(\beta_5) = 60.23$).
 
-In accordance with our zero-discarding protocol, all $2{,}000$ draws were retained:
-- **Point Estimate Contraction Ratio:** $\rho = \frac{|20.7942|}{2 \times |-8.1974|} = \mathbf{1.2683}$ ($\rho > 1$).
-- **Concave Draws ($\beta_2 < 0$):** $2{,}000 / 2{,}000$ ($100.0\%$).
-- **Contraction Mapping Satisfaction ($P(\rho < 1)$):** $\mathbf{32.40\%}$.
-- **Contraction Ratio Quantiles (among concave draws):**
-  - $p_{10} = 0.2982$
-  - $p_{25} = 0.7611$
-  - $p_{50} (\text{Median}) = 1.6434$
-  - $p_{75} = 2.8524$
-  - $p_{90} = 4.4912$
+### 7.4 Corrected Bootstrap Inference ($B = 2{,}000$ Cluster Pairs)
+Using a cluster-pairs bootstrap ($B = 2{,}000$ draws, resampling complete channel clusters with replacement, seed 42) without artificial within-cluster demeaning, bootstrap standard errors match CRSE within $6\%$ across all regressors:
+
+```
++--------------------+------------+------------+------------+-------------+----------------------+
+| Parameter          | Point Est. |  Boot SE   |  CRSE SE   | Ratio B/C   | 95% Percentile CI    |
++--------------------+------------+------------+------------+-------------+----------------------+
+| Intercept (b0_c)   |   -2.7904  |   2.4993   |   2.4168   |    1.034    | [ -7.735,   +1.986]  |
+| Own Appeal (b1_c)  |   -0.3135  |   1.8144   |   1.9191   |    0.945    | [ -3.716,   +3.243]  |
+| Curvature (b2_c)   |   -8.1974  |   8.0165   |   8.2994   |    0.966    | [-23.303,   +6.516]  |
+| Peer Congest (b3_c)|   +2.6172  |   6.1283   |   6.0386   |    1.015    | [-10.147,  +13.357]  |
+| Interaction (b5_c) |  +20.7942  |  59.7562   |  60.2260   |    0.992    | [-115.043, +118.044] |
+| Log Subs (gamma_s) |   +1.0417  |   0.1220   |   0.1147   |    1.064    | [ +0.789,   +1.279]  |
+| Own Uncentered b1_u|   -2.0190  |  21.2315   |  20.9201   |    1.015    | [-36.847,  +46.533]  |
+| Peer Uncentered b3_u|  -5.5424  |  22.5215   |  22.8522   |    0.986    | [-43.503,  +45.488]  |
++--------------------+------------+------------+------------+-------------+----------------------+
+```
+
+**Bootstrap Hypothesis Distribution:**
+- **Concavity ($b_2 < 0$):** $81.40\%$ of draws ($1{,}628 / 2{,}000$) are strictly concave. The earlier report claim of "100% concave" has been corrected.
+- **Both Concave and Contraction Satisfied ($b_2 < 0$ and $\rho < 1$):** Exactly $18.65\%$ of draws ($373 / 2{,}000$).
+- **Contraction Ratio ($\rho = |b_5| / (2|b_2|)$ among concave draws):**
+  - Point estimate: $\rho = 1.2683$
+  - 95% Percentile Confidence Interval: $[0.1140, 35.7036]$
+  - Quantiles: $p_{10} = 0.4200, p_{25} = 1.1053, p_{50} = 2.1528, p_{75} = 4.0546, p_{90} = 9.4619$.
 
 ---
 
-## 8. Game-Theoretic Formulation & Potential Game Handoff
+### 7.5 State-Dependent Peer Congestion Function $E(x) = b_{3\_u} + b_{5\_u} x$
+Because of the strategic interaction term $b_5 x \bar{x}$, peer attention congestion cannot be evaluated on $b_3$ alone; it is state-dependent and must be evaluated through the marginal effect $E(x) = \frac{\partial \ln(V)}{\partial \bar{x}} = b_{3\_u} + b_{5\_u} x$. At the sample mean $x = \mu_x = 0.3924$, $E(\mu_x) = b_{3c} = +2.6172$ ($\mathrm{SE}_{\Delta} = 6.0386, p = 0.6672$), whereas at zero own appeal $x = 0$, $E(0) = b_{3\_u} = -5.5424$ ($\mathrm{SE}_{\Delta} = 22.8522, p = 0.8097$). Evaluated across the entire observed data support $x \in [0.0054, 0.6843]$, both the delta-method 95% confidence intervals and cluster-pairs bootstrap 95% percentile intervals cover zero everywhere, with $31.25\%$ of bootstrap draws negative at the mean ($52.90\%$ at $x = 0$). Consequently, the empirical data support neither positive spillovers nor negative congestion at any conventional significance level.
 
-*This section provides the formal handoff payload for Khushi Shah (Roll: 24110326).*
+---
 
-### 8.1 Game Classification & Exact Potential Function
-Under Model 4-Centered, the strategic interaction between creator $i$ and competitors $-i$ is symmetric because the peer effect enters through the unweighted aggregate $\bar{x}_{-i} = \frac{1}{N - 1} \sum_{j \neq i} x_j$.
+## 8. Output for Downstream Use (Game-Theoretic Parameters)
 
-The system forms a **Continuous Aggregative Potential Game**. The exact potential function $\Phi(x_1, \dots, x_N)$ whose gradient matches each creator's marginal payoff is:
+This section provides the calibrated empirical structural parameters and covariance structure for downstream continuous Aggregative Exact Potential Game modeling.
 
-$$\Phi(x_1, \dots, x_N) = \sum_{i=1}^N \left( \beta_1^* (x_i - \mu_x) + \beta_2^* (x_i - \mu_x)^2 \right) + \frac{\beta_5^*}{2 (N - 1)} \sum_{i=1}^N \sum_{j \neq i} (x_i - \mu_x)(x_j - \mu_{\bar{x}}) - \sum_{i=1}^N C_i(x_i)$$
+### 8.1 Primary Structural Parameters (Paper Eq. 2)
+The uncentered empirical payoff function parameters corresponding to paper Equation (2) are:
+$$\pi_i(x_i, \bar{x}_{-i}) = b_{0\_u} + b_{1\_u} x_i + b_{2\_u} x_i^2 + b_{3\_u} \bar{x}_{-i} + b_{5\_u} x_i \bar{x}_{-i} + \gamma_s \ln(s_i) + \gamma_d \ln(\text{dur}_{it}) + \gamma_a \text{age}_{it}$$
 
-Differentiating $\Phi$ with respect to $x_i$:
-$$\frac{\partial \Phi}{\partial x_i} = \beta_1^* + 2 \beta_2^* (x_i - \mu_x) + \beta_5^* (\bar{x}_{-i} - \mu_{\bar{x}}) - C_i'(x_i) = \frac{\partial \Pi_i}{\partial x_i}$$
-This satisfies Monderer and Shapley's (1996) condition for an **exact potential game**.
+- **Uncentered Point Estimates:**
+  $$b_{1\_u} = -2.0190, \quad b_{2\_u} = -8.1974, \quad b_{3\_u} = -5.5424, \quad b_{5\_u} = +20.7942$$
+  $$b_{0\_u} = -1.7604, \quad \gamma_s = 1.0417, \quad \gamma_d = 0.0454, \quad \gamma_a = 0.0003$$
+- **Centering Sample Means:**
+  $$\mu_x = 0.392395, \quad \mu_{\bar{x}} = 0.391390$$
+- **Delta-Method Standard Errors & Student-$t$ $p$-values ($df = 37$):**
+  - $\mathrm{SE}(b_{1\_u}) = 20.9201 \implies t = -0.0965, p = 0.9236$
+  - $\mathrm{SE}(b_{2\_u}) = 8.2994 \implies t = -0.9877, p = 0.3297$
+  - $\mathrm{SE}(b_{3\_u}) = 22.8522 \implies t = -0.2425, p = 0.8097$
+  - $\mathrm{SE}(b_{5\_u}) = 60.2260 \implies t = +0.3453, p = 0.7318$
+- **Centered Estimation Coefficients (Model 4-Centered):**
+  $$b_{1c} = -0.3135 \; (\mathrm{SE} = 1.9191), \quad b_{2c} = -8.1974 \; (\mathrm{SE} = 8.2994)$$
+  $$b_{3c} = +2.6172 \; (\mathrm{SE} = 6.0386), \quad b_{5c} = +20.7942 \; (\mathrm{SE} = 60.2260)$$
 
-### 8.2 Production Cost Structure & Contraction Guarantee
-Because the empirical point estimate yields $\rho = 1.2683 > 1$, relying solely on empirical revenue curvature does not guarantee a contraction mapping. We prescribe a quadratic production cost structure:
+### 8.2 Empirical Covariance Matrix for Downstream Error Propagation
+The analytical delta-method covariance matrix $\mathbf{\Sigma}_u = \mathbf{J} \mathbf{\Sigma}_c \mathbf{J}^T$ for the vector $(b_{1\_u}, b_{2\_u}, b_{3\_u}, b_{5\_u})$ is:
 
-$$C_i(x_i) = c_i x_i + \frac{\kappa_i}{2} x_i^2 \quad (\kappa_i > 0)$$
-
-Under this cost function, each creator's payoff second derivative becomes:
-$$\frac{\partial^2 \Pi_i}{\partial x_i^2} = 2 \beta_2^* - \kappa_i = 2(-8.1974) - \kappa_i = -16.3948 - \kappa_i < 0$$
-Strict concavity is unconditionally guaranteed for any $\kappa_i \ge 0$.
-
-The best-response slope is:
-$$\left| \frac{\partial \mathrm{BR}_i}{\partial \bar{x}_{-i}} \right| = \frac{|\beta_5^*|}{2 |\beta_2^*| + \kappa_i}$$
-
-To guarantee a unique pure-strategy Nash Equilibrium via Banach's Fixed Point Theorem, the contraction condition requires:
-$$\frac{|\beta_5^*|}{2 |\beta_2^*| + \kappa_{\min}} < 1 \iff \kappa_{\min} > |\beta_5^*| - 2 |\beta_2^*| = 20.7942 - 16.3948 = \mathbf{4.3994}$$
-
-**Recommendation for Game Theory Component:** Setting convex production cost curvature $\kappa_i > 4.40$ (or linear cost slope $c_i > 1.0$) guarantees that creator best responses form a strict contraction mapping on $[0, 1]$, ensuring:
-1. Existence and uniqueness of pure-strategy Nash Equilibrium $x^* = (x_1^*, \dots, x_N^*)$.
-2. Convergence of synchronous and asynchronous best-response dynamics.
-3. Tractable computation of Price of Anarchy ($\mathrm{PoA} = \frac{\Phi(x_{\mathrm{SO}})}{\Phi(x_{\mathrm{NE}})}$).
-
-### 8.3 Parameter Covariance Matrix
-For delta-method evaluations and Monte Carlo error propagation in the game theory simulation, the empirical covariance matrix of $(\beta_1^*, \beta_2^*, \beta_3^*, \beta_5^*)$ is exported:
-
-$$\mathbf{\Sigma}_{\mathrm{strat}} = \begin{pmatrix}
-3.6829 & -3.8967 & 3.2389 & -6.1436 \\
--3.8967 & 68.8802 & -1.2464 & -18.2396 \\
-3.2389 & -1.2464 & 36.4649 & 12.8715 \\
--6.1436 & -18.2396 & 12.8715 & 3627.1741
+$$\mathbf{\Sigma}_u = \begin{pmatrix}
+437.6519 & 81.7337 & 456.3322 & -1233.9756 \\
+81.7337 & 68.8802 & 108.1554 & -316.4174 \\
+456.3322 & 108.1554 & 522.2211 & -1330.6057 \\
+-1233.9756 & -316.4174 & -1330.6057 & 3627.1741
 \end{pmatrix}$$
+
+Centered covariance matrix $\mathbf{\Sigma}_c$ (order: $x_c, x_c^2, \bar{x}_c, x_c \cdot \bar{x}_c$):
+$$\mathbf{\Sigma}_c = \begin{pmatrix}
+3.6829 & 11.9476 & -4.1607 & -62.6574 \\
+11.9476 & 68.8802 & -16.0052 & -316.4174 \\
+-4.1607 & -16.0052 & 36.4649 & 92.6782 \\
+-62.6574 & -316.4174 & 92.6782 & 3627.1741
+\end{pmatrix}$$
+
+### 8.3 Factual Mathematical Properties
+Factually, at the empirical point estimates:
+- $b_{5\_u} > 2|b_{2\_u}|$ ($20.7942 > 16.3948$) and $b_{2\_u} + b_{5\_u} > 0$ ($-8.1974 + 20.7942 = +12.5968 > 0$).
+- Across $2{,}000$ cluster-pairs bootstrap draws, only $18.65\%$ of draws satisfy $|b_5| < 2|b_2|$.
 
 ---
 
 ## 9. Publication Figures (Step 8)
 
-Six high-resolution figures (300 DPI) have been generated in `payoff_estimation/plots/`:
+Seven high-resolution figures (300 DPI) are maintained in `payoff_calculation/plots/`:
 1. **`01_model_progression_fit.png`:** In-sample $R^2$, 26-fold LOCO-CV $R^2_{\mathrm{OOS}}$, and Validation $R^2_{\mathrm{OOS}}$ alongside AIC and BIC curves across models M0–M5.
 2. **`02_actual_vs_predicted.png`:** Actual vs. predicted log views across Training ($R^2 = 0.638$), Validation ($R^2_{\mathrm{OOS}} = 0.396$), and Test ($R^2_{\mathrm{OOS}} = 0.754$) cohorts, color-coded by subscriber tier.
 3. **`03_residual_audit.png`:** Four-panel diagnostic grid (residuals vs. fitted values, normal Q-Q plot, residuals vs. own click appeal, and residuals vs. creator scale).
 4. **`04_payoff_response_curves.png`:** Gross view response curves across low ($p_{10}$), median ($p_{50}$), and high ($p_{90}$) peer competition, contrasted with net payoffs under linear vs. convex production costs.
 5. **`05_peer_interaction_heatmap.png`:** Strategic contour surface $\ln V(x_i, \bar{x}_{-i})$ with the best-response reaction path overlaid.
 6. **`06_channel_error_dispersion.png`:** Channel-by-channel error dispersion (MAE and bias) across all 38 channels, color-coded by sample partition.
+7. **`07_congestion_test.png`:** State-dependent peer congestion function $E(x) = b_{3\_u} + b_{5\_u} x$ across the observed support $x \in [0.00, 0.68]$ with delta-method 95% CI band, bootstrap percentile 95% CI band, and bootstrap probability $\Pr(E < 0)$.
 
 ---
 
 ## 10. Methodological Limitations & Boundary Conditions
 
-1. **Retrospective Subscriber Snapshot:** Subscriber counts represent a late-2026 snapshot rather than historical time-varying subscriber counts at the exact video upload date. In our models, $\ln(s_i)$ acts as a channel-level fixed scale proxy.
-2. **Observational Inference:** Packaging metrics ($x_{it}$) are observational rather than experimentally manipulated. While we control for duration, age, and creator scale, point estimates should be interpreted as predictive associations and structural calibration inputs, not causal treatments.
-3. **Monetary Profit vs. Attention Payoff:** View counts proxy viewer attention and algorithmic impressions. True monetary creator profit depends on RPM (revenue per thousand impressions), sponsorships, and production overhead.
+1. **Weak Identification of Peer Effects by Design:** The peer packaging variable is computed as a mean of channel-level means across $\sim 32$ competing channels within a rolling 60-day window. This compresses cross-sectional peer variation ($\mathrm{SD}(\bar{x}) = 0.0074$ vs. $\mathrm{SD}(x) = 0.1037$). This low variation is inherent to the aggregative mean-of-means definition by design, not merely an artifact of small sample size, preventing statistically precise identification of $\beta_3$ and $\beta_5$.
+2. **Confounding of Own Appeal with Unobserved Channel Quality:** Own click appeal varies primarily between channels rather than within individual channels over time. Consequently, the coefficients $b_1$ and $b_2$ may be partially confounded with unobserved channel quality, baseline production value, or creator celebrity status, rather than representing an exogenous treatment effect of thumbnail/title packaging alone.
+3. **Sample Scope Divergence from Initial Proposal:** The empirical sample comprises $N = 809$ videos across 38 channels in **global English-language digital entertainment** (Gaming, Comedy, General Entertainment, Food/Tech Lifestyle), rather than the Indian tech-review niche originally outlined in the project proposal. While this provides a substantial and realistic competitive market across creators from $118\text{K}$ to $150\text{M}$ subscribers, findings reflect global entertainment attention dynamics rather than regional tech niche competition.
+4. **Retrospective Subscriber Snapshot:** Subscriber counts represent a late-2026 snapshot rather than historical time-varying subscriber counts at the exact video upload date. In our models, $\ln(s_i)$ acts as a channel-level fixed scale proxy.
+5. **Observational vs. Causal Interpretation:** Packaging metrics ($x_{it}$) are observational rather than experimentally manipulated. While we control for duration, age, and creator scale, point estimates represent predictive associations and structural calibration inputs, not causal treatments.
+6. **Attention vs. Revenue Payoff:** View counts proxy viewer attention and algorithmic impressions. True creator profit depends on monetization rates (RPM), sponsorship integration, and physical production overhead.
 
 ---
 
 ## 11. Complete Artifact Catalog & Reproduction Pipeline
 
-All scripts and generated artifacts are maintained within `payoff_estimation/`:
+All primary scripts, datasets, and generated estimation artifacts are maintained within `payoff_calculation/`:
 
 ```text
-payoff_estimation/
-├── data/
-│   ├── processed_payoff_data.csv             # Step 1: Ingested & validated dataset (N=809)
-│   ├── data_dictionary.csv                   # Step 1: Complete variable definitions
-│   ├── channel_splits.json                   # Step 2: Channel-level stratification partition map
-│   └── partitioned_payoff_data.csv           # Step 2: Full dataset labeled by partition
-├── scripts/
-│   ├── 01_prepare_payoff_data.py             # Step 1 execution script
-│   ├── 02_create_stratified_split.py         # Step 2 execution script
-│   ├── 03_train_models.py                    # Step 3 primary training regressions
-│   ├── 04_evaluate_loco_cv.py                # Step 4 26-fold LOCO-CV on training cohort
-│   ├── 05_validate_and_freeze.py             # Step 5 validation evaluation & model locking
-│   ├── 06_evaluate_test_holdout.py           # Step 6 holdout test evaluation
-│   ├── 07_post_test_structural_calibration.py# Step 7 full-sample structural estimation & bootstrap
-│   ├── 08_generate_plots.py                  # Step 8 publication figures generator
-│   └── 09_backward_looking_robustness.py     # Secondary peer window robustness script
-├── results/
-│   ├── training_regression_results.csv       # Training model estimates
-│   ├── training_model_comparison.csv         # Training AIC, BIC, R²
-│   ├── training_multicollinearity_diagnostics.csv # Centered vs uncentered VIFs
-│   ├── subscriber_robustness_table.csv       # Specs A, B, C, R-Tags
-│   ├── loco_cv_aggregate_summary.csv         # Step 4 LOCO-CV summary
-│   ├── loco_cv_fold_results.csv              # Step 4 fold-by-fold results
-│   ├── validation_evaluation.csv             # Step 5 validation evaluation
-│   ├── validation_channel_dispersion.csv     # Step 5 validation channel breakdown
-│   ├── test_set_evaluation.csv               # Step 6 test evaluation
-│   ├── test_channel_dispersion.csv           # Step 6 test channel breakdown
-│   ├── post_test_structural_regression_results.csv # Step 7 full-sample estimates
-│   ├── bootstrap_inference_results.csv       # Step 7 bootstrap CIs & contraction stats
-│   ├── game_theory_coefficients.json         # Step 7 JSON handoff payload for Khushi Shah
-│   ├── game_theory_coefficients.csv          # Step 7 flat CSV payload
-│   └── backward_looking_peer_robustness.csv  # Robustness comparison table
-├── plots/
-│   ├── 01_model_progression_fit.png          # Figure 1
-│   ├── 02_actual_vs_predicted.png            # Figure 2
-│   ├── 03_residual_audit.png                 # Figure 3
-│   ├── 04_payoff_response_curves.png         # Figure 4
-│   ├── 05_peer_interaction_heatmap.png       # Figure 5
-│   └── 06_channel_error_dispersion.png       # Figure 6
-├── FINAL_PAYOFF_REPORT.md                    # This master report
-└── README.md                                 # Component documentation & reproduction instructions
+payoff_calculation/
+|--  data/
+|   |--  processed_payoff_data.csv             # Stage 1: Ingested & validated dataset (N=809)
+|   |--  data_dictionary.csv                   # Stage 1: Complete variable definitions
+|   |--  channel_splits.json                   # Stage 2: Channel-level stratification partition map
+|   \--  partitioned_payoff_data.csv           # Stage 2: Full dataset labeled by partition
+|--  scripts/
+|   |--  01_prepare_payoff_data.py             # Stage 1: Data preparation & audit
+|   |--  02_create_stratified_split.py         # Stage 2: Stratified split (26/6/6)
+|   |--  03_train_models.py                    # Stage 3: Primary training regressions
+|   |--  04_evaluate_loco_cv.py                # Stage 4: 26-fold LOCO-CV on training cohort
+|   |--  05_validate_and_freeze.py             # Stage 5: Validation evaluation & model locking
+|   |--  06_evaluate_test_holdout.py           # Stage 6: Holdout test evaluation
+|   |--  07_post_test_structural_calibration.py# Stage 7: Full-sample estimation, uncentering & bootstrap
+|   |--  08_generate_plots.py                  # Stage 8: Publication figures generator
+|   |--  09_backward_looking_robustness.py     # Stage 9: Backward-looking peer window check
+|   \--  10_congestion_test.py                 # Stage 10: State-dependent peer congestion test E(x)
+|--  results/
+|   |--  game_theory_coefficients.json         # Complete structural payload for downstream game theory
+|   |--  game_theory_coefficients.csv          # Flat parameter summary table
+|   |--  post_test_structural_regression_results.csv # Full-sample regression table
+|   |--  bootstrap_inference_results.csv       # Bootstrap CIs & contraction stats
+|   |--  bootstrap_draws.npz                   # 2,000 cluster-pairs bootstrap parameter draws
+|   |--  congestion_test.csv                   # Stage 10: Congestion function E(x) grid & bootstrap results
+|   |--  training_regression_results.csv       # Training model estimates
+|   |--  training_model_comparison.csv         # Training AIC, BIC, R²
+|   |--  training_multicollinearity_diagnostics.csv # Centered vs uncentered VIFs
+|   |--  subscriber_robustness_table.csv       # Scale and FE robustness specifications
+|   |--  loco_cv_aggregate_summary.csv         # Stage 4 LOCO-CV summary
+|   |--  loco_cv_fold_results.csv              # Stage 4 fold-by-fold results
+|   |--  validation_evaluation.csv             # Stage 5 validation evaluation
+|   |--  validation_channel_dispersion.csv     # Stage 5 validation channel breakdown
+|   |--  test_set_evaluation.csv               # Stage 6 test evaluation
+|   |--  test_channel_dispersion.csv           # Stage 6 test channel breakdown
+|   \--  backward_looking_peer_robustness.csv  # Contemporaneous vs backward peer table
+|--  plots/
+|   |--  01_model_progression_fit.png          # Figure 1: In-sample vs OOS R² and AIC/BIC
+|   |--  02_actual_vs_predicted.png            # Figure 2: Actual vs predicted log views
+|   |--  03_residual_audit.png                 # Figure 3: Four-panel residual diagnostics
+|   |--  04_payoff_response_curves.png         # Figure 4: Payoff response curves under competition
+|   |--  05_peer_interaction_heatmap.png       # Figure 5: Strategic contour surface ln V(x, x_bar)
+|   |--  06_channel_error_dispersion.png       # Figure 6: Channel-level error dispersion
+|   \--  07_congestion_test.png                # Figure 7: State-dependent peer congestion function E(x)
+|--  tests/
+|   |--  test_bootstrap_verification.py        # Automated test for cluster-pairs bootstrap
+|   |--  test_report_consistency.py           # Automated test verifying report numerical accuracy
+|   |--  test_equilibrium_consistency.py       # Structural transformation & parameter consistency
+|   \--  test_encoding.py                      # UTF-8 and mojibake audit test
+|--  _extras/                                  # Archived downstream equilibrium scripts, sweeps & legacy files
+|--  payoff_estimation.py                     # Master runner executing stages 01 through 10
+|--  FINAL_PAYOFF_REPORT.md                     # Comprehensive master research report
+\--  README.md                                  # Repository overview and quick-start guide
 ```
 
 ### End-to-End Reproduction Command
-To reproduce all results, tables, bootstrap inference, and figures sequentially from scratch:
-
+To execute all 10 empirical estimation stages sequentially and log execution to `logs/master_pipeline.log`:
 ```bash
-cd payoff_estimation
-python scripts/01_prepare_payoff_data.py
-python scripts/02_create_stratified_split.py
-python scripts/03_train_models.py
-python scripts/04_evaluate_loco_cv.py
-python scripts/05_validate_and_freeze.py
-python scripts/06_evaluate_test_holdout.py
-python scripts/07_post_test_structural_calibration.py
-python scripts/08_generate_plots.py
-python scripts/09_backward_looking_robustness.py
+python payoff_estimation.py
 ```
-
-*All scripts run deterministically under `seed = 42` and complete in approximately 60 seconds.*
+*Total pipeline execution duration: ~45 seconds on standard hardware.*

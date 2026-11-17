@@ -41,3 +41,273 @@
 2026-11-15 22:28:22,245 [INFO] ======================================================================
 2026-11-15 22:28:22,245 [INFO] BOOTSTRAP VERIFICATION COMPLETED SUCCESSFULLY.
 2026-11-15 22:28:22,245 [INFO] ======================================================================
+2026-11-18 00:31:25,268 [INFO] ======================================================================
+2026-11-18 00:31:25,268 [INFO] RUNNING BOOTSTRAP VERIFICATION SUITE ON SYNTHETIC CLUSTERED DATA
+2026-11-18 00:31:25,268 [INFO] ======================================================================
+2026-11-18 00:31:25,275 [INFO] Generated synthetic dataset: N = 520 observations across G = 26 clusters.
+2026-11-18 00:31:25,277 [INFO] Unrestricted OLS Sample Estimates (True: beta_1=2.0, beta_2=-3.0, beta_5=0.0):
+2026-11-18 00:31:25,277 [INFO]   const: b = 9.4998, SE_CRSE = 0.9469, t = 10.0322
+2026-11-18 00:31:25,278 [INFO]   x: b = 1.8816, SE_CRSE = 1.1421, t = 1.6475
+2026-11-18 00:31:25,278 [INFO]   x2: b = -2.4897, SE_CRSE = 0.7862, t = -3.1667
+2026-11-18 00:31:25,278 [INFO]   x_bar: b = 0.1561, SE_CRSE = 0.7520, t = 0.2076
+2026-11-18 00:31:25,278 [INFO]   x_inter: b = -0.9746, SE_CRSE = 1.5967, t = -0.6104
+2026-11-18 00:31:25,278 [INFO]   log_s: b = 0.5243, SE_CRSE = 0.0697, t = 7.5218
+2026-11-18 00:31:25,278 [INFO] Global finite-sample scaling factor: 1.0248
+2026-11-18 00:31:25,698 [INFO] Test 1 (Null-Restricted WCB for beta_5 = 0, True Null): p-value = 0.5500
+2026-11-18 00:31:25,698 [INFO]   Result: PASSED (Null retained at alpha=0.05)
+2026-11-18 00:31:26,119 [INFO] Test 2 (Null-Restricted WCB for beta_2 < 0, False Null): p-value = 0.0020
+2026-11-18 00:31:26,119 [INFO]   Result: PASSED (Null rejected strongly at alpha=0.01)
+2026-11-18 00:31:26,695 [INFO]   const     : Boot SE = 1.0137 | CRSE = 0.9469 | Ratio = 1.07
+2026-11-18 00:31:26,695 [INFO]   x         : Boot SE = 1.1156 | CRSE = 1.1421 | Ratio = 0.98
+2026-11-18 00:31:26,695 [INFO]   x2        : Boot SE = 0.7535 | CRSE = 0.7862 | Ratio = 0.96
+2026-11-18 00:31:26,695 [INFO]   x_bar     : Boot SE = 0.7004 | CRSE = 0.7520 | Ratio = 0.93
+2026-11-18 00:31:26,695 [INFO]   x_inter   : Boot SE = 1.5077 | CRSE = 1.5967 | Ratio = 0.94
+2026-11-18 00:31:26,695 [INFO]   log_s     : Boot SE = 0.0737 | CRSE = 0.0697 | Ratio = 1.06
+2026-11-18 00:31:26,695 [INFO] Unrestricted Bootstrap 95% Percentile Confidence Intervals:
+2026-11-18 00:31:26,695 [INFO]   beta_1 (True: 2.0): [-0.4913, 3.8463]
+2026-11-18 00:31:26,695 [INFO]   beta_2 (True: -3.0): [-3.7845, -0.9682]
+2026-11-18 00:31:26,696 [INFO]   beta_5 (True: 0.0): [-3.9146, 2.0189]
+2026-11-18 00:31:26,696 [INFO] Test 3 Coverage Check: PASSED (All true values covered by 95% CIs)
+2026-11-18 00:31:26,696 [INFO] Contraction Ratio Evaluation: Median = 0.2718, P(rho < 1) = 0.9800, Non-concave draws = 0/500
+2026-11-18 00:31:26,704 [INFO] Test 4 (Seed Reproducibility Check): Max discrepancy = 0.0000000000 -> PASSED
+2026-11-18 00:31:26,705 [INFO] Saved verification report: C:\Github Backup\Multiagent-Systems\payoff_calculation\results\bootstrap_verification_report.json
+2026-11-18 00:31:26,705 [INFO] ======================================================================
+2026-11-18 00:31:26,705 [INFO] BOOTSTRAP VERIFICATION COMPLETED SUCCESSFULLY.
+2026-11-18 00:31:26,705 [INFO] ======================================================================
+2026-11-18 01:10:40,147 [INFO] ======================================================================
+2026-11-18 01:10:40,147 [INFO] RUNNING BOOTSTRAP VERIFICATION SUITE ON SYNTHETIC CLUSTERED DATA
+2026-11-18 01:10:40,147 [INFO] ======================================================================
+2026-11-18 01:10:40,156 [INFO] Generated synthetic dataset: N = 520 observations across G = 26 clusters.
+2026-11-18 01:10:40,160 [INFO] Unrestricted OLS Sample Estimates (True: beta_1=2.0, beta_2=-3.0, beta_5=0.0):
+2026-11-18 01:10:40,160 [INFO]   const: b = 9.4998, SE_CRSE = 0.9469, t = 10.0322
+2026-11-18 01:10:40,160 [INFO]   x: b = 1.8816, SE_CRSE = 1.1421, t = 1.6475
+2026-11-18 01:10:40,160 [INFO]   x2: b = -2.4897, SE_CRSE = 0.7862, t = -3.1667
+2026-11-18 01:10:40,160 [INFO]   x_bar: b = 0.1561, SE_CRSE = 0.7520, t = 0.2076
+2026-11-18 01:10:40,160 [INFO]   x_inter: b = -0.9746, SE_CRSE = 1.5967, t = -0.6104
+2026-11-18 01:10:40,160 [INFO]   log_s: b = 0.5243, SE_CRSE = 0.0697, t = 7.5218
+2026-11-18 01:10:40,160 [INFO] Global finite-sample scaling factor: 1.0248
+2026-11-18 01:10:40,967 [INFO] Test 1 (Null-Restricted WCB for beta_5 = 0, True Null): p-value = 0.5500
+2026-11-18 01:10:40,968 [INFO]   Result: PASSED (Null retained at alpha=0.05)
+2026-11-18 01:10:41,757 [INFO] Test 2 (Null-Restricted WCB for beta_2 < 0, False Null): p-value = 0.0020
+2026-11-18 01:10:41,757 [INFO]   Result: PASSED (Null rejected strongly at alpha=0.01)
+2026-11-18 01:10:43,974 [INFO]   const     : Boot SE = 1.0137 | CRSE = 0.9469 | Ratio = 1.07
+2026-11-18 01:10:43,975 [INFO]   x         : Boot SE = 1.1156 | CRSE = 1.1421 | Ratio = 0.98
+2026-11-18 01:10:43,975 [INFO]   x2        : Boot SE = 0.7535 | CRSE = 0.7862 | Ratio = 0.96
+2026-11-18 01:10:43,975 [INFO]   x_bar     : Boot SE = 0.7004 | CRSE = 0.7520 | Ratio = 0.93
+2026-11-18 01:10:43,975 [INFO]   x_inter   : Boot SE = 1.5077 | CRSE = 1.5967 | Ratio = 0.94
+2026-11-18 01:10:43,975 [INFO]   log_s     : Boot SE = 0.0737 | CRSE = 0.0697 | Ratio = 1.06
+2026-11-18 01:10:43,980 [INFO] Unrestricted Bootstrap 95% Percentile Confidence Intervals:
+2026-11-18 01:10:43,980 [INFO]   beta_1 (True: 2.0): [-0.4913, 3.8463]
+2026-11-18 01:10:43,980 [INFO]   beta_2 (True: -3.0): [-3.7845, -0.9682]
+2026-11-18 01:10:43,980 [INFO]   beta_5 (True: 0.0): [-3.9146, 2.0189]
+2026-11-18 01:10:43,980 [INFO] Test 3 Coverage Check: PASSED (All true values covered by 95% CIs)
+2026-11-18 01:10:43,982 [INFO] Contraction Ratio Evaluation: Median = 0.2718, P(rho < 1) = 0.9800, Non-concave draws = 0/500
+2026-11-18 01:10:44,021 [INFO] Test 4 (Seed Reproducibility Check): Max discrepancy = 0.0000000000 -> PASSED
+2026-11-18 01:10:44,024 [INFO] Saved verification report: C:\Github Backup\Multiagent-Systems\payoff_calculation\results\bootstrap_verification_report.json
+2026-11-18 01:10:44,024 [INFO] ======================================================================
+2026-11-18 01:10:44,024 [INFO] BOOTSTRAP VERIFICATION COMPLETED SUCCESSFULLY.
+2026-11-18 01:10:44,024 [INFO] ======================================================================
+2026-11-18 01:30:00,142 [INFO] ======================================================================
+2026-11-18 01:30:00,142 [INFO] RUNNING BOOTSTRAP VERIFICATION SUITE ON SYNTHETIC CLUSTERED DATA
+2026-11-18 01:30:00,142 [INFO] ======================================================================
+2026-11-18 01:30:00,147 [INFO] Generated synthetic dataset: N = 520 observations across G = 26 clusters.
+2026-11-18 01:30:00,149 [INFO] Unrestricted OLS Sample Estimates (True: beta_1=2.0, beta_2=-3.0, beta_5=0.0):
+2026-11-18 01:30:00,149 [INFO]   const: b = 9.4998, SE_CRSE = 0.9469, t = 10.0322
+2026-11-18 01:30:00,149 [INFO]   x: b = 1.8816, SE_CRSE = 1.1421, t = 1.6475
+2026-11-18 01:30:00,149 [INFO]   x2: b = -2.4897, SE_CRSE = 0.7862, t = -3.1667
+2026-11-18 01:30:00,149 [INFO]   x_bar: b = 0.1561, SE_CRSE = 0.7520, t = 0.2076
+2026-11-18 01:30:00,149 [INFO]   x_inter: b = -0.9746, SE_CRSE = 1.5967, t = -0.6104
+2026-11-18 01:30:00,149 [INFO]   log_s: b = 0.5243, SE_CRSE = 0.0697, t = 7.5218
+2026-11-18 01:30:00,149 [INFO] Global finite-sample scaling factor: 1.0248
+2026-11-18 01:30:00,593 [INFO] Test 1 (Null-Restricted WCB for beta_5 = 0, True Null): p-value = 0.5500
+2026-11-18 01:30:00,593 [INFO]   Result: PASSED (Null retained at alpha=0.05)
+2026-11-18 01:30:01,030 [INFO] Test 2 (Null-Restricted WCB for beta_2 < 0, False Null): p-value = 0.0020
+2026-11-18 01:30:01,030 [INFO]   Result: PASSED (Null rejected strongly at alpha=0.01)
+2026-11-18 01:30:01,614 [INFO]   const     : Boot SE = 1.0137 | CRSE = 0.9469 | Ratio = 1.07
+2026-11-18 01:30:01,614 [INFO]   x         : Boot SE = 1.1156 | CRSE = 1.1421 | Ratio = 0.98
+2026-11-18 01:30:01,614 [INFO]   x2        : Boot SE = 0.7535 | CRSE = 0.7862 | Ratio = 0.96
+2026-11-18 01:30:01,614 [INFO]   x_bar     : Boot SE = 0.7004 | CRSE = 0.7520 | Ratio = 0.93
+2026-11-18 01:30:01,614 [INFO]   x_inter   : Boot SE = 1.5077 | CRSE = 1.5967 | Ratio = 0.94
+2026-11-18 01:30:01,614 [INFO]   log_s     : Boot SE = 0.0737 | CRSE = 0.0697 | Ratio = 1.06
+2026-11-18 01:30:01,615 [INFO] Unrestricted Bootstrap 95% Percentile Confidence Intervals:
+2026-11-18 01:30:01,615 [INFO]   beta_1 (True: 2.0): [-0.4913, 3.8463]
+2026-11-18 01:30:01,615 [INFO]   beta_2 (True: -3.0): [-3.7845, -0.9682]
+2026-11-18 01:30:01,615 [INFO]   beta_5 (True: 0.0): [-3.9146, 2.0189]
+2026-11-18 01:30:01,615 [INFO] Test 3 Coverage Check: PASSED (All true values covered by 95% CIs)
+2026-11-18 01:30:01,615 [INFO] Contraction Ratio Evaluation: Median = 0.2718, P(rho < 1) = 0.9800, Non-concave draws = 0/500
+2026-11-18 01:30:01,624 [INFO] Test 4 (Seed Reproducibility Check): Max discrepancy = 0.0000000000 -> PASSED
+2026-11-18 01:30:01,625 [INFO] Saved verification report: C:\Github Backup\Multiagent-Systems\payoff_calculation\results\bootstrap_verification_report.json
+2026-11-18 01:30:01,625 [INFO] ======================================================================
+2026-11-18 01:30:01,625 [INFO] SYNTHETIC BOOTSTRAP VERIFICATION COMPLETED SUCCESSFULLY.
+2026-11-18 01:30:01,625 [INFO] ======================================================================
+2026-11-18 01:30:01,625 [INFO] 
+======================================================================
+2026-11-18 01:30:01,625 [INFO] TEST 5: REAL PIPELINE BOOTSTRAP TO CRSE RATIO AUDIT (N=809, G=38)
+2026-11-18 01:30:01,625 [INFO] ======================================================================
+2026-11-18 01:30:01,630 [INFO]   const            (centered  ): Boot SE =    2.4993 | CRSE =    2.4168 | Ratio =  1.03
+2026-11-18 01:30:01,631 [INFO]   x_c              (centered  ): Boot SE =    1.8144 | CRSE =    1.9191 | Ratio =  0.95
+2026-11-18 01:30:01,631 [INFO]   x2_c             (centered  ): Boot SE =    8.0165 | CRSE =    8.2994 | Ratio =  0.97
+2026-11-18 01:30:01,632 [INFO]   x_bar_c          (centered  ): Boot SE =    6.1283 | CRSE =    6.0386 | Ratio =  1.01
+2026-11-18 01:30:01,633 [INFO]   x_inter_c        (centered  ): Boot SE =   59.7562 | CRSE =   60.2260 | Ratio =  0.99
+2026-11-18 01:30:01,633 [INFO]   log_subscribers  (centered  ): Boot SE =    0.1220 | CRSE =    0.1147 | Ratio =  1.06
+2026-11-18 01:30:01,634 [INFO]   log_duration     (centered  ): Boot SE =    0.2474 | CRSE =    0.2534 | Ratio =  0.98
+2026-11-18 01:30:01,635 [INFO]   age_days         (centered  ): Boot SE =    0.0003 | CRSE =    0.0003 | Ratio =  0.97
+2026-11-18 01:30:01,635 [INFO]   b1_u             (uncentered): Boot SE =   21.2315 | CRSE =   20.9201 | Ratio =  1.01
+2026-11-18 01:30:01,636 [INFO]   b2_u             (uncentered): Boot SE =    8.0165 | CRSE =    8.2994 | Ratio =  0.97
+2026-11-18 01:30:01,636 [INFO]   b3_u             (uncentered): Boot SE =   22.5215 | CRSE =   22.8522 | Ratio =  0.99
+2026-11-18 01:30:01,637 [INFO]   b5_u             (uncentered): Boot SE =   59.7562 | CRSE =   60.2260 | Ratio =  0.99
+2026-11-18 01:30:01,637 [INFO] REAL PIPELINE BOOTSTRAP SE RATIO TEST PASSED (0.5 <= ratio <= 2.0 for all variables).
+2026-11-18 01:30:01,637 [INFO] ======================================================================
+2026-11-18 01:34:04,138 [INFO] ======================================================================
+2026-11-18 01:34:04,138 [INFO] RUNNING BOOTSTRAP VERIFICATION SUITE ON SYNTHETIC CLUSTERED DATA
+2026-11-18 01:34:04,139 [INFO] ======================================================================
+2026-11-18 01:34:04,143 [INFO] Generated synthetic dataset: N = 520 observations across G = 26 clusters.
+2026-11-18 01:34:04,146 [INFO] Unrestricted OLS Sample Estimates (True: beta_1=2.0, beta_2=-3.0, beta_5=0.0):
+2026-11-18 01:34:04,146 [INFO]   const: b = 9.4998, SE_CRSE = 0.9469, t = 10.0322
+2026-11-18 01:34:04,146 [INFO]   x: b = 1.8816, SE_CRSE = 1.1421, t = 1.6475
+2026-11-18 01:34:04,146 [INFO]   x2: b = -2.4897, SE_CRSE = 0.7862, t = -3.1667
+2026-11-18 01:34:04,146 [INFO]   x_bar: b = 0.1561, SE_CRSE = 0.7520, t = 0.2076
+2026-11-18 01:34:04,146 [INFO]   x_inter: b = -0.9746, SE_CRSE = 1.5967, t = -0.6104
+2026-11-18 01:34:04,146 [INFO]   log_s: b = 0.5243, SE_CRSE = 0.0697, t = 7.5218
+2026-11-18 01:34:04,146 [INFO] Global finite-sample scaling factor: 1.0248
+2026-11-18 01:34:04,590 [INFO] Test 1 (Null-Restricted WCB for beta_5 = 0, True Null): p-value = 0.5500
+2026-11-18 01:34:04,590 [INFO]   Result: PASSED (Null retained at alpha=0.05)
+2026-11-18 01:34:05,035 [INFO] Test 2 (Null-Restricted WCB for beta_2 < 0, False Null): p-value = 0.0020
+2026-11-18 01:34:05,036 [INFO]   Result: PASSED (Null rejected strongly at alpha=0.01)
+2026-11-18 01:34:05,648 [INFO]   const     : Boot SE = 1.0137 | CRSE = 0.9469 | Ratio = 1.07
+2026-11-18 01:34:05,648 [INFO]   x         : Boot SE = 1.1156 | CRSE = 1.1421 | Ratio = 0.98
+2026-11-18 01:34:05,648 [INFO]   x2        : Boot SE = 0.7535 | CRSE = 0.7862 | Ratio = 0.96
+2026-11-18 01:34:05,648 [INFO]   x_bar     : Boot SE = 0.7004 | CRSE = 0.7520 | Ratio = 0.93
+2026-11-18 01:34:05,648 [INFO]   x_inter   : Boot SE = 1.5077 | CRSE = 1.5967 | Ratio = 0.94
+2026-11-18 01:34:05,648 [INFO]   log_s     : Boot SE = 0.0737 | CRSE = 0.0697 | Ratio = 1.06
+2026-11-18 01:34:05,649 [INFO] Unrestricted Bootstrap 95% Percentile Confidence Intervals:
+2026-11-18 01:34:05,649 [INFO]   beta_1 (True: 2.0): [-0.4913, 3.8463]
+2026-11-18 01:34:05,649 [INFO]   beta_2 (True: -3.0): [-3.7845, -0.9682]
+2026-11-18 01:34:05,649 [INFO]   beta_5 (True: 0.0): [-3.9146, 2.0189]
+2026-11-18 01:34:05,649 [INFO] Test 3 Coverage Check: PASSED (All true values covered by 95% CIs)
+2026-11-18 01:34:05,649 [INFO] Contraction Ratio Evaluation: Median = 0.2718, P(rho < 1) = 0.9800, Non-concave draws = 0/500
+2026-11-18 01:34:05,658 [INFO] Test 4 (Seed Reproducibility Check): Max discrepancy = 0.0000000000 -> PASSED
+2026-11-18 01:34:05,659 [INFO] Saved verification report: C:\Github Backup\Multiagent-Systems\payoff_calculation\results\bootstrap_verification_report.json
+2026-11-18 01:34:05,659 [INFO] ======================================================================
+2026-11-18 01:34:05,659 [INFO] SYNTHETIC BOOTSTRAP VERIFICATION COMPLETED SUCCESSFULLY.
+2026-11-18 01:34:05,659 [INFO] ======================================================================
+2026-11-18 01:34:05,659 [INFO] 
+======================================================================
+2026-11-18 01:34:05,659 [INFO] TEST 5: REAL PIPELINE BOOTSTRAP TO CRSE RATIO AUDIT (N=809, G=38)
+2026-11-18 01:34:05,659 [INFO] ======================================================================
+2026-11-18 01:34:05,664 [INFO]   const            (centered  ): Boot SE =    2.4993 | CRSE =    2.4168 | Ratio =  1.03
+2026-11-18 01:34:05,665 [INFO]   x_c              (centered  ): Boot SE =    1.8144 | CRSE =    1.9191 | Ratio =  0.95
+2026-11-18 01:34:05,666 [INFO]   x2_c             (centered  ): Boot SE =    8.0165 | CRSE =    8.2994 | Ratio =  0.97
+2026-11-18 01:34:05,666 [INFO]   x_bar_c          (centered  ): Boot SE =    6.1283 | CRSE =    6.0386 | Ratio =  1.01
+2026-11-18 01:34:05,667 [INFO]   x_inter_c        (centered  ): Boot SE =   59.7562 | CRSE =   60.2260 | Ratio =  0.99
+2026-11-18 01:34:05,668 [INFO]   log_subscribers  (centered  ): Boot SE =    0.1220 | CRSE =    0.1147 | Ratio =  1.06
+2026-11-18 01:34:05,668 [INFO]   log_duration     (centered  ): Boot SE =    0.2474 | CRSE =    0.2534 | Ratio =  0.98
+2026-11-18 01:34:05,669 [INFO]   age_days         (centered  ): Boot SE =    0.0003 | CRSE =    0.0003 | Ratio =  0.97
+2026-11-18 01:34:05,670 [INFO]   b1_u             (uncentered): Boot SE =   21.2315 | CRSE =   20.9201 | Ratio =  1.01
+2026-11-18 01:34:05,671 [INFO]   b2_u             (uncentered): Boot SE =    8.0165 | CRSE =    8.2994 | Ratio =  0.97
+2026-11-18 01:34:05,671 [INFO]   b3_u             (uncentered): Boot SE =   22.5215 | CRSE =   22.8522 | Ratio =  0.99
+2026-11-18 01:34:05,672 [INFO]   b5_u             (uncentered): Boot SE =   59.7562 | CRSE =   60.2260 | Ratio =  0.99
+2026-11-18 01:34:05,672 [INFO] REAL PIPELINE BOOTSTRAP SE RATIO TEST PASSED (0.5 <= ratio <= 2.0 for all variables).
+2026-11-18 01:34:05,672 [INFO] ======================================================================
+2026-11-18 02:14:17,574 [INFO] ======================================================================
+2026-11-18 02:14:17,574 [INFO] RUNNING BOOTSTRAP VERIFICATION SUITE ON SYNTHETIC CLUSTERED DATA
+2026-11-18 02:14:17,574 [INFO] ======================================================================
+2026-11-18 02:14:17,579 [INFO] Generated synthetic dataset: N = 520 observations across G = 26 clusters.
+2026-11-18 02:14:17,581 [INFO] Unrestricted OLS Sample Estimates (True: beta_1=2.0, beta_2=-3.0, beta_5=0.0):
+2026-11-18 02:14:17,581 [INFO]   const: b = 9.4998, SE_CRSE = 0.9469, t = 10.0322
+2026-11-18 02:14:17,581 [INFO]   x: b = 1.8816, SE_CRSE = 1.1421, t = 1.6475
+2026-11-18 02:14:17,581 [INFO]   x2: b = -2.4897, SE_CRSE = 0.7862, t = -3.1667
+2026-11-18 02:14:17,581 [INFO]   x_bar: b = 0.1561, SE_CRSE = 0.7520, t = 0.2076
+2026-11-18 02:14:17,581 [INFO]   x_inter: b = -0.9746, SE_CRSE = 1.5967, t = -0.6104
+2026-11-18 02:14:17,581 [INFO]   log_s: b = 0.5243, SE_CRSE = 0.0697, t = 7.5218
+2026-11-18 02:14:17,581 [INFO] Global finite-sample scaling factor: 1.0248
+2026-11-18 02:14:17,980 [INFO] Test 1 (Null-Restricted WCB for beta_5 = 0, True Null): p-value = 0.5500
+2026-11-18 02:14:17,980 [INFO]   Result: PASSED (Null retained at alpha=0.05)
+2026-11-18 02:14:18,374 [INFO] Test 2 (Null-Restricted WCB for beta_2 < 0, False Null): p-value = 0.0020
+2026-11-18 02:14:18,374 [INFO]   Result: PASSED (Null rejected strongly at alpha=0.01)
+2026-11-18 02:14:18,932 [INFO]   const     : Boot SE = 1.0137 | CRSE = 0.9469 | Ratio = 1.07
+2026-11-18 02:14:18,933 [INFO]   x         : Boot SE = 1.1156 | CRSE = 1.1421 | Ratio = 0.98
+2026-11-18 02:14:18,933 [INFO]   x2        : Boot SE = 0.7535 | CRSE = 0.7862 | Ratio = 0.96
+2026-11-18 02:14:18,933 [INFO]   x_bar     : Boot SE = 0.7004 | CRSE = 0.7520 | Ratio = 0.93
+2026-11-18 02:14:18,933 [INFO]   x_inter   : Boot SE = 1.5077 | CRSE = 1.5967 | Ratio = 0.94
+2026-11-18 02:14:18,933 [INFO]   log_s     : Boot SE = 0.0737 | CRSE = 0.0697 | Ratio = 1.06
+2026-11-18 02:14:18,933 [INFO] Unrestricted Bootstrap 95% Percentile Confidence Intervals:
+2026-11-18 02:14:18,933 [INFO]   beta_1 (True: 2.0): [-0.4913, 3.8463]
+2026-11-18 02:14:18,933 [INFO]   beta_2 (True: -3.0): [-3.7845, -0.9682]
+2026-11-18 02:14:18,933 [INFO]   beta_5 (True: 0.0): [-3.9146, 2.0189]
+2026-11-18 02:14:18,933 [INFO] Test 3 Coverage Check: PASSED (All true values covered by 95% CIs)
+2026-11-18 02:14:18,934 [INFO] Contraction Ratio Evaluation: Median = 0.2718, P(rho < 1) = 0.9800, Non-concave draws = 0/500
+2026-11-18 02:14:18,942 [INFO] Test 4 (Seed Reproducibility Check): Max discrepancy = 0.0000000000 -> PASSED
+2026-11-18 02:14:18,943 [INFO] Saved verification report: C:\Github Backup\Multiagent-Systems\payoff_calculation\results\bootstrap_verification_report.json
+2026-11-18 02:14:18,943 [INFO] ======================================================================
+2026-11-18 02:14:18,943 [INFO] SYNTHETIC BOOTSTRAP VERIFICATION COMPLETED SUCCESSFULLY.
+2026-11-18 02:14:18,943 [INFO] ======================================================================
+2026-11-18 02:14:18,943 [INFO] 
+======================================================================
+2026-11-18 02:14:18,943 [INFO] TEST 5: REAL PIPELINE BOOTSTRAP TO CRSE RATIO AUDIT (N=809, G=38)
+2026-11-18 02:14:18,943 [INFO] ======================================================================
+2026-11-18 02:14:18,948 [INFO]   const            (centered  ): Boot SE =    2.4993 | CRSE =    2.4168 | Ratio =  1.03
+2026-11-18 02:14:18,949 [INFO]   x_c              (centered  ): Boot SE =    1.8144 | CRSE =    1.9191 | Ratio =  0.95
+2026-11-18 02:14:18,950 [INFO]   x2_c             (centered  ): Boot SE =    8.0165 | CRSE =    8.2994 | Ratio =  0.97
+2026-11-18 02:14:18,951 [INFO]   x_bar_c          (centered  ): Boot SE =    6.1283 | CRSE =    6.0386 | Ratio =  1.01
+2026-11-18 02:14:18,951 [INFO]   x_inter_c        (centered  ): Boot SE =   59.7562 | CRSE =   60.2260 | Ratio =  0.99
+2026-11-18 02:14:18,952 [INFO]   log_subscribers  (centered  ): Boot SE =    0.1220 | CRSE =    0.1147 | Ratio =  1.06
+2026-11-18 02:14:18,953 [INFO]   log_duration     (centered  ): Boot SE =    0.2474 | CRSE =    0.2534 | Ratio =  0.98
+2026-11-18 02:14:18,953 [INFO]   age_days         (centered  ): Boot SE =    0.0003 | CRSE =    0.0003 | Ratio =  0.97
+2026-11-18 02:14:18,954 [INFO]   b1_u             (uncentered): Boot SE =   21.2315 | CRSE =   20.9201 | Ratio =  1.01
+2026-11-18 02:14:18,954 [INFO]   b2_u             (uncentered): Boot SE =    8.0165 | CRSE =    8.2994 | Ratio =  0.97
+2026-11-18 02:14:18,955 [INFO]   b3_u             (uncentered): Boot SE =   22.5215 | CRSE =   22.8522 | Ratio =  0.99
+2026-11-18 02:14:18,956 [INFO]   b5_u             (uncentered): Boot SE =   59.7562 | CRSE =   60.2260 | Ratio =  0.99
+2026-11-18 02:14:18,956 [INFO] REAL PIPELINE BOOTSTRAP SE RATIO TEST PASSED (0.5 <= ratio <= 2.0 for all variables).
+2026-11-18 02:14:18,956 [INFO] ======================================================================
+2026-11-18 02:23:19,675 [INFO] ======================================================================
+2026-11-18 02:23:19,675 [INFO] RUNNING BOOTSTRAP VERIFICATION SUITE ON SYNTHETIC CLUSTERED DATA
+2026-11-18 02:23:19,675 [INFO] ======================================================================
+2026-11-18 02:23:19,680 [INFO] Generated synthetic dataset: N = 520 observations across G = 26 clusters.
+2026-11-18 02:23:19,682 [INFO] Unrestricted OLS Sample Estimates (True: beta_1=2.0, beta_2=-3.0, beta_5=0.0):
+2026-11-18 02:23:19,682 [INFO]   const: b = 9.4998, SE_CRSE = 0.9469, t = 10.0322
+2026-11-18 02:23:19,682 [INFO]   x: b = 1.8816, SE_CRSE = 1.1421, t = 1.6475
+2026-11-18 02:23:19,682 [INFO]   x2: b = -2.4897, SE_CRSE = 0.7862, t = -3.1667
+2026-11-18 02:23:19,682 [INFO]   x_bar: b = 0.1561, SE_CRSE = 0.7520, t = 0.2076
+2026-11-18 02:23:19,682 [INFO]   x_inter: b = -0.9746, SE_CRSE = 1.5967, t = -0.6104
+2026-11-18 02:23:19,682 [INFO]   log_s: b = 0.5243, SE_CRSE = 0.0697, t = 7.5218
+2026-11-18 02:23:19,682 [INFO] Global finite-sample scaling factor: 1.0248
+2026-11-18 02:23:20,095 [INFO] Test 1 (Null-Restricted WCB for beta_5 = 0, True Null): p-value = 0.5500
+2026-11-18 02:23:20,095 [INFO]   Result: PASSED (Null retained at alpha=0.05)
+2026-11-18 02:23:20,502 [INFO] Test 2 (Null-Restricted WCB for beta_2 < 0, False Null): p-value = 0.0020
+2026-11-18 02:23:20,502 [INFO]   Result: PASSED (Null rejected strongly at alpha=0.01)
+2026-11-18 02:23:21,079 [INFO]   const     : Boot SE = 1.0137 | CRSE = 0.9469 | Ratio = 1.07
+2026-11-18 02:23:21,079 [INFO]   x         : Boot SE = 1.1156 | CRSE = 1.1421 | Ratio = 0.98
+2026-11-18 02:23:21,079 [INFO]   x2        : Boot SE = 0.7535 | CRSE = 0.7862 | Ratio = 0.96
+2026-11-18 02:23:21,079 [INFO]   x_bar     : Boot SE = 0.7004 | CRSE = 0.7520 | Ratio = 0.93
+2026-11-18 02:23:21,079 [INFO]   x_inter   : Boot SE = 1.5077 | CRSE = 1.5967 | Ratio = 0.94
+2026-11-18 02:23:21,079 [INFO]   log_s     : Boot SE = 0.0737 | CRSE = 0.0697 | Ratio = 1.06
+2026-11-18 02:23:21,080 [INFO] Unrestricted Bootstrap 95% Percentile Confidence Intervals:
+2026-11-18 02:23:21,080 [INFO]   beta_1 (True: 2.0): [-0.4913, 3.8463]
+2026-11-18 02:23:21,080 [INFO]   beta_2 (True: -3.0): [-3.7845, -0.9682]
+2026-11-18 02:23:21,080 [INFO]   beta_5 (True: 0.0): [-3.9146, 2.0189]
+2026-11-18 02:23:21,080 [INFO] Test 3 Coverage Check: PASSED (All true values covered by 95% CIs)
+2026-11-18 02:23:21,080 [INFO] Contraction Ratio Evaluation: Median = 0.2718, P(rho < 1) = 0.9800, Non-concave draws = 0/500
+2026-11-18 02:23:21,089 [INFO] Test 4 (Seed Reproducibility Check): Max discrepancy = 0.0000000000 -> PASSED
+2026-11-18 02:23:21,089 [INFO] Saved verification report: C:\Github Backup\Multiagent-Systems\payoff_calculation\results\bootstrap_verification_report.json
+2026-11-18 02:23:21,089 [INFO] ======================================================================
+2026-11-18 02:23:21,089 [INFO] SYNTHETIC BOOTSTRAP VERIFICATION COMPLETED SUCCESSFULLY.
+2026-11-18 02:23:21,090 [INFO] ======================================================================
+2026-11-18 02:23:21,090 [INFO] 
+======================================================================
+2026-11-18 02:23:21,090 [INFO] TEST 5: REAL PIPELINE BOOTSTRAP TO CRSE RATIO AUDIT (N=809, G=38)
+2026-11-18 02:23:21,090 [INFO] ======================================================================
+2026-11-18 02:23:21,095 [INFO]   const            (centered  ): Boot SE =    2.4993 | CRSE =    2.4168 | Ratio =  1.03
+2026-11-18 02:23:21,096 [INFO]   x_c              (centered  ): Boot SE =    1.8144 | CRSE =    1.9191 | Ratio =  0.95
+2026-11-18 02:23:21,096 [INFO]   x2_c             (centered  ): Boot SE =    8.0165 | CRSE =    8.2994 | Ratio =  0.97
+2026-11-18 02:23:21,097 [INFO]   x_bar_c          (centered  ): Boot SE =    6.1283 | CRSE =    6.0386 | Ratio =  1.01
+2026-11-18 02:23:21,098 [INFO]   x_inter_c        (centered  ): Boot SE =   59.7562 | CRSE =   60.2260 | Ratio =  0.99
+2026-11-18 02:23:21,098 [INFO]   log_subscribers  (centered  ): Boot SE =    0.1220 | CRSE =    0.1147 | Ratio =  1.06
+2026-11-18 02:23:21,099 [INFO]   log_duration     (centered  ): Boot SE =    0.2474 | CRSE =    0.2534 | Ratio =  0.98
+2026-11-18 02:23:21,100 [INFO]   age_days         (centered  ): Boot SE =    0.0003 | CRSE =    0.0003 | Ratio =  0.97
+2026-11-18 02:23:21,101 [INFO]   b1_u             (uncentered): Boot SE =   21.2315 | CRSE =   20.9201 | Ratio =  1.01
+2026-11-18 02:23:21,101 [INFO]   b2_u             (uncentered): Boot SE =    8.0165 | CRSE =    8.2994 | Ratio =  0.97
+2026-11-18 02:23:21,102 [INFO]   b3_u             (uncentered): Boot SE =   22.5215 | CRSE =   22.8522 | Ratio =  0.99
+2026-11-18 02:23:21,103 [INFO]   b5_u             (uncentered): Boot SE =   59.7562 | CRSE =   60.2260 | Ratio =  0.99
+2026-11-18 02:23:21,103 [INFO] REAL PIPELINE BOOTSTRAP SE RATIO TEST PASSED (0.5 <= ratio <= 2.0 for all variables).
+2026-11-18 02:23:21,103 [INFO] ======================================================================

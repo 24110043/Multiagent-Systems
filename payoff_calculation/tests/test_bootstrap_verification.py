@@ -179,10 +179,8 @@ def run_verification(B=500, seed=42):
     # -------------------------------------------------------------
     # Test 3: Unrestricted Bootstrap Confidence Intervals
     # -------------------------------------------------------------
-    u_unr = ols_unr.resid
-    # Cluster-center residuals
-    u_centered = u_unr - df.groupby("channel_id")["y"].transform(lambda s: u_unr[s.index].mean())
-    u_unr_adj = u_centered * scale_factor
+    # Cluster pairs bootstrap preserving between-cluster variance (NO within-cluster demeaning)
+    channel_groups = {c: df[df["channel_id"] == c] for c in unique_clusters}
     
     np.random.seed(seed)
     beta_boot = []
@@ -190,11 +188,10 @@ def run_verification(B=500, seed=42):
     failed_rho_count = 0
     
     for b in range(B):
-        v_dict = {c: np.random.choice([-1.0, 1.0]) for c in unique_clusters}
-        v_vec = np.array([v_dict[c] for c in cluster_ids])
-        y_boot = ols_unr.fittedvalues + v_vec * u_unr_adj
+        sampled_c = np.random.choice(unique_clusters, size=G, replace=True)
+        boot_df = pd.concat([channel_groups[c] for c in sampled_c], ignore_index=True)
         
-        fit_b = sm.OLS(y_boot, X).fit()
+        fit_b = sm.OLS(boot_df["y"], boot_df[X_cols]).fit()
         b_draw = fit_b.params.values if hasattr(fit_b.params, "values") else fit_b.params
         beta_boot.append(b_draw)
         
@@ -208,6 +205,16 @@ def run_verification(B=500, seed=42):
             failed_rho_count += 1
             
     beta_boot = np.array(beta_boot)
+    boot_se = np.std(beta_boot, axis=0, ddof=1)
+    
+    # Check that bootstrap SE is within a factor of 2 of CRSE for every coefficient
+    se_ratio_pass = True
+    for i, col in enumerate(X_cols):
+        ratio = boot_se[i] / se_sample[i]
+        logger.info(f"  {col:<10}: Boot SE = {boot_se[i]:.4f} | CRSE = {se_sample[i]:.4f} | Ratio = {ratio:.2f}")
+        assert 0.5 <= ratio <= 2.0, f"Bootstrap SE for {col} ratio {ratio:.3f} outside [0.5, 2.0]"
+        if not (0.5 <= ratio <= 2.0):
+            se_ratio_pass = False
     
     # Confidence intervals
     ci_results = {}
@@ -261,6 +268,7 @@ def run_verification(B=500, seed=42):
         "test_2_passed": bool(test2_pass),
         "test_3_confidence_intervals": ci_results,
         "test_3_coverage_passed": bool(test3_pass),
+        "test_3_se_ratio_passed": bool(se_ratio_pass),
         "test_4_seed_reproducibility_passed": bool(test4_pass),
         "contraction_ratio_summary": {
             "median": median_rho,
@@ -268,7 +276,7 @@ def run_verification(B=500, seed=42):
             "non_concave_draws": failed_rho_count,
             "total_draws": B
         },
-        "all_tests_passed": bool(test1_pass and test2_pass and test3_pass and test4_pass)
+        "all_tests_passed": bool(test1_pass and test2_pass and test3_pass and test4_pass and se_ratio_pass)
     }
     
     out_json = RESULTS_DIR / "bootstrap_verification_report.json"
@@ -276,9 +284,48 @@ def run_verification(B=500, seed=42):
         json.dump(verification_report, f, indent=2)
     logger.info(f"Saved verification report: {out_json}")
     logger.info("=" * 70)
-    logger.info("BOOTSTRAP VERIFICATION COMPLETED SUCCESSFULLY.")
+    logger.info("SYNTHETIC BOOTSTRAP VERIFICATION COMPLETED SUCCESSFULLY.")
+    logger.info("=" * 70)
+
+
+def test_real_pipeline_bootstrap_ratios():
+    logger.info("\n" + "=" * 70)
+    logger.info("TEST 5: REAL PIPELINE BOOTSTRAP TO CRSE RATIO AUDIT (N=809, G=38)")
+    logger.info("=" * 70)
+
+    boot_csv = RESULTS_DIR / "bootstrap_inference_results.csv"
+    reg_csv = RESULTS_DIR / "post_test_structural_regression_results.csv"
+
+    assert boot_csv.exists(), f"Missing {boot_csv}"
+    assert reg_csv.exists(), f"Missing {reg_csv}"
+
+    df_boot = pd.read_csv(boot_csv)
+    df_reg = pd.read_csv(reg_csv)
+
+    for _, row in df_boot.iterrows():
+        var = row["variable"]
+        ptype = row["parameter_type"]
+        boot_se = float(row["boot_se"])
+
+        if ptype == "centered":
+            reg_match = df_reg[(df_reg["specification"] == "Model_4_Centered") & (df_reg["variable"] == var)]
+        else:
+            var_map = {"b1_u": "x", "b2_u": "x2", "b3_u": "x_bar", "b5_u": "x_inter"}
+            target_var = var_map.get(var, var)
+            reg_match = df_reg[(df_reg["specification"] == "Model_4_Uncentered_Analytical") & (df_reg["variable"] == target_var)]
+
+        assert not reg_match.empty, f"Could not find regression record for {var} ({ptype})"
+        crse_se = float(reg_match.iloc[0]["std_error_crse"])
+
+        ratio = boot_se / crse_se
+        logger.info(f"  {var:<16} ({ptype:<10}): Boot SE = {boot_se:9.4f} | CRSE = {crse_se:9.4f} | Ratio = {ratio:5.2f}")
+
+        assert 0.5 <= ratio <= 2.0, f"Real pipeline ratio out of bounds for {var}: {ratio:.3f}"
+
+    logger.info("REAL PIPELINE BOOTSTRAP SE RATIO TEST PASSED (0.5 <= ratio <= 2.0 for all variables).")
     logger.info("=" * 70)
 
 
 if __name__ == "__main__":
     run_verification(B=500, seed=42)
+    test_real_pipeline_bootstrap_ratios()

@@ -3,153 +3,220 @@
 **CS 329: Foundations of AI: Multi-Agent Systems (Autumn 2026)**  
 *Indian Institute of Technology Gandhinagar*  
 **Project:** Click Appeal as a Potential Game: Modeling Creator Incentives, Attention Congestion, and Social Welfare in YouTube  
+**Author:** Bhavya Shah (24110324) — *Empirical Payoff Function Estimation & Econometric Analysis*  
 **Collaborators:**  
 - Ankita Kushwaha (24110043) — *Multimodal Scoring & Data Preprocessing*  
-- Bhavya Shah 
-- Harshita Singh (24110342) — *Platform Mediation & Multi-Agent Simulation*  
+- Harshita Singh (24110342) — *Platform Mediation & Algorithmic Simulation*  
+- Khushi Shah (24110326) — *Game Theory, Potential Function Analysis & Social Welfare*  
 
 ---
 
 ## 1. Overview & Purpose
 
-This component provides the empirical foundation for modeling YouTube creator packaging competition as an **Exact Potential Game**. Rather than assuming synthetic or arbitrary payoff functions, we estimate the structural parameters of the creator revenue function directly from multimodal video packaging metrics and YouTube performance data ($N = 809$ videos across 38 distinct creator channels).
+This component provides the empirical foundation for modeling YouTube creator packaging competition as a **Continuous Aggregative Exact Potential Game**. Rather than assuming synthetic or arbitrary payoff functions, we estimate the structural parameters of the creator revenue function directly from multimodal video packaging metrics and YouTube performance data ($N = 809$ videos across 38 distinct creator channels).
 
-The fitted parameters, cluster-robust standard errors, and covariance matrices are delivered directly to the game theory component (Khushi Shah) for pure-strategy Nash Equilibrium derivation, best-response dynamics, and Price of Anarchy analysis.
+The fitted parameters, delta-method covariance matrices, and well-posedness conditions are delivered directly to the game theory component (Khushi Shah) for pure-strategy Nash Equilibrium derivation, best-response dynamics, and Price of Anarchy analysis.
 
----
-
-## 2. Methodological Architecture (8-Step Pipeline)
-
-Our empirical pipeline follows a pre-registered, leak-free design across 8 sequential steps:
-
-1. **Step 1: Data Ingestion & Integrity Validation:** Ingests `video_scores.csv` and `cleaned_videos.csv`, validates exact 1:1 join ($N = 809$), standardizes subscriber counts to channel-level medians, and verifies zero non-positive views.
-2. **Step 2: Channel-Level Stratified Partitioning:** Partitions the 38 channels into 26 Training channels ($N = 541$), 6 Validation channels ($N = 136$), and 6 Held-Out Test channels ($N = 132$), preserving exact subscriber-tier distributions.
-3. **Step 3: Primary Model Development (Training Sample):** Fits progressive OLS models (M0 through M5) on the 26 training channels. Applies mean-centering to eliminate structural multicollinearity (VIFs drop from $1{,}334.9$ to $1.15$).
-4. **Step 4: 26-Fold LOCO-CV on Training Cohort:** Evaluates predictive generalization via strict Leave-One-Channel-Out Cross-Validation within the training cohort with zero data leakage.
-5. **Step 5: Validation Evaluation & Specification Freezing:** Evaluates candidate models on the 6 validation channels ($N = 136$) and formally locks **Model 4-Centered (Strategic Payoff Function)**.
-6. **Step 6: Final Holdout Test Evaluation:** Evaluates the locked Model 4 specification on the untouched 6 test channels ($N = 132$) after refitting on the pooled 32 training+validation channels ($R^2_{\mathrm{OOS}} = 0.7537$, $\mathrm{RMSE} = 1.1382$).
-7. **Step 7: Post-Test Full-Sample Structural Calibration:** Estimates Model 4-Centered on all 38 channels ($N = 809$) for structural parameter handoff, executes Null-Restricted Wild Cluster Bootstrap tests ($B = 2{,}000$), computes unrestricted bootstrap confidence intervals, and audits the contraction mapping condition ($\rho = 1.2683$).
-8. **Step 8: Publication Visualizations:** Generates 6 high-resolution (300 DPI) publication-quality econometric figures in `plots/`.
+> [!NOTE]
+> **Data vs. Proposal Scope Clarification:**  
+> The dataset covers 38 channels from **global English-language digital entertainment** (Gaming, Comedy, General Entertainment, Food/Tech Lifestyle) rather than the Indian tech-review market proposed in the initial proposal. The analyzed sample comprises 809 videos across creators spanning from $118\text{K}$ to $150\text{M}$ subscribers, capturing real-world cross-channel competition across global attention categories.
 
 ---
 
-## 3. Core Structural Specification (Model 4-Centered)
+## 2. Methodological Architecture (10-Stage Pipeline)
 
-The primary econometric specification for creator $i$ on video $t$ is:
+Our empirical pipeline follows a pre-registered, leak-free design across 10 sequential stages:
 
+1. **Stage 1 (`01_prepare_payoff_data.py`): Data Ingestion & Audit:** Merges multimodal scores (`video_scores.csv`) with video metadata (`cleaned_videos.csv`), validates 1:1 join ($N = 809$), standardizes subscriber counts to channel-level medians, and verifies zero non-positive views.
+2. **Stage 2 (`02_create_stratified_split.py`): Channel-Stratified Splitting:** Partitions the 38 channels into 26 Training channels ($N = 541$), 6 Validation channels ($N = 136$), and 6 Held-Out Test channels ($N = 132$), preserving exact subscriber-tier distributions.
+3. **Stage 3 (`03_train_models.py`): Primary Model Development (Training Sample):** Fits progressive OLS models (M0 through M5) on the 26 training channels. Applies mean-centering to eliminate structural multicollinearity (VIFs drop from $1{,}334.9$ to $1.15$).
+4. **Stage 4 (`04_evaluate_loco_cv.py`): 26-Fold LOCO-CV on Training Cohort:** Evaluates predictive generalization via strict Leave-One-Channel-Out Cross-Validation within the training cohort with zero data leakage.
+5. **Stage 5 (`05_validate_and_freeze.py`): Validation Evaluation & Specification Freezing:** Evaluates candidate models on the 6 validation channels ($N = 136$) and formally locks **Model 4-Centered (Strategic Payoff Function)** based on theoretical necessity.
+6. **Stage 6 (`06_evaluate_test_holdout.py`): Final Holdout Test Evaluation:** Evaluates the locked Model 4 specification on the untouched 6 test channels ($N = 132$) after refitting on the pooled 32 training+validation channels ($R^2_{\mathrm{OOS}} = 0.7537$, $\mathrm{RMSE} = 1.1382$).
+7. **Stage 7 (`07_post_test_structural_calibration.py`): Full Calibration & Bootstrap Inference:** Estimates Model 4-Centered on all 38 channels ($N = 809$), derives uncentered parameters analytically for paper Eq. 2, executes Wild Cluster Bootstrap tests ($B = 2{,}000$), and computes cluster-pairs bootstrap confidence intervals.
+8. **Stage 8 (`08_generate_plots.py`): Publication Figures:** Generates 6 high-resolution (300 DPI) publication-quality econometric figures in `plots/`.
+9. **Stage 9 (`09_backward_looking_robustness.py`): Backward-Looking Peer Window Robustness:** Compares the primary contemporaneous peer window $[t - 30\text{d}, t + 30\text{d}]$ against a retrospective $[t - 60\text{d}, t)$ window.
+10. **Stage 10 (`10_congestion_test.py`): State-Dependent Peer Congestion Test:** Evaluates the state-dependent marginal peer congestion effect $E(x) = b_{3\_u} + b_{5\_u} x$ across the observed support $x \in [0.00, 0.68]$, calculating delta-method standard errors and cluster-pairs bootstrap confidence intervals.
+
+---
+
+## 3. Core Structural Payoff Specifications
+
+### Econometric Estimation Model (Centered Model 4)
 $$\ln(V_{it}) = \beta_0^* + \beta_1^* (x_{it} - \mu_x) + \beta_2^* (x_{it} - \mu_x)^2 + \beta_3^* (\bar{x}_{-i,t} - \mu_{\bar{x}}) + \beta_5^* (x_{it} - \mu_x)(\bar{x}_{-i,t} - \mu_{\bar{x}}) + \gamma_s \ln(s_i) + \gamma_d \ln(\text{dur}_{it}) + \gamma_a \text{age}_{it} + \varepsilon_{it}$$
 
-- $x_{it} \in [0, 1]$: Multimodal click appeal score of video $t$ by creator $i$.
-- $\bar{x}_{-i,t} \in [0, 1]$: Competitor packaging average within a rolling 60-day window $[t - 30\text{d}, t + 30\text{d}]$, excluding creator $i$.
-- $\mu_x, \mu_{\bar{x}}$: Sample centering means ($\mu_x = 0.3924, \mu_{\bar{x}} = 0.3914$).
-- $s_i$: Creator subscriber count (fixed scale control).
-- $\text{dur}_{it}$: Video duration in seconds.
-- $\text{age}_{it}$: Elapsed days since publication.
+- Sample centering means: $\mu_x = 0.392395$, $\mu_{\bar{x}} = 0.391390$.
+- Standard deviation of own appeal: $\mathrm{SD}(x) = 0.1037$.
+- Standard deviation of peer appeal: $\mathrm{SD}(\bar{x}) = 0.0074$ (14x smaller, causing weak peer identification).
+
+### Game-Theoretic Payoff Function (Uncentered Paper Eq. 2)
+$$\pi_i(x_i, \bar{x}_{-i}) = b_{0\_u} + b_{1\_u} x_i + b_{2\_u} x_i^2 + b_{3\_u} \bar{x}_{-i} + b_{5\_u} x_i \bar{x}_{-i} + \gamma_s \ln(s_i) + \gamma_d \ln(\text{dur}_{it}) + \gamma_a \text{age}_{it}$$
+
+Analytically derived from centered coefficients with verified prediction equivalence ($\max |\hat{y}_c - \hat{y}_u| < 10^{-14}$):
+- $b_{1\_u} = b_{1c} - 2 b_2 \mu_x - b_5 \mu_{\bar{x}}$
+- $b_{3\_u} = b_{3c} - b_5 \mu_x$
+- $b_{2\_u} = b_2, \quad b_{5\_u} = b_5$
+- $b_{0\_u} = b_{0c} - b_{1c}\mu_x + b_2 \mu_x^2 - b_{3c}\mu_{\bar{x}} + b_5 \mu_x \mu_{\bar{x}}$
 
 ---
 
 ## 4. Key Empirical & Theoretical Findings
 
-### Full-Sample Calibrated Coefficients ($N = 809, G = 38$)
-- $\hat{\beta}_1^* = -0.3135$ ($\mathrm{SE}_{\mathrm{CRSE}} = 1.9191, p = 0.8711$)
-- $\hat{\beta}_2^* = -8.1974$ ($\mathrm{SE}_{\mathrm{CRSE}} = 8.2994, p = 0.3297$) — *Point estimate is strictly concave ($\beta_2 < 0$), reflecting diminishing returns.*
-- $\hat{\beta}_3^* = +2.6172$ ($\mathrm{SE}_{\mathrm{CRSE}} = 6.0386, p = 0.6672$)
-- $\hat{\beta}_5^* = +20.7942$ ($\mathrm{SE}_{\mathrm{CRSE}} = 60.2260, p = 0.7318$)
-- $\hat{\gamma}_s = +1.0417$ ($\mathrm{SE}_{\mathrm{CRSE}} = 0.1147, p < 0.0001$) — *Creator scale elasticity is the dominant predictor ($t = 9.08$).*
+### Model Progression & Out-of-Sample Performance Comparison
 
-### Statistical Inference via Wild Cluster Bootstrap ($B = 2{,}000$)
-- **Diminishing Returns ($H_0: \beta_2 \ge 0$):** One-sided WCB $p = 0.2480$. Retained at $\alpha = 0.05$. Concavity is a calibrated theoretical feature rather than a statistically confirmed finding.
-- **Strategic Interaction ($H_0: \beta_5 = 0$):** Two-sided WCB $p = 0.7835$. Retained at $\alpha = 0.05$.
-- **Contraction Ratio ($\rho = |\beta_5| / (2|\beta_2|)$):** Point estimate $\rho = 1.2683$. $100\%$ of bootstrap draws are concave ($\beta_2 < 0$), with $P(\rho < 1) = 32.40\%$.
+```
++------------------------+-------------+-------------+-------------+-------------+
+| Model                  | Train R²    | LOCO-CV R²  | Val R²_OOS  | Test R²_OOS |
+|                        | (N=541)     | (26 folds)  | (N=136)     | (N=132)     |
++------------------------+-------------+-------------+-------------+-------------+
+| Model 0 (Controls Base)|   0.6324    |   0.5741    |   0.4768    |   0.7535    |
+| Model 1 (Linear Appeal)|   0.6373    |   0.5708    |   0.4035    |   0.7473    |
+| Model 2 (Quadratic)    |   0.6376    |   0.5600    |   0.3836    |   0.7519    |
+| Model 3 (Peer Congest) |   0.6378    |   0.5589    |   0.3881    |   0.7534    |
+| Model 4 [LOCKED SPEC]  |   0.6383    |   0.5565    |   0.3965    |   0.7537    |
+| Model 5 (Full Tags)    |   0.6409    |   0.5440    |   0.4210    |   0.7559    |
++------------------------+-------------+-------------+-------------+-------------+
+```
 
-### Handoff Condition for Game Theory (Khushi Shah)
-Because $\rho = 1.2683 > 1$ under empirical revenue alone, creators face boundary solutions without convex costs. Incorporating quadratic production costs $C_i(x_i) = c_i x_i + \frac{\kappa_i}{2} x_i^2$ with:
-$$\kappa_{\min} > |\beta_5^*| - 2 |\beta_2^*| = 20.7942 - 16.3948 = 4.40$$
-guarantees that creator best-response dynamics form a strict contraction mapping on $[0, 1]$, proving the existence and uniqueness of a pure-strategy Nash Equilibrium.
+> [!IMPORTANT]
+> **Model Selection Disclosure:**  
+> Model 0 (controls alone) outperforms Model 4 in both LOCO-CV ($0.5741$ vs. $0.5565$) and Validation ($0.4768$ vs. $0.3965$). In Test holdout, Model 4 ($0.7537$) beats Model 0 ($0.7535$) by only $+0.0002$ ($0.02$ percentage points). Model 4-Centered was locked **strictly by theoretical necessity** because it is the minimal specification containing the structural packaging terms required for game-theoretic analysis.
+
+### Structural Parameter Estimates ($N = 809, G = 38$)
+
+| Parameter | Centered Estimate | CRSE SE | Student-$t$ $p$ | Uncentered Est. ($b_u$) | Delta SE | Student-$t$ $p$ |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Intercept ($b_0$)** | $-2.7904$ | $2.4168$ | $0.2557$ | $-1.7604$ | — | — |
+| **Own Appeal ($b_1$)** | $-0.3135$ | $1.9191$ | $0.8711$ | $-2.0190$ | $20.9201$ | $0.9236$ |
+| **Curvature ($b_2$)** | $-8.1974$ | $8.2994$ | $0.3297$ | $-8.1974$ | $8.2994$ | $0.3297$ |
+| **Peer Congestion ($b_3$)**| $+2.6172$ | $6.0386$ | $0.6672$ | $-5.5424$ | $22.8522$ | $0.8097$ |
+| **Interaction ($b_5$)** | $+20.7942$| $60.2260$| $0.7318$ | $+20.7942$| $60.2260$| $0.7318$ |
+| **Log Subscribers ($\gamma_s$)** | $+1.0417^{***}$ | $0.1147$ | $<0.0001$ | $+1.0417^{***}$ | $0.1147$ | $<0.0001$ |
+| **Log Duration ($\gamma_d$)** | $+0.0454$ | $0.2534$ | $0.8588$ | $+0.0454$ | $0.2534$ | $0.8588$ |
+| **Age Days ($\gamma_a$)** | $+0.0003$ | $0.0003$ | $0.3178$ | $+0.0003$ | $0.0003$ | $0.3178$ |
+
+*Significance marker: $^{***} p < 0.001$. Degrees of freedom $df = G - 1 = 37$.*
+
+### Hypothesis Tests & Hypothesis Support Status
+- **Joint Packaging Significance:** $F(4, 37) = 0.4739$ ($p = 0.7546$). Controls explain $99.3\%$ of the variance; packaging terms are jointly insignificant.
+- **Diminishing Returns ($H_0: \beta_2 \ge 0$):** Wild Cluster Bootstrap one-sided $p = 0.2600$. Retained at $\alpha = 0.05$. Concavity is not statistically confirmed.
+- **Strategic Interaction ($H_0: \beta_5 = 0$):** Wild Cluster Bootstrap two-sided $p = 0.7795$. Retained at $\alpha = 0.05$.
+- **Original Proposal Hypotheses (H1–H4):** Not supported by the data:
+  - *H1 ($b_1 > 0$):* not supported ($p = 0.92$) (uncentered point estimate $b_{1\_u} = -2.0190$, $\mathrm{SE} = 20.9201$).
+  - *H2 ($b_2 < 0$):* Insignificant ($p = 0.3297$).
+  - *H3 ($b_3 < 0$):* Insignificant ($p = 0.8097$).
+  - *H4 ($b_5 < 0$):* Point estimate is positive ($+20.7942$, complements) and insignificant ($p = 0.7318$).
+
+### Cluster-Pairs Bootstrap Diagnostics ($B = 2{,}000$)
+- **Standard Error Verification:** Ratio $\mathrm{SE}_{\mathrm{boot}} / \mathrm{SE}_{\mathrm{CRSE}}$ is between $0.95$ and $1.06$ for all variables (log-subscribers ratio is $1.064$, resolving the earlier 12x deflation artifact).
+- **Concave Draws ($b_2 < 0$):** $81.40\%$ ($1{,}628 / 2{,}000$).
+- **Contraction & Concave Satisfied ($\rho < 1$ and $b_2 < 0$):** Exactly $18.65\%$ ($373 / 2{,}000$).
+- **Contraction Ratio ($\rho = |b_5| / (2|b_2|)$ among concave draws):**
+  - Point estimate: $\rho = 1.2683$
+  - 95% Confidence Interval: $[0.1140, 35.7036]$
+  - Median: $2.1528$ ($p_{10} = 0.4200, p_{25} = 1.1053, p_{75} = 4.0546, p_{90} = 9.4619$).
 
 ---
 
-## 5. Directory Structure & Key Artifacts
+## 5. Output for Downstream Use (Game-Theoretic Parameters)
+
+This section provides the calibrated empirical structural parameters and covariance structure for downstream game-theoretic modeling (Khushi Shah).
+
+### Primary Structural Parameters (Paper Eq. 2)
+The uncentered empirical payoff function parameters corresponding to paper Equation (2) are:
+$$\pi_i(x_i, \bar{x}_{-i}) = b_{0\_u} + b_{1\_u} x_i + b_{2\_u} x_i^2 + b_{3\_u} \bar{x}_{-i} + b_{5\_u} x_i \bar{x}_{-i} + \gamma_s \ln(s_i) + \gamma_d \ln(\text{dur}_{it}) + \gamma_a \text{age}_{it}$$
+
+- **Uncentered Point Estimates:**
+  $$b_{1\_u} = -2.0190, \quad b_{2\_u} = -8.1974, \quad b_{3\_u} = -5.5424, \quad b_{5\_u} = +20.7942$$
+  $$b_{0\_u} = -1.7604, \quad \gamma_s = 1.0417, \quad \gamma_d = 0.0454, \quad \gamma_a = 0.0003$$
+- **Centering Sample Means:**
+  $$\mu_x = 0.392395, \quad \mu_{\bar{x}} = 0.391390$$
+- **Delta-Method Covariance Matrix $\mathbf{\Sigma}_u$ (Order: $b_{1\_u}, b_{2\_u}, b_{3\_u}, b_{5\_u}$):**
+$$\mathbf{\Sigma}_u = \begin{pmatrix}
+437.6519 & 81.7337 & 456.3322 & -1233.9756 \\
+81.7337 & 68.8802 & 108.1554 & -316.4174 \\
+456.3322 & 108.1554 & 522.2211 & -1330.6057 \\
+-1233.9756 & -316.4174 & -1330.6057 & 3627.1741
+\end{pmatrix}$$
+
+### Factual Mathematical Properties
+Factually, at the empirical point estimates:
+- $b_{5\_u} > 2|b_{2\_u}|$ ($20.7942 > 16.3948$) and $b_{2\_u} + b_{5\_u} > 0$ ($-8.1974 + 20.7942 = +12.5968 > 0$).
+- Across $2{,}000$ cluster-pairs bootstrap draws, only $18.65\%$ of draws satisfy $|b_5| < 2|b_2|$.
+
+---
+
+## 6. Directory Structure & Complete Artifact Catalog
 
 ```text
-payoff_estimation/
-├── data/
-│   ├── processed_payoff_data.csv       # Cleaned, joined dataset (N=809)
-│   ├── data_dictionary.csv             # 21 variables documented with ranges
-│   ├── channel_splits.json             # Stratified channel partition map (seed=42)
-│   └── partitioned_payoff_data.csv     # Full dataset labeled with partition
-├── scripts/
-│   ├── 01_prepare_payoff_data.py       # Step 1: Ingestion & audit
-│   ├── 02_create_stratified_split.py   # Step 2: Stratified split (26/6/6)
-│   ├── 03_train_models.py              # Step 3: Primary regressions & robustness
-│   ├── 04_evaluate_loco_cv.py          # Step 4: 26-fold LOCO-CV on training
-│   ├── 05_validate_and_freeze.py       # Step 5: Validation & model locking
-│   ├── 06_evaluate_test_holdout.py     # Step 6: Holdout test evaluation
-│   ├── 07_post_test_structural_calibration.py # Step 7: Full estimation & bootstrap
-│   ├── 08_generate_plots.py            # Step 8: Publication plots generator
-│   └── 09_backward_looking_robustness.py # Secondary peer window robustness
-├── results/
-│   ├── game_theory_coefficients.json   # Structural handoff payload for Game Theory
-│   ├── game_theory_coefficients.csv    # Flat parameter summary table
-│   ├── post_test_structural_regression_results.csv # Full-sample regression table
-│   ├── bootstrap_inference_results.csv # Bootstrap CIs and contraction stats
-│   ├── test_set_evaluation.csv         # Holdout test set metrics
-│   ├── test_channel_dispersion.csv     # Test channel-by-channel breakdown
-│   ├── validation_evaluation.csv       # Validation cohort metrics
-│   ├── validation_channel_dispersion.csv # Validation channel breakdown
-│   ├── loco_cv_aggregate_summary.csv   # 26-fold LOCO-CV aggregate summary
-│   ├── training_model_comparison.csv   # Training fit, AIC, and BIC
-│   ├── training_multicollinearity_diagnostics.csv # VIF comparison table
-│   ├── subscriber_robustness_table.csv # Scale and FE robustness specifications
-│   └── backward_looking_peer_robustness.csv # Contemporaneous vs backward peer table
-├── plots/
-│   ├── 01_model_progression_fit.png    # In-sample vs OOS R² & AIC/BIC curves
-│   ├── 02_actual_vs_predicted.png      # Actual vs predicted for Train/Val/Test
-│   ├── 03_residual_audit.png           # 4-panel residual diagnostic grid
-│   ├── 04_payoff_response_curves.png   # Revenue response vs convex cost tradeoffs
-│   ├── 05_peer_interaction_heatmap.png # 2D contour surface with best-response path
-│   └── 06_channel_error_dispersion.png # Channel-level MAE and bias across 38 channels
-├── FINAL_PAYOFF_REPORT.md              # Comprehensive master research report
-└── README.md                           # This document
-```
+payoff_calculation/
+|--  data/
+|   |--  processed_payoff_data.csv             # Cleaned, validated dataset (N=809)
+|   |--  data_dictionary.csv                   # Complete 21-variable definitions
+|   |--  channel_splits.json                   # Stratified channel partition map (seed=42)
+|   \--  partitioned_payoff_data.csv           # Full dataset labeled with partition
+|--  scripts/
+|   |--  01_prepare_payoff_data.py             # Stage 1: Ingestion & audit
+|   |--  02_create_stratified_split.py         # Stage 2: Stratified split (26/6/6)
+|   |--  03_train_models.py                    # Stage 3: Training regressions & robustness
+|   |--  04_evaluate_loco_cv.py                # Stage 4: 26-fold LOCO-CV on training cohort
+|   |--  05_validate_and_freeze.py             # Stage 5: Validation evaluation & model locking
+|   |--  06_evaluate_test_holdout.py           # Stage 6: Holdout test evaluation
+|   |--  07_post_test_structural_calibration.py# Stage 7: Full estimation, uncentering & bootstrap
+|   |--  08_generate_plots.py                  # Stage 8: Publication figure generation
+|   |--  09_backward_looking_robustness.py     # Stage 9: Backward-looking peer window check
+|   \--  10_congestion_test.py                 # Stage 10: State-dependent peer congestion test E(x)
+|--  results/
+|   |--  game_theory_coefficients.json         # Complete structural payload for downstream game theory
+|   |--  game_theory_coefficients.csv          # Flat structural parameter summary
+|   |--  post_test_structural_regression_results.csv # Full-sample regression table
+|   |--  bootstrap_inference_results.csv       # Bootstrap CIs & contraction stats
+|   |--  bootstrap_draws.npz                   # 2,000 cluster-pairs bootstrap parameter draws
+|   |--  congestion_test.csv                   # Stage 10: Congestion function E(x) grid & bootstrap results
+|   |--  training_regression_results.csv       # Training model estimates
+|   |--  training_model_comparison.csv         # Training AIC, BIC, R²
+|   |--  training_multicollinearity_diagnostics.csv # Centered vs uncentered VIFs
+|   |--  subscriber_robustness_table.csv       # Scale and FE robustness specifications
+|   |--  loco_cv_aggregate_summary.csv         # Stage 4 LOCO-CV summary
+|   |--  loco_cv_fold_results.csv              # Stage 4 fold-by-fold results
+|   |--  validation_evaluation.csv             # Stage 5 validation evaluation
+|   |--  validation_channel_dispersion.csv     # Stage 5 validation channel breakdown
+|   |--  test_set_evaluation.csv               # Stage 6 test evaluation
+|   |--  test_channel_dispersion.csv           # Stage 6 test channel breakdown
+|   \--  backward_looking_peer_robustness.csv  # Contemporaneous vs backward peer table
+|--  plots/
+|   |--  01_model_progression_fit.png          # Figure 1: In-sample vs OOS R² and AIC/BIC
+|   |--  02_actual_vs_predicted.png            # Figure 2: Actual vs predicted log views
+|   |--  03_residual_audit.png                 # Figure 3: Four-panel residual diagnostics
+|   |--  04_payoff_response_curves.png         # Figure 4: Payoff response under production costs
+|   |--  05_peer_interaction_heatmap.png       # Figure 5: Strategic contour surface & BR path
+|   |--  06_channel_error_dispersion.png       # Figure 6: Channel-level error dispersion
+|   \--  07_congestion_test.png                # Figure 7: State-dependent peer congestion function E(x)
+|--  tests/
+|   |--  test_bootstrap_verification.py        # Automated test for cluster-pairs bootstrap
+|   |--  test_report_consistency.py           # Automated test verifying report numerical accuracy
+|   |--  test_equilibrium_consistency.py       # Structural transformation & parameter consistency
+|   \--  test_encoding.py                      # UTF-8 and mojibake audit test
+|--  _extras/                                  # Archived downstream equilibrium scripts, sweeps & legacy files
+|--  payoff_estimation.py                     # Master execution runner
+|--  FINAL_PAYOFF_REPORT.md                     # Comprehensive master research report
+\--  README.md                                  # This document
+``````
 
 ---
 
-## 6. Reproduction Instructions
+## 7. End-to-End Reproduction Instructions
 
-All analyses run reproducibly under Python 3.10+ (requires `statsmodels`, `scipy`, `pandas`, `numpy`, and `matplotlib`).
-
-To execute the entire empirical pipeline from Step 1 to Step 8:
+To execute all 10 empirical stages in clean sequence:
 
 ```bash
-cd payoff_estimation
-
-# Step 1: Data Preparation & Verification
-python scripts/01_prepare_payoff_data.py
-
-# Step 2: Channel-Level Stratified Partitioning (26 train, 6 val, 6 test)
-python scripts/02_create_stratified_split.py
-
-# Step 3: Model Development & Multicollinearity Diagnostics (Training Cohort)
-python scripts/03_train_models.py
-
-# Step 4: 26-Fold LOCO-CV Evaluation (Training Cohort)
-python scripts/04_evaluate_loco_cv.py
-
-# Step 5: Model Selection & Specification Freezing (Validation Cohort)
-python scripts/05_validate_and_freeze.py
-
-# Step 6: Final Holdout Evaluation (6 Test Channels)
-python scripts/06_evaluate_test_holdout.py
-
-# Step 7: Post-Test Full-Sample Structural Calibration & Bootstrap Inference
-python scripts/07_post_test_structural_calibration.py
-
-# Step 8: Publication Figure Generation
-python scripts/08_generate_plots.py
-
-# Secondary Robustness Check: Backward-Looking Peer Window
-python scripts/09_backward_looking_robustness.py
+cd payoff_calculation
+python payoff_estimation.py
 ```
 
-*Execution of the entire pipeline completes in approximately 60 seconds.*
+To run the automated verification test suite:
+```bash
+python tests/test_bootstrap_verification.py
+python tests/test_report_consistency.py
+```
+*Total execution completes in approximately 45 seconds.*

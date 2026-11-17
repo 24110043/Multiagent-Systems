@@ -1,14 +1,23 @@
-parameter,value,se_crse,description
-beta_0_c_intercept,-2.7904402468278455,2.416793206575689,Centered Intercept
-beta_1_c_own_appeal,-0.3135297005865514,1.9191011206841946,Linear Own Appeal at Mean
-beta_2_c_curvature,-8.197369064002235,8.299407366719604,Quadratic Curvature
-beta_3_c_peer_congestion,2.617178231167514,6.038613874271168,Competitor Congestion at Mean
-beta_5_c_interaction,20.794249907773402,60.22602538361707,Strategic Interaction Term
-gamma_subscribers,1.0417303162390181,0.11473605366396031,Channel Scale Elasticity
-gamma_duration,0.04539869027386549,0.2534277171114793,Log Duration Elasticity
-gamma_age_days,0.0002953209480532577,0.0002916016959743716,Linear Age Drift per Day
-mu_x_centering,0.39239470580964153,,Sample Mean Own Click Appeal
-mu_xbar_centering,0.39138986963688116,,Sample Mean Competitor Peer Appeal
-contraction_ratio_rho,1.268349012068327,,|beta_5| / (2 * |beta_2|)
-wcb_p_val_concavity,0.248,,Null-Restricted WCB p-value for H0: beta_2 >= 0
-wcb_p_val_interaction,0.7835,,Null-Restricted WCB p-value for H0: beta_5 = 0
+parameter,label,value,se,description
+b0_u_intercept,uncentered,-1.7603617563744556,,Uncentered Intercept
+b1_u_own_appeal,uncentered,-2.018980016622285,20.92013162747341,Uncentered Linear Own Appeal
+b2_u_curvature,uncentered,-8.197369064002235,8.299407366719604,Uncentered Quadratic Curvature
+b3_u_peer_congestion,uncentered,-5.542375343925395,22.852157008150307,Uncentered Peer Congestion
+b5_u_interaction,uncentered,20.794249907773402,60.22602538361707,Uncentered Strategic Interaction
+b0_c_intercept,centered,-2.7904402468278455,2.416793206575689,Centered Intercept
+b1_c_own_appeal_at_mean,centered,-0.3135297005865514,1.9191011206841946,Centered Linear Own Appeal at Mean
+b2_c_curvature,centered,-8.197369064002235,8.299407366719604,Centered Quadratic Curvature
+b3_c_peer_congestion_at_mean,centered,2.617178231167514,6.038613874271168,Centered Peer Congestion at Mean
+b5_c_interaction,centered,20.794249907773402,60.22602538361707,Centered Strategic Interaction
+gamma_subscribers,control,1.0417303162390181,0.11473605366396031,Channel Scale Elasticity
+gamma_duration,control,0.04539869027386549,0.2534277171114793,Log Duration Elasticity
+gamma_age_days,control,0.0002953209480532577,0.0002916016959743716,Linear Age Drift per Day
+mu_x_centering,constant,0.39239470580964153,,Sample Mean Own Click Appeal
+mu_xbar_centering,constant,0.39138986963688116,,Sample Mean Competitor Peer Appeal
+contraction_ratio_rho,diagnostic,1.268349012068327,,|b5| / (2 * |b2|)
+wcb_p_val_concavity,hypothesis_test,0.26,,Null-Restricted WCB p-value for H0: b2 >= 0
+wcb_p_val_interaction,hypothesis_test,0.7795,,Null-Restricted WCB p-value for H0: b5 = 0
+r_squared_controls,model_fit,0.6308007683540072,,R² of controls-only model
+r_squared_full,model_fit,0.6353315210905901,,R² of full Model 4-Centered
+joint_f_stat_packaging,model_fit,0.47391377747529634,,F-statistic for b1=b2=b3=b5=0
+joint_f_pval_packaging,model_fit,0.7545508326710406,,p-value for joint packaging F-test

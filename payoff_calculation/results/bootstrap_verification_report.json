@@ -27,35 +27,36 @@
   "test_2_passed": true,
   "test_3_confidence_intervals": {
     "const": {
-      "lower": 8.94078945125749,
-      "upper": 10.10202324061061
+      "lower": 7.82372342694209,
+      "upper": 11.694018076063532
     },
     "x": {
-      "lower": 0.13549896537827577,
-      "upper": 3.3869440418964443
+      "lower": -0.49126325233456786,
+      "upper": 3.8463426907917095
     },
     "x2": {
-      "lower": -3.609058974841329,
-      "upper": -1.305540345823195
+      "lower": -3.784470161800047,
+      "upper": -0.968233756934264
     },
     "x_bar": {
-      "lower": -1.1274951611341872,
-      "upper": 1.3294630691604896
+      "lower": -1.2676776102481864,
+      "upper": 1.3712039587175522
     },
     "x_inter": {
-      "lower": -3.507879956669719,
-      "upper": 1.7121320591866966
+      "lower": -3.914648053057903,
+      "upper": 2.018944178826156
     },
     "log_s": {
-      "lower": 0.5227738010584828,
-      "upper": 0.5257674766816199
+      "lower": 0.36752070061136366,
+      "upper": 0.6563238708766551
     }
   },
   "test_3_coverage_passed": true,
+  "test_3_se_ratio_passed": true,
   "test_4_seed_reproducibility_passed": true,
   "contraction_ratio_summary": {
-    "median": 0.24694224183702118,
-    "p_rho_less_1": 0.992,
+    "median": 0.27176007381867284,
+    "p_rho_less_1": 0.98,
     "non_concave_draws": 0,
     "total_draws": 500
   },

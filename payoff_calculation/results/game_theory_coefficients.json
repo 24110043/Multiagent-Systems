@@ -5,7 +5,8 @@
     "course": "CS 329 Multi-Agent Systems, IIT Gandhinagar",
     "authors": "Bhavya Shah (24110324) - Payoff Estimation | Khushi Shah (24110326) - Game Theory",
     "calibration_status": "Post-Test Final Full-Sample Calibration (N = 809 videos, G = 38 channels)",
-    "locked_specification": "Model 4-Centered: Strategic Payoff Function with Contemporaneous Peer Appeal"
+    "locked_specification": "Model 4-Centered: Strategic Payoff Function with Contemporaneous Peer Appeal",
+    "mathematical_note": "Uncentered coefficients (b1_u, b2_u, b3_u, b5_u) are analytically derived from the centered model and represent the true structural payoff parameters for uncentered click appeal x in [0, 1] as defined in Eq. 2."
   },
   "sample_summary": {
     "total_observations_N": 809,
@@ -13,66 +14,94 @@
     "mean_videos_per_channel": 21.289473684210527,
     "centering_mu_x": 0.39239470580964153,
     "centering_mu_xbar": 0.39138986963688116,
+    "sd_own_appeal_x": 0.10370987700571042,
+    "sd_peer_appeal_xbar": 0.00736312048038628,
     "peer_window_days": 60,
     "peer_window_description": "Contemporaneous rolling 60-day window [t - 30d, t + 30d], LOCO across channels",
     "subscribers_snapshot_note": "Subscriber count measured as late-2026 snapshot; acts as time-invariant channel scale control"
   },
-  "locked_centered_coefficients": {
-    "specification": "ln(V_it) = beta_0_c + beta_1_c*(x - mu_x) + beta_2_c*(x - mu_x)^2 + beta_3_c*(x_bar - mu_xbar) + beta_5_c*(x - mu_x)*(x_bar - mu_xbar) + gamma_s*ln(s_i) + gamma_d*ln(dur_it) + gamma_a*age_it + eps_it",
-    "beta_0_c_intercept": -2.7904402468278455,
-    "beta_1_c_own_appeal_at_mean": -0.3135297005865514,
-    "beta_2_c_quadratic_curvature": -8.197369064002235,
-    "beta_3_c_peer_congestion_at_mean": 2.617178231167514,
-    "beta_5_c_strategic_interaction": 20.794249907773402,
+  "uncentered_structural_coefficients_for_game_theory": {
+    "description": "Primary parameters for paper Eq. 2: pi_i(x_i, x_bar) = b0_u + b1_u*x_i + b2_u*x_i^2 + b3_u*x_bar + b5_u*x_i*x_bar + controls",
+    "b0_u_intercept": -1.7603617563744556,
+    "b1_u_own_linear_appeal": -2.018980016622285,
+    "b2_u_quadratic_curvature": -8.197369064002235,
+    "b3_u_peer_congestion": -5.542375343925395,
+    "b5_u_strategic_interaction": 20.794249907773402,
     "gamma_subscribers": 1.0417303162390181,
     "gamma_duration": 0.04539869027386549,
-    "gamma_age_days": 0.0002953209480532577
+    "gamma_age_days": 0.0002953209480532577,
+    "standard_errors_delta_method": {
+      "se_b1_u": 20.92013162747341,
+      "se_b2_u": 8.299407366719604,
+      "se_b3_u": 22.852157008150307,
+      "se_b5_u": 60.22602538361707
+    },
+    "p_values_student_t_df37": {
+      "p_val_b1_u": 0.9236372238743895,
+      "p_val_b2_u": 0.32329697322975925,
+      "p_val_b3_u": 0.8097075136584473,
+      "p_val_b5_u": 0.7298912716669095
+    },
+    "covariance_matrix_order": [
+      "b1_u",
+      "b2_u",
+      "b3_u",
+      "b5_u"
+    ],
+    "covariance_matrix_delta_method": [
+      [
+        437.6519073108132,
+        81.73371153319638,
+        456.3321848279307,
+        -1233.9756095198127
+      ],
+      [
+        81.73371153319668,
+        68.88016263875964,
+        108.15535384448393,
+        -316.41740231579104
+      ],
+      [
+        456.33218482793086,
+        108.15535384448378,
+        522.2210799251532,
+        -1330.6057456633494
+      ],
+      [
+        -1233.9756095198131,
+        -316.41740231579035,
+        -1330.6057456633494,
+        3627.1741335080874
+      ]
+    ]
   },
-  "uncentered_reference_coefficients": {
-    "specification": "ln(V_it) = beta_0 + beta_1*x_it + beta_2*x_it^2 + beta_3*x_bar_(-i,t) + beta_5*x_it*x_bar_(-i,t) + gamma_s*ln(s_i) + gamma_d*ln(dur_it) + gamma_a*age_it + eps_it",
-    "beta_0_intercept": -1.7603617563732825,
-    "beta_1_own_appeal": -2.0189800166253535,
-    "beta_2_quadratic_own_appeal": -8.19736906400218,
-    "beta_3_peer_appeal": -5.54237534392816,
-    "beta_5_interaction": 20.79424990778103,
-    "note_on_equivalence": "beta_2 and beta_5 are numerically identical between centered and uncentered models"
-  },
-  "statistical_inference": {
-    "cluster_robust_standard_errors": {
-      "se_beta_0_c": 2.416793206575689,
-      "se_beta_1_c": 1.9191011206841946,
-      "se_beta_2_c": 8.299407366719604,
-      "se_beta_3_c": 6.038613874271168,
-      "se_beta_5_c": 60.22602538361707,
+  "centered_estimation_coefficients": {
+    "description": "Econometric estimation model: ln(V) = b0_c + b1_c*(x - mu_x) + b2_c*(x - mu_x)^2 + b3_c*(x_bar - mu_xbar) + b5_c*(x - mu_x)*(x_bar - mu_xbar) + controls",
+    "b0_c_intercept": -2.7904402468278455,
+    "b1_c_own_appeal_at_mean": -0.3135297005865514,
+    "b2_c_quadratic_curvature": -8.197369064002235,
+    "b3_c_peer_congestion_at_mean": 2.617178231167514,
+    "b5_c_strategic_interaction": 20.794249907773402,
+    "gamma_subscribers": 1.0417303162390181,
+    "gamma_duration": 0.04539869027386549,
+    "gamma_age_days": 0.0002953209480532577,
+    "standard_errors_crse": {
+      "se_b0_c": 2.416793206575689,
+      "se_b1_c": 1.9191011206841946,
+      "se_b2_c": 8.299407366719604,
+      "se_b3_c": 6.038613874271168,
+      "se_b5_c": 60.22602538361707,
       "se_gamma_subs": 0.11473605366396031,
       "se_gamma_dur": 0.2534277171114793,
       "se_gamma_age": 0.0002916016959743716
     },
-    "hypothesis_test_diminishing_returns_concavity": {
-      "null_hypothesis": "H0: beta_2 >= 0 (no diminishing returns)",
-      "alternative_hypothesis": "H1: beta_2 < 0 (strictly concave revenue)",
-      "crse_t_statistic": -0.9877053507306388,
-      "student_t_p_value_df37": 0.16485617554095058,
-      "wild_cluster_bootstrap_p_value": 0.248,
-      "rejection_at_alpha_0_05": false,
-      "interpretation": "Concavity is NOT statistically established at alpha=0.05. Point estimate beta_2 < 0 must be treated as calibrated benchmark."
-    },
-    "hypothesis_test_strategic_interaction": {
-      "null_hypothesis": "H0: beta_5 = 0 (no strategic interaction)",
-      "alternative_hypothesis": "H1: beta_5 != 0 (strategic interdependence)",
-      "crse_t_statistic": 0.3452701680929776,
-      "student_t_p_value_df37": 0.7318465233169236,
-      "wild_cluster_bootstrap_p_value": 0.7835,
-      "rejection_at_alpha_0_05": false,
-      "interpretation": "Strategic interaction is statistically insignificant (p > 0.05). Packaging effects carry substantial residual uncertainty."
-    },
-    "strategic_covariance_matrix_order": [
+    "covariance_matrix_order": [
       "x_c",
       "x2_c",
       "x_bar_c",
       "x_inter_c"
     ],
-    "strategic_covariance_matrix": [
+    "covariance_matrix_crse": [
       [
         3.6829491114113315,
         11.947567999491321,
@@ -99,30 +128,73 @@
       ]
     ]
   },
+  "hypothesis_testing_and_model_diagnostics": {
+    "r_squared_controls_only": 0.6308007683540072,
+    "r_squared_full_model": 0.6353315210905901,
+    "incremental_r_squared": 0.004530752736582877,
+    "joint_f_test_packaging_terms": {
+      "test": "H0: b1 = b2 = b3 = b5 = 0",
+      "f_statistic": 0.47391377747529634,
+      "p_value": 0.7545508326710406,
+      "interpretation": "Packaging terms are jointly insignificant (p = 0.755). Adding packaging terms to creator scale and duration yields essentially zero predictive gain."
+    },
+    "test_concavity": {
+      "null_hypothesis": "H0: beta_2 >= 0 (no diminishing returns)",
+      "alternative_hypothesis": "H1: beta_2 < 0 (strictly concave revenue)",
+      "crse_t_statistic": -0.9877053507306388,
+      "wild_cluster_bootstrap_p_value": 0.26,
+      "rejection_at_alpha_0_05": false,
+      "interpretation": "Concavity is NOT statistically established (p = 0.2600). Point estimate beta_2 < 0 is a calibrated assumption, not an established empirical fact."
+    },
+    "test_strategic_interaction": {
+      "null_hypothesis": "H0: beta_5 = 0 (no strategic interaction)",
+      "alternative_hypothesis": "H1: beta_5 != 0 (strategic interdependence)",
+      "crse_t_statistic": 0.3452701680929776,
+      "wild_cluster_bootstrap_p_value": 0.7795,
+      "rejection_at_alpha_0_05": false,
+      "interpretation": "Strategic interaction is statistically insignificant (p = 0.7795)."
+    }
+  },
   "game_theoretic_properties": {
-    "game_class": "Continuous Aggregative Potential Game",
-    "exact_potential_function": "Phi(x_1, ..., x_N) = sum_i [ beta_1_c*(x_i - mu_x) + beta_2_c*(x_i - mu_x)^2 ] + [beta_5_c / (2*(N-1))] * sum_i sum_{j != i} (x_i - mu_x)*(x_j - mu_xbar) - sum_i C_i(x_i)",
-    "best_response_equation": "BR_i(x_{-i}) = argmax_{x_i in [0, 1]} [ ln V_i(x_i, x_bar_{-i}) - C_i(x_i) ]",
-    "first_order_condition": "beta_1_c + 2*beta_2_c*(x_i - mu_x) + beta_5_c*(x_bar_{-i} - mu_xbar) - C_i'(x_i) = 0",
+    "game_class": "Continuous Aggregative Exact Potential Game",
+    "exact_potential_function": "Phi(x_1, ..., x_N) = sum_i [ b1_u*x_i + b2_u*x_i^2 ] + [b5_u / (2*(N-1))] * sum_i sum_{j != i} x_i*x_j - sum_i C_i(x_i)",
+    "first_order_condition": "b1_u + 2*b2_u*x_i + b5_u*x_bar_{-i} - C_i'(x_i) = 0",
     "contraction_mapping_audit": {
       "formula": "rho = |beta_5| / (2 * |beta_2|)",
       "sample_point_estimate_rho": 1.268349012068327,
-      "contraction_satisfied_on_point_estimates": false,
-      "bootstrap_concave_fraction": 1.0,
-      "bootstrap_p_rho_less_1_given_concave": 0.324,
-      "bootstrap_p_both_concave_and_contraction": 0.324,
+      "contraction_satisfied_on_raw_point_estimates": false,
+      "bootstrap_concave_fraction": 0.814,
+      "bootstrap_p_rho_less_1_given_concave": 0.2291154791154791,
+      "bootstrap_p_both_concave_and_contraction": 0.1865,
+      "bootstrap_rho_95_ci": [
+        0.11398768654601875,
+        35.70363308746949
+      ],
       "bootstrap_rho_quantiles": {
-        "p10": 0.2982421167610886,
-        "p25": 0.761148526360224,
-        "p50_median": 1.6433714048719963,
-        "p75": 2.852385695164491,
-        "p90": 4.491190321081053
+        "p10": 0.4200478339864346,
+        "p25": 1.10530045469807,
+        "p50_median": 2.152844618872982,
+        "p75": 4.054634637180318,
+        "p90": 9.461931444727789
       }
     },
-    "production_cost_guidance_for_game_theory_agent": {
-      "specification_recommendation": "C_i(x_i) = c_i * x_i + 0.5 * kappa_i * x_i^2",
-      "boundary_warning": "Because empirical beta_2 has high variance, setting kappa_i > 0 guarantees strict game concavity (2*beta_2 - kappa_i < 0) for all creators even in regions where empirical beta_2 fluctuates.",
-      "equilibrium_uniqueness": "When 2*|beta_2| + kappa_min > |beta_5|, best-response dynamics form a contraction mapping, guaranteeing a unique pure-strategy Nash Equilibrium."
+    "stability_evaluation_option_A_unaugmented": {
+      "condition": "|b5| < 2|b2|",
+      "point_estimate_b5": 20.794249907773402,
+      "point_estimate_2_abs_b2": 16.39473812800447,
+      "denominator_2_abs_b2_minus_b5": -4.3995117797689325,
+      "status": "VIOLATED",
+      "implication": "On raw unaugmented point estimates, b5 = 20.794 > 2|b2| = 16.395, so 2|b2| - b5 = -4.399 < 0. Best-response dynamics do NOT form a contraction mapping, and the symmetric interior fixed point is an unstable repeller. Unconstrained best responses diverge to boundaries {0, 1}."
+    },
+    "stability_evaluation_option_B_cost_augmented": {
+      "production_cost_model": "C_i(x_i) = c_i * x_i + 0.5 * kappa_i * x_i^2",
+      "status_of_kappa": "ASSUMPTION (NOT estimated from data; added to restore mathematical contraction)",
+      "augmented_denominator": "2*|b2| + kappa - b5",
+      "strict_contraction_condition": "kappa > |b5| - 2*|b2| = 4.3994",
+      "linear_cost_clarification": "Linear cost (c_i * x_i) shifts payoff levels and intercepts, but does NOT alter the second derivative or best-response slope. Linear cost CANNOT restore a contraction mapping.",
+      "interior_solution_note": "Convex cost (kappa > 0) steepens marginal costs and makes an interior equilibrium more likely, but boundary clipping at [0, 1] remains necessary if marginal payoffs remain positive at x = 1.",
+      "downstream_replacement_rule": "In all paper formulas (x_Nash, x_SO, PoA, G(lambda), lambda_max), replace |b2| with (|b2| + kappa/2).",
+      "corrected_poa_definition": "PoA = exp[pi(x_SO, x_SO) - pi(x_NE, x_NE)] (evaluating true social welfare difference, NOT potential function ratio Phi_SO / Phi_NE)"
     }
   }
 }

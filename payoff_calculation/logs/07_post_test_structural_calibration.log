@@ -101,3 +101,258 @@ Centered Model 4 Estimates (CRSE Clustered by Channel, G = 38):
 2026-11-16 21:36:48,362 [INFO] ================================================================================
 2026-11-16 21:36:48,362 [INFO] STEP 7 COMPLETED SUCCESSFULLY: STRUCTURAL CALIBRATION & HANDOFF READY
 2026-11-16 21:36:48,362 [INFO] ================================================================================
+2026-11-18 00:28:43,435 [INFO] ================================================================================
+2026-11-18 00:28:43,435 [INFO] STEP 7: POST-TEST FULL-SAMPLE STRUCTURAL CALIBRATION & GAME THEORY HANDOFF
+2026-11-18 00:28:43,435 [INFO] ================================================================================
+2026-11-18 00:28:43,435 [INFO] CONTEXT: Post-test full-sample estimation is conducted ONLY after holdout test
+generalization was verified. The resulting parameters serve as structural inputs
+for the CS 329 potential game simulation and social welfare analysis.
+2026-11-18 00:28:43,450 [INFO] Loaded Full Dataset: N = 809 observations across G = 38 channels.
+2026-11-18 00:28:43,450 [INFO] Computing contemporaneous rolling peer appeal [t - 30d, t + 30d] across all 38 channels...
+2026-11-18 00:28:44,658 [INFO] Full-Sample Centering Parameters: mu_x = 0.392395, mu_xbar = 0.391390
+2026-11-18 00:28:44,660 [INFO] 
+================================================================================
+2026-11-18 00:28:44,661 [INFO] ESTIMATING FULL-SAMPLE MODEL 4-CENTERED (PRIMARY STRUCTURAL SPECIFICATION)
+2026-11-18 00:28:44,661 [INFO] ================================================================================
+2026-11-18 00:28:44,671 [INFO] Controls-Only Model R²: 0.6308
+2026-11-18 00:28:44,671 [INFO] Full Model 4-Centered R²: 0.6353 (Incremental Delta R² = 0.0045)
+2026-11-18 00:28:44,671 [INFO] Joint F-test of packaging terms (b1=b2=b3=b5=0): F = 0.4739, p = 0.7546
+2026-11-18 00:28:44,672 [INFO] Centered Model VIFs (Resolution of Multicollinearity):
+2026-11-18 00:28:44,673 [INFO]   x_c               : VIF =    1.121
+2026-11-18 00:28:44,673 [INFO]   x2_c              : VIF =    1.214
+2026-11-18 00:28:44,673 [INFO]   x_bar_c           : VIF =    1.068
+2026-11-18 00:28:44,673 [INFO]   x_inter_c         : VIF =    1.165
+2026-11-18 00:28:44,673 [INFO]   log_subscribers   : VIF =    1.132
+2026-11-18 00:28:44,673 [INFO]   log_duration      : VIF =    1.088
+2026-11-18 00:28:44,673 [INFO]   age_days          : VIF =    1.020
+2026-11-18 00:28:44,674 [INFO] 
+================================================================================
+2026-11-18 00:28:44,674 [INFO] TASK 1: ANALYTICAL UNCENTERING & DELTA-METHOD COVARIANCE DERIVATION
+2026-11-18 00:28:44,674 [INFO] ================================================================================
+2026-11-18 00:28:44,674 [INFO] Uncentered Coefficients:
+2026-11-18 00:28:44,674 [INFO]   b1_u = b1_c - 2*b2*mu_x - b5*mu_xbar = -2.018980 (Expected ~ -2.019)
+2026-11-18 00:28:44,674 [INFO]   b3_u = b3_c - b5*mu_x                = -5.542375 (Expected ~ -5.542)
+2026-11-18 00:28:44,674 [INFO]   b2_u = b2_c                          = -8.197369
+2026-11-18 00:28:44,674 [INFO]   b5_u = b5_c                          = 20.794250
+2026-11-18 00:28:44,674 [INFO]   b0_u                                 = -1.760362
+2026-11-18 00:28:44,675 [INFO] Prediction Equivalence Check: Max |pred_c - pred_u| = 5.33e-15
+2026-11-18 00:28:44,677 [INFO] Uncentered Standard Errors (Delta Method):
+2026-11-18 00:28:44,677 [INFO]   b1_u: Coef =    -2.0190 | SE =  20.9201 | t =  -0.097 | p = 0.9236
+2026-11-18 00:28:44,678 [INFO]   b2_u: Coef =    -8.1974 | SE =   8.2994 | t =  -0.988 | p = 0.3233
+2026-11-18 00:28:44,678 [INFO]   b3_u: Coef =    -5.5424 | SE =  22.8522 | t =  -0.243 | p = 0.8097
+2026-11-18 00:28:44,678 [INFO]   b5_u: Coef =    20.7942 | SE =  60.2260 | t =   0.345 | p = 0.7299
+2026-11-18 00:28:44,688 [INFO] Saved structural regression results table: C:\Github Backup\Multiagent-Systems\payoff_calculation\results\post_test_structural_regression_results.csv
+2026-11-18 00:28:44,688 [INFO] 
+================================================================================
+2026-11-18 00:28:44,688 [INFO] RUNNING NULL-RESTRICTED WILD CLUSTER BOOTSTRAP (B = 2000 DRAWS, WEBB WEIGHTS)
+2026-11-18 00:28:44,688 [INFO] ================================================================================
+2026-11-18 00:29:07,806 [INFO] Test A Result: t_sample = -0.9877 | WCB one-sided p-value = 0.2600 | Concavity H0 (beta_2 >= 0) is RETAINED at alpha = 0.05
+2026-11-18 00:29:10,375 [INFO] Test B Result: t_sample = 0.3453 | WCB two-sided p-value = 0.7795 | Interaction H0 (beta_5 = 0) is RETAINED at alpha = 0.05
+2026-11-18 00:29:10,375 [INFO] 
+================================================================================
+2026-11-18 00:29:10,375 [INFO] TASK 2: UNRESTRICTED CLUSTER-PAIRS BOOTSTRAP (B = 2,000 DRAWS)
+2026-11-18 00:29:10,375 [INFO] ================================================================================
+2026-11-18 00:29:10,375 [INFO] Resampling 38 channels with replacement. Preserving between-cluster variance (NO within-cluster demeaning).
+2026-11-18 00:29:22,781 [INFO] Saved compressed bootstrap draws array: C:\Github Backup\Multiagent-Systems\payoff_calculation\results\bootstrap_draws.npz
+2026-11-18 00:29:22,781 [INFO] 
+Cluster-Pairs Bootstrap SEs and Verification vs CRSE:
+2026-11-18 00:29:22,786 [INFO]   const             : Boot SE =   2.4993 | CRSE =   2.4168 | Ratio =  1.03
+2026-11-18 00:29:22,789 [INFO]   x_c               : Boot SE =   1.8144 | CRSE =   1.9191 | Ratio =  0.95
+2026-11-18 00:29:22,791 [INFO]   x2_c              : Boot SE =   8.0165 | CRSE =   8.2994 | Ratio =  0.97
+2026-11-18 00:29:22,794 [INFO]   x_bar_c           : Boot SE =   6.1283 | CRSE =   6.0386 | Ratio =  1.01
+2026-11-18 00:29:22,795 [INFO]   x_inter_c         : Boot SE =  59.7562 | CRSE =  60.2260 | Ratio =  0.99
+2026-11-18 00:29:22,799 [INFO]   log_subscribers   : Boot SE =   0.1220 | CRSE =   0.1147 | Ratio =  1.06
+2026-11-18 00:29:22,802 [INFO]   log_duration      : Boot SE =   0.2474 | CRSE =   0.2534 | Ratio =  0.98
+2026-11-18 00:29:22,806 [INFO]   age_days          : Boot SE =   0.0003 | CRSE =   0.0003 | Ratio =  0.97
+2026-11-18 00:29:22,809 [INFO]   b1_u              : Boot SE =  21.2315 | Delta SE =  20.9201 | Ratio =  1.01
+2026-11-18 00:29:22,810 [INFO]   b2_u              : Boot SE =   8.0165 | Delta SE =   8.2994 | Ratio =  0.97
+2026-11-18 00:29:22,812 [INFO]   b3_u              : Boot SE =  22.5215 | Delta SE =  22.8522 | Ratio =  0.99
+2026-11-18 00:29:22,814 [INFO]   b5_u              : Boot SE =  59.7562 | Delta SE =  60.2260 | Ratio =  0.99
+2026-11-18 00:29:22,820 [INFO] Saved bootstrap inference table: C:\Github Backup\Multiagent-Systems\payoff_calculation\results\bootstrap_inference_results.csv
+2026-11-18 00:29:22,823 [INFO] 
+================================================================================
+2026-11-18 00:29:22,824 [INFO] AUDITED CONTRACTION RATIO & POTENTIAL GAME STABILITY
+2026-11-18 00:29:22,824 [INFO] ================================================================================
+2026-11-18 00:29:22,824 [INFO] Sample Point Estimate beta_2: -8.197369 (Concave)
+2026-11-18 00:29:22,824 [INFO] Sample Point Estimate beta_5: 20.794250
+2026-11-18 00:29:22,825 [INFO] Sample Point Estimate rho = |beta_5| / (2*|beta_2|): 1.2683 (rho < 1: False)
+2026-11-18 00:29:22,825 [INFO] P(beta_2 < 0) [Concave Fraction]: 81.40% (Expected ~ 79-81%)
+2026-11-18 00:29:22,825 [INFO] P(rho < 1 | beta_2 < 0): 22.91%
+2026-11-18 00:29:22,825 [INFO] P(beta_2 < 0 and rho < 1): 18.65% (Expected ~ 18.5-19.5%)
+2026-11-18 00:29:22,826 [INFO] 95% CI for rho (among concave draws): [0.1140, 35.7036]
+2026-11-18 00:29:22,826 [INFO] Contraction Ratio Quantiles: p10=0.4200, p25=1.1053, p50(median)=2.1528, p75=4.0546, p90=9.4619
+2026-11-18 00:29:22,850 [INFO] Saved game theory JSON payload: C:\Github Backup\Multiagent-Systems\payoff_calculation\results\game_theory_coefficients.json
+2026-11-18 00:29:22,851 [INFO] Saved game theory CSV payload: C:\Github Backup\Multiagent-Systems\payoff_calculation\results\game_theory_coefficients.csv
+2026-11-18 00:29:22,851 [INFO] ================================================================================
+2026-11-18 00:29:22,851 [INFO] STEP 7 COMPLETED SUCCESSFULLY: STRUCTURAL CALIBRATION & HANDOFF READY
+2026-11-18 00:29:22,851 [INFO] ================================================================================
+2026-11-18 01:12:07,214 [INFO] ================================================================================
+2026-11-18 01:12:07,215 [INFO] STEP 7: POST-TEST FULL-SAMPLE STRUCTURAL CALIBRATION & GAME THEORY HANDOFF
+2026-11-18 01:12:07,215 [INFO] ================================================================================
+2026-11-18 01:12:07,215 [INFO] CONTEXT: Post-test full-sample estimation is conducted ONLY after holdout test
+generalization was verified. The resulting parameters serve as structural inputs
+for the CS 329 potential game simulation and social welfare analysis.
+2026-11-18 01:12:07,239 [INFO] Loaded Full Dataset: N = 809 observations across G = 38 channels.
+2026-11-18 01:12:07,240 [INFO] Computing contemporaneous rolling peer appeal [t - 30d, t + 30d] across all 38 channels...
+2026-11-18 01:12:09,609 [INFO] Full-Sample Centering Parameters: mu_x = 0.392395, mu_xbar = 0.391390
+2026-11-18 01:12:09,614 [INFO] 
+================================================================================
+2026-11-18 01:12:09,615 [INFO] ESTIMATING FULL-SAMPLE MODEL 4-CENTERED (PRIMARY STRUCTURAL SPECIFICATION)
+2026-11-18 01:12:09,615 [INFO] ================================================================================
+2026-11-18 01:12:09,624 [INFO] Controls-Only Model R²: 0.6308
+2026-11-18 01:12:09,625 [INFO] Full Model 4-Centered R²: 0.6353 (Incremental Delta R² = 0.0045)
+2026-11-18 01:12:09,625 [INFO] Joint F-test of packaging terms (b1=b2=b3=b5=0): F = 0.4739, p = 0.7546
+2026-11-18 01:12:09,627 [INFO] Centered Model VIFs (Resolution of Multicollinearity):
+2026-11-18 01:12:09,628 [INFO]   x_c               : VIF =    1.121
+2026-11-18 01:12:09,628 [INFO]   x2_c              : VIF =    1.214
+2026-11-18 01:12:09,628 [INFO]   x_bar_c           : VIF =    1.068
+2026-11-18 01:12:09,628 [INFO]   x_inter_c         : VIF =    1.165
+2026-11-18 01:12:09,628 [INFO]   log_subscribers   : VIF =    1.132
+2026-11-18 01:12:09,628 [INFO]   log_duration      : VIF =    1.088
+2026-11-18 01:12:09,628 [INFO]   age_days          : VIF =    1.020
+2026-11-18 01:12:09,630 [INFO] 
+================================================================================
+2026-11-18 01:12:09,630 [INFO] TASK 1: ANALYTICAL UNCENTERING & DELTA-METHOD COVARIANCE DERIVATION
+2026-11-18 01:12:09,630 [INFO] ================================================================================
+2026-11-18 01:12:09,630 [INFO] Uncentered Coefficients:
+2026-11-18 01:12:09,630 [INFO]   b1_u = b1_c - 2*b2*mu_x - b5*mu_xbar = -2.018980 (Expected ~ -2.019)
+2026-11-18 01:12:09,630 [INFO]   b3_u = b3_c - b5*mu_x                = -5.542375 (Expected ~ -5.542)
+2026-11-18 01:12:09,631 [INFO]   b2_u = b2_c                          = -8.197369
+2026-11-18 01:12:09,631 [INFO]   b5_u = b5_c                          = 20.794250
+2026-11-18 01:12:09,631 [INFO]   b0_u                                 = -1.760362
+2026-11-18 01:12:09,632 [INFO] Prediction Equivalence Check: Max |pred_c - pred_u| = 5.33e-15
+2026-11-18 01:12:09,635 [INFO] Uncentered Standard Errors (Delta Method):
+2026-11-18 01:12:09,635 [INFO]   b1_u: Coef =    -2.0190 | SE =  20.9201 | t =  -0.097 | p = 0.9236
+2026-11-18 01:12:09,636 [INFO]   b2_u: Coef =    -8.1974 | SE =   8.2994 | t =  -0.988 | p = 0.3233
+2026-11-18 01:12:09,636 [INFO]   b3_u: Coef =    -5.5424 | SE =  22.8522 | t =  -0.243 | p = 0.8097
+2026-11-18 01:12:09,636 [INFO]   b5_u: Coef =    20.7942 | SE =  60.2260 | t =   0.345 | p = 0.7299
+2026-11-18 01:12:09,646 [INFO] Saved structural regression results table: C:\Github Backup\Multiagent-Systems\payoff_calculation\results\post_test_structural_regression_results.csv
+2026-11-18 01:12:09,646 [INFO] 
+================================================================================
+2026-11-18 01:12:09,646 [INFO] RUNNING NULL-RESTRICTED WILD CLUSTER BOOTSTRAP (B = 2000 DRAWS, WEBB WEIGHTS)
+2026-11-18 01:12:09,646 [INFO] ================================================================================
+2026-11-18 01:12:14,736 [INFO] Test A Result: t_sample = -0.9877 | WCB one-sided p-value = 0.2600 | Concavity H0 (beta_2 >= 0) is RETAINED at alpha = 0.05
+2026-11-18 01:12:19,367 [INFO] Test B Result: t_sample = 0.3453 | WCB two-sided p-value = 0.7795 | Interaction H0 (beta_5 = 0) is RETAINED at alpha = 0.05
+2026-11-18 01:12:19,367 [INFO] 
+================================================================================
+2026-11-18 01:12:19,367 [INFO] TASK 2: UNRESTRICTED CLUSTER-PAIRS BOOTSTRAP (B = 2,000 DRAWS)
+2026-11-18 01:12:19,367 [INFO] ================================================================================
+2026-11-18 01:12:19,367 [INFO] Resampling 38 channels with replacement. Preserving between-cluster variance (NO within-cluster demeaning).
+2026-11-18 01:12:34,637 [INFO] Saved compressed bootstrap draws array: C:\Github Backup\Multiagent-Systems\payoff_calculation\results\bootstrap_draws.npz
+2026-11-18 01:12:34,637 [INFO] 
+Cluster-Pairs Bootstrap SEs and Verification vs CRSE:
+2026-11-18 01:12:34,638 [INFO]   const             : Boot SE =   2.4993 | CRSE =   2.4168 | Ratio =  1.03
+2026-11-18 01:12:34,639 [INFO]   x_c               : Boot SE =   1.8144 | CRSE =   1.9191 | Ratio =  0.95
+2026-11-18 01:12:34,640 [INFO]   x2_c              : Boot SE =   8.0165 | CRSE =   8.2994 | Ratio =  0.97
+2026-11-18 01:12:34,642 [INFO]   x_bar_c           : Boot SE =   6.1283 | CRSE =   6.0386 | Ratio =  1.01
+2026-11-18 01:12:34,643 [INFO]   x_inter_c         : Boot SE =  59.7562 | CRSE =  60.2260 | Ratio =  0.99
+2026-11-18 01:12:34,644 [INFO]   log_subscribers   : Boot SE =   0.1220 | CRSE =   0.1147 | Ratio =  1.06
+2026-11-18 01:12:34,645 [INFO]   log_duration      : Boot SE =   0.2474 | CRSE =   0.2534 | Ratio =  0.98
+2026-11-18 01:12:34,646 [INFO]   age_days          : Boot SE =   0.0003 | CRSE =   0.0003 | Ratio =  0.97
+2026-11-18 01:12:34,647 [INFO]   b1_u              : Boot SE =  21.2315 | Delta SE =  20.9201 | Ratio =  1.01
+2026-11-18 01:12:34,648 [INFO]   b2_u              : Boot SE =   8.0165 | Delta SE =   8.2994 | Ratio =  0.97
+2026-11-18 01:12:34,648 [INFO]   b3_u              : Boot SE =  22.5215 | Delta SE =  22.8522 | Ratio =  0.99
+2026-11-18 01:12:34,649 [INFO]   b5_u              : Boot SE =  59.7562 | Delta SE =  60.2260 | Ratio =  0.99
+2026-11-18 01:12:34,651 [INFO] Saved bootstrap inference table: C:\Github Backup\Multiagent-Systems\payoff_calculation\results\bootstrap_inference_results.csv
+2026-11-18 01:12:34,652 [INFO] 
+================================================================================
+2026-11-18 01:12:34,652 [INFO] AUDITED CONTRACTION RATIO & POTENTIAL GAME STABILITY
+2026-11-18 01:12:34,652 [INFO] ================================================================================
+2026-11-18 01:12:34,652 [INFO] Sample Point Estimate beta_2: -8.197369 (Concave)
+2026-11-18 01:12:34,652 [INFO] Sample Point Estimate beta_5: 20.794250
+2026-11-18 01:12:34,652 [INFO] Sample Point Estimate rho = |beta_5| / (2*|beta_2|): 1.2683 (rho < 1: False)
+2026-11-18 01:12:34,652 [INFO] P(beta_2 < 0) [Concave Fraction]: 81.40% (Expected ~ 79-81%)
+2026-11-18 01:12:34,652 [INFO] P(rho < 1 | beta_2 < 0): 22.91%
+2026-11-18 01:12:34,653 [INFO] P(beta_2 < 0 and rho < 1): 18.65% (Expected ~ 18.5-19.5%)
+2026-11-18 01:12:34,653 [INFO] 95% CI for rho (among concave draws): [0.1140, 35.7036]
+2026-11-18 01:12:34,653 [INFO] Contraction Ratio Quantiles: p10=0.4200, p25=1.1053, p50(median)=2.1528, p75=4.0546, p90=9.4619
+2026-11-18 01:12:34,660 [INFO] Saved game theory JSON payload: C:\Github Backup\Multiagent-Systems\payoff_calculation\results\game_theory_coefficients.json
+2026-11-18 01:12:34,660 [INFO] Saved game theory CSV payload: C:\Github Backup\Multiagent-Systems\payoff_calculation\results\game_theory_coefficients.csv
+2026-11-18 01:12:34,660 [INFO] ================================================================================
+2026-11-18 01:12:34,660 [INFO] STEP 7 COMPLETED SUCCESSFULLY: STRUCTURAL CALIBRATION & HANDOFF READY
+2026-11-18 01:12:34,660 [INFO] ================================================================================
+2026-11-18 01:33:31,787 [INFO] ================================================================================
+2026-11-18 01:33:31,787 [INFO] STEP 7: POST-TEST FULL-SAMPLE STRUCTURAL CALIBRATION & GAME THEORY HANDOFF
+2026-11-18 01:33:31,787 [INFO] ================================================================================
+2026-11-18 01:33:31,787 [INFO] CONTEXT: Post-test full-sample estimation is conducted ONLY after holdout test
+generalization was verified. The resulting parameters serve as structural inputs
+for the CS 329 potential game simulation and social welfare analysis.
+2026-11-18 01:33:31,802 [INFO] Loaded Full Dataset: N = 809 observations across G = 38 channels.
+2026-11-18 01:33:31,802 [INFO] Computing contemporaneous rolling peer appeal [t - 30d, t + 30d] across all 38 channels...
+2026-11-18 01:33:32,942 [INFO] Full-Sample Centering Parameters: mu_x = 0.392395, mu_xbar = 0.391390
+2026-11-18 01:33:32,945 [INFO] 
+================================================================================
+2026-11-18 01:33:32,945 [INFO] ESTIMATING FULL-SAMPLE MODEL 4-CENTERED (PRIMARY STRUCTURAL SPECIFICATION)
+2026-11-18 01:33:32,945 [INFO] ================================================================================
+2026-11-18 01:33:32,950 [INFO] Controls-Only Model R²: 0.6308
+2026-11-18 01:33:32,950 [INFO] Full Model 4-Centered R²: 0.6353 (Incremental Delta R² = 0.0045)
+2026-11-18 01:33:32,950 [INFO] Joint F-test of packaging terms (b1=b2=b3=b5=0): F = 0.4739, p = 0.7546
+2026-11-18 01:33:32,951 [INFO] Centered Model VIFs (Resolution of Multicollinearity):
+2026-11-18 01:33:32,951 [INFO]   x_c               : VIF =    1.121
+2026-11-18 01:33:32,951 [INFO]   x2_c              : VIF =    1.214
+2026-11-18 01:33:32,951 [INFO]   x_bar_c           : VIF =    1.068
+2026-11-18 01:33:32,951 [INFO]   x_inter_c         : VIF =    1.165
+2026-11-18 01:33:32,951 [INFO]   log_subscribers   : VIF =    1.132
+2026-11-18 01:33:32,951 [INFO]   log_duration      : VIF =    1.088
+2026-11-18 01:33:32,951 [INFO]   age_days          : VIF =    1.020
+2026-11-18 01:33:32,952 [INFO] 
+================================================================================
+2026-11-18 01:33:32,953 [INFO] TASK 1: ANALYTICAL UNCENTERING & DELTA-METHOD COVARIANCE DERIVATION
+2026-11-18 01:33:32,953 [INFO] ================================================================================
+2026-11-18 01:33:32,953 [INFO] Uncentered Coefficients:
+2026-11-18 01:33:32,953 [INFO]   b1_u = b1_c - 2*b2*mu_x - b5*mu_xbar = -2.018980 (Expected ~ -2.019)
+2026-11-18 01:33:32,953 [INFO]   b3_u = b3_c - b5*mu_x                = -5.542375 (Expected ~ -5.542)
+2026-11-18 01:33:32,953 [INFO]   b2_u = b2_c                          = -8.197369
+2026-11-18 01:33:32,953 [INFO]   b5_u = b5_c                          = 20.794250
+2026-11-18 01:33:32,953 [INFO]   b0_u                                 = -1.760362
+2026-11-18 01:33:32,954 [INFO] Prediction Equivalence Check: Max |pred_c - pred_u| = 5.33e-15
+2026-11-18 01:33:32,955 [INFO] Uncentered Standard Errors (Delta Method):
+2026-11-18 01:33:32,955 [INFO]   b1_u: Coef =    -2.0190 | SE =  20.9201 | t =  -0.097 | p = 0.9236
+2026-11-18 01:33:32,955 [INFO]   b2_u: Coef =    -8.1974 | SE =   8.2994 | t =  -0.988 | p = 0.3233
+2026-11-18 01:33:32,956 [INFO]   b3_u: Coef =    -5.5424 | SE =  22.8522 | t =  -0.243 | p = 0.8097
+2026-11-18 01:33:32,956 [INFO]   b5_u: Coef =    20.7942 | SE =  60.2260 | t =   0.345 | p = 0.7299
+2026-11-18 01:33:32,961 [INFO] Saved structural regression results table: C:\Github Backup\Multiagent-Systems\payoff_calculation\results\post_test_structural_regression_results.csv
+2026-11-18 01:33:32,961 [INFO] 
+================================================================================
+2026-11-18 01:33:32,961 [INFO] RUNNING NULL-RESTRICTED WILD CLUSTER BOOTSTRAP (B = 2000 DRAWS, WEBB WEIGHTS)
+2026-11-18 01:33:32,961 [INFO] ================================================================================
+2026-11-18 01:33:35,458 [INFO] Test A Result: t_sample = -0.9877 | WCB one-sided p-value = 0.2600 | Concavity H0 (beta_2 >= 0) is RETAINED at alpha = 0.05
+2026-11-18 01:33:37,868 [INFO] Test B Result: t_sample = 0.3453 | WCB two-sided p-value = 0.7795 | Interaction H0 (beta_5 = 0) is RETAINED at alpha = 0.05
+2026-11-18 01:33:37,869 [INFO] 
+================================================================================
+2026-11-18 01:33:37,869 [INFO] TASK 2: UNRESTRICTED CLUSTER-PAIRS BOOTSTRAP (B = 2,000 DRAWS)
+2026-11-18 01:33:37,869 [INFO] ================================================================================
+2026-11-18 01:33:37,869 [INFO] Resampling 38 channels with replacement. Preserving between-cluster variance (NO within-cluster demeaning).
+2026-11-18 01:33:45,836 [INFO] Saved compressed bootstrap draws array: C:\Github Backup\Multiagent-Systems\payoff_calculation\results\bootstrap_draws.npz
+2026-11-18 01:33:45,836 [INFO] 
+Cluster-Pairs Bootstrap SEs and Verification vs CRSE:
+2026-11-18 01:33:45,836 [INFO]   const             : Boot SE =   2.4993 | CRSE =   2.4168 | Ratio =  1.03
+2026-11-18 01:33:45,837 [INFO]   x_c               : Boot SE =   1.8144 | CRSE =   1.9191 | Ratio =  0.95
+2026-11-18 01:33:45,838 [INFO]   x2_c              : Boot SE =   8.0165 | CRSE =   8.2994 | Ratio =  0.97
+2026-11-18 01:33:45,838 [INFO]   x_bar_c           : Boot SE =   6.1283 | CRSE =   6.0386 | Ratio =  1.01
+2026-11-18 01:33:45,839 [INFO]   x_inter_c         : Boot SE =  59.7562 | CRSE =  60.2260 | Ratio =  0.99
+2026-11-18 01:33:45,839 [INFO]   log_subscribers   : Boot SE =   0.1220 | CRSE =   0.1147 | Ratio =  1.06
+2026-11-18 01:33:45,840 [INFO]   log_duration      : Boot SE =   0.2474 | CRSE =   0.2534 | Ratio =  0.98
+2026-11-18 01:33:45,840 [INFO]   age_days          : Boot SE =   0.0003 | CRSE =   0.0003 | Ratio =  0.97
+2026-11-18 01:33:45,841 [INFO]   b1_u              : Boot SE =  21.2315 | Delta SE =  20.9201 | Ratio =  1.01
+2026-11-18 01:33:45,841 [INFO]   b2_u              : Boot SE =   8.0165 | Delta SE =   8.2994 | Ratio =  0.97
+2026-11-18 01:33:45,841 [INFO]   b3_u              : Boot SE =  22.5215 | Delta SE =  22.8522 | Ratio =  0.99
+2026-11-18 01:33:45,841 [INFO]   b5_u              : Boot SE =  59.7562 | Delta SE =  60.2260 | Ratio =  0.99
+2026-11-18 01:33:45,843 [INFO] Saved bootstrap inference table: C:\Github Backup\Multiagent-Systems\payoff_calculation\results\bootstrap_inference_results.csv
+2026-11-18 01:33:45,843 [INFO] 
+================================================================================
+2026-11-18 01:33:45,843 [INFO] AUDITED CONTRACTION RATIO & POTENTIAL GAME STABILITY
+2026-11-18 01:33:45,843 [INFO] ================================================================================
+2026-11-18 01:33:45,843 [INFO] Sample Point Estimate beta_2: -8.197369 (Concave)
+2026-11-18 01:33:45,843 [INFO] Sample Point Estimate beta_5: 20.794250
+2026-11-18 01:33:45,843 [INFO] Sample Point Estimate rho = |beta_5| / (2*|beta_2|): 1.2683 (rho < 1: False)
+2026-11-18 01:33:45,843 [INFO] P(beta_2 < 0) [Concave Fraction]: 81.40% (Expected ~ 79-81%)
+2026-11-18 01:33:45,843 [INFO] P(rho < 1 | beta_2 < 0): 22.91%
+2026-11-18 01:33:45,843 [INFO] P(beta_2 < 0 and rho < 1): 18.65% (Expected ~ 18.5-19.5%)
+2026-11-18 01:33:45,844 [INFO] 95% CI for rho (among concave draws): [0.1140, 35.7036]
+2026-11-18 01:33:45,844 [INFO] Contraction Ratio Quantiles: p10=0.4200, p25=1.1053, p50(median)=2.1528, p75=4.0546, p90=9.4619
+2026-11-18 01:33:45,847 [INFO] Saved game theory JSON payload: C:\Github Backup\Multiagent-Systems\payoff_calculation\results\game_theory_coefficients.json
+2026-11-18 01:33:45,848 [INFO] Saved game theory CSV payload: C:\Github Backup\Multiagent-Systems\payoff_calculation\results\game_theory_coefficients.csv
+2026-11-18 01:33:45,848 [INFO] ================================================================================
+2026-11-18 01:33:45,848 [INFO] STEP 7 COMPLETED SUCCESSFULLY: STRUCTURAL CALIBRATION & HANDOFF READY
+2026-11-18 01:33:45,848 [INFO] ================================================================================

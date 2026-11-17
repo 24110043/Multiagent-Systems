@@ -107,7 +107,7 @@ def run_data_preparation():
     if diff_1 or diff_2:
         logger.error(f"Mismatch in video_id! In scores but not clean: {len(diff_1)}. In clean but not scores: {len(diff_2)}.")
         sys.exit(1)
-    logger.info("âœ“ Video ID 1:1 match verified: Exactly 809 overlapping unique videos.")
+    logger.info("[OK] Video ID 1:1 match verified: Exactly 809 overlapping unique videos.")
 
     # 2. Merge datasets cleanly
     # Use df_scores as primary, pulling any auxiliary columns from df_clean if needed

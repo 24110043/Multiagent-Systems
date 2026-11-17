@@ -12,7 +12,7 @@ x2,float,Constructed,Quadratic own appeal regressor: x^2 (tests concavity condit
 subscribers_raw,integer,YouTube Metadata,Raw channel subscriber count as recorded at scraping time.
 subscribers_channel,integer,Standardized,Channel-level median subscriber count S_i (time-invariant creator scale).
 log_subscribers,float,Constructed,Natural log of channel subscribers: ln(S_i). Primary scale control.
-duration_sec,integer,YouTube Metadata,"Total video length in seconds (min = 181s, max = 59,251s)."
+duration_sec,integer,YouTube Metadata,"Total video length in seconds (min = 13s, max = 18,886s)."
 log_duration,float,Constructed,Natural log of duration: ln(duration_sec). Primary content control.
 age_days,float,YouTube Metadata,"Video age in days since publication to scrape date (min = 30d, max = 759d)."
 log_age,float,Constructed,Natural log of age: ln(age_days). Non-linear exposure robustness control.
