@@ -65,9 +65,9 @@ def _get_empirical_game() -> PotentialGame:
     return _EMPIRICAL_GAME
 
 
-def make_regime(base_key: str, **overrides) -> PotentialGame:
+def make_regime(base_key: str = "A", **overrides) -> PotentialGame:
     """
-    Factory for PotentialGame instances for regimes 'A', 'B', 'Bprime'.
+    Factory for PotentialGame instances for Regime A (Calibrated Empirical Baseline).
 
     Accepts overrides for: beta_1, beta_2, beta_3, beta_5, n_creators, name.
     Raises ValueError unless:
@@ -84,20 +84,8 @@ def make_regime(base_key: str, **overrides) -> PotentialGame:
         b3 = base_game.beta_3
         b5 = base_game.beta_5
         name = "Calibrated (N=809, assumed kappa=8)"
-    elif key in ("B", "B_hypothetical"):
-        b1 = 8.301959
-        b2 = -9.167702
-        b3 = -3.802120
-        b5 = 0.782244
-        name = "Illustrative B (legacy N=186 coefficients)"
-    elif key in ("Bprime", "B'", "Bprime_hypothetical", "B_prime"):
-        b1 = 8.301959
-        b2 = -9.167702
-        b3 = -3.802120
-        b5 = -0.782244
-        name = "Illustrative B' (legacy N=186 coefficients)"
     else:
-        raise ValueError(f"Unknown base_key '{base_key}'. Expected one of 'A', 'B', 'Bprime'.")
+        raise ValueError(f"Unknown base_key '{base_key}'. Expected 'A' (Calibrated Empirical Baseline).")
 
     n_creators = base_game.n_creators
 
@@ -302,15 +290,11 @@ def main():
     print("Experiment 1 & 2: Best-Response Dynamics & Welfare")
     print("=" * 60)
 
-    # --- Construct regimes via factory ---
+    # --- Construct Regime A via factory ---
     game_A = make_regime("A")
-    game_B = make_regime("B")
-    game_Bp = make_regime("Bprime")
 
     regimes = [
         ("A_empirical", game_A),
-        ("B_hypothetical", game_B),
-        ("Bprime_hypothetical", game_Bp),
     ]
 
     for label, game in regimes:

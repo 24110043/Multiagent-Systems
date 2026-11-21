@@ -58,7 +58,7 @@ class PotentialGame:
 
     @classmethod
     def from_json(cls, json_path: Optional[str] = None, n_creators: int = 38, kappa: float = 8.0, use_option_b: bool = True) -> "PotentialGame":
-        """Load empirical parameters from estimated payoff JSON (supports both N=809 payoff_calculation and legacy N=186)."""
+        """Load empirical parameters from estimated payoff JSON (supports both N=809 payoff_calculation and alternative parameter formats)."""
         # Resolve candidate paths if json_path does not exist or is None
         if json_path is None or not os.path.exists(json_path):
             candidates = []
@@ -126,7 +126,7 @@ class PotentialGame:
                 kappa=eff_kappa,
             )
 
-        # Schema 2: Legacy N=186 payoff_estimation
+        # Schema 2: Alternative parameter schema
         if "point_estimates_uncentered_model_5" in data:
             uncentered = data["point_estimates_uncentered_model_5"]
             required_keys = [

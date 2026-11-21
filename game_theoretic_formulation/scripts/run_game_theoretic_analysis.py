@@ -81,7 +81,7 @@ def load_empirical_inputs(json_path: str, kappa: float = 8.0, use_option_b: bool
         }
         return uncentered, cov_sub, data, diag_info
 
-    # Schema 2: Legacy N=186 payoff_estimation
+    # Schema 2: Alternative parameter schema
     if "point_estimates_uncentered_model_5" not in data:
         raise KeyError("Missing required key 'uncentered_structural_coefficients_for_game_theory' or 'point_estimates_uncentered_model_5' in JSON")
     uncentered = data["point_estimates_uncentered_model_5"]
@@ -268,7 +268,7 @@ def run_parametric_bootstrap(mean_vec: np.ndarray, cov_mat: np.ndarray, n_draws:
     return df_valid, summary_boot
 
 
-def build_sensitivity_analysis_grid(b1_base: float = 8.301959):
+def build_sensitivity_analysis_grid(b1_base: float = -2.019001):
     """
     Construct sensitivity grid spanning:
       beta_2 in [-20.0, -15.0, -9.1677, -5.0, -3.0]
@@ -377,52 +377,7 @@ def main():
           f"lambda_2={empirical_summary['well_posedness']['potential_game_hessian_eigenvalues']['lambda_orthogonal']:.4f}")
 
     # -------------------------------------------------------------------------
-    # 2. Theoretical Attention-Congestion Models (Regimes B and B' - Hypothetical)
-    # -------------------------------------------------------------------------
-    congestion_game = PotentialGame(
-        beta_1=8.301959,
-        beta_2=-9.167702,
-        beta_3=-3.802120,   # Negative peer externality (attention congestion)
-        beta_5=0.782244,    # Strategic complements
-        n_creators=38,
-        name="Regime B (Hypothetical): Attention Congestion (Strategic Complements)",
-    )
-    congestion_summary = congestion_game.to_dict()
-
-    congestion_game_b_prime = PotentialGame(
-        beta_1=8.301959,
-        beta_2=-9.167702,
-        beta_3=-3.802120,   # Negative peer externality (attention congestion)
-        beta_5=-0.782244,   # Keep empirical strategic substitutes
-        n_creators=38,
-        name="Regime B' (Hypothetical): Attention Congestion (Empirical Interaction)",
-    )
-    congestion_b_prime_summary = congestion_game_b_prime.to_dict()
-    
-    print("\n" + "=" * 70)
-    print("REGIME B (HYPOTHETICAL): ATTENTION CONGESTION + STRATEGIC COMPLEMENTS")
-    print("=" * 70)
-    print(f"Parameters: beta_1 = {congestion_game.beta_1:.4f}, beta_2 = {congestion_game.beta_2:.4f}, "
-          f"beta_3 = {congestion_game.beta_3:.4f}, beta_5 = {congestion_game.beta_5:.4f}")
-    print(f"Symmetric Nash (x*):       {congestion_game.x_nash:.4f}")
-    print(f"Social Optimum (x^SO):     {congestion_game.x_so:.4f}  <-- Overshoots optimum!")
-    print(f"Marginal Externality (E):  {congestion_game.marginal_external_congestion:.4f}")
-    print(f"Nash-SO Gap (Delta):       {congestion_game.nash_so_gap:.4f}")
-    print(f"Price of Anarchy (PoA):    {congestion_game.price_of_anarchy:.4f}")
-
-    print("\n" + "=" * 70)
-    print("REGIME B' (HYPOTHETICAL): ATTENTION CONGESTION + EMPIRICAL INTERACTION")
-    print("=" * 70)
-    print(f"Parameters: beta_1 = {congestion_game_b_prime.beta_1:.4f}, beta_2 = {congestion_game_b_prime.beta_2:.4f}, "
-          f"beta_3 = {congestion_game_b_prime.beta_3:.4f}, beta_5 = {congestion_game_b_prime.beta_5:.4f}")
-    print(f"Symmetric Nash (x*):       {congestion_game_b_prime.x_nash:.4f}")
-    print(f"Social Optimum (x^SO):     {congestion_game_b_prime.x_so:.4f}  <-- Overshoots optimum!")
-    print(f"Marginal Externality (E):  {congestion_game_b_prime.marginal_external_congestion:.4f}")
-    print(f"Nash-SO Gap (Delta):       {congestion_game_b_prime.nash_so_gap:.4f}")
-    print(f"Price of Anarchy (PoA):    {congestion_game_b_prime.price_of_anarchy:.4f}")
-
-    # -------------------------------------------------------------------------
-    # 3. Parametric Bootstrap for 95% Confidence Intervals
+    # 2. Parametric Bootstrap for 95% Confidence Intervals
     # -------------------------------------------------------------------------
     print("\n" + "=" * 70)
     print("PARAMETRIC BOOTSTRAP (10,000 DRAWS OVER CLUSTER-ROBUST COVARIANCE)")
@@ -464,11 +419,11 @@ def main():
     print(f"Saved sensitivity grid ({len(df_grid)} combinations) to: {grid_csv_path}")
 
     # -------------------------------------------------------------------------
-    # 5. Export Handover Payloads for Part 4 (Simulations)
+    # 4. Export Handover Payloads for Part 4 (Simulations)
     # -------------------------------------------------------------------------
     equilibrium_summary_csv = pd.DataFrame([
         {
-            "regime": "Regime A: Empirical Point Estimate",
+            "regime": "Regime A: Calibrated Empirical Baseline (Option B, kappa=8)",
             "is_hypothetical": False,
             "beta_1": empirical_game.beta_1,
             "beta_2": empirical_game.beta_2,
@@ -483,40 +438,6 @@ def main():
             "contraction_rate": empirical_game.contraction_rate,
             "overshooting": empirical_game.marginal_external_congestion < 0,
             "equilibria_interior": empirical_game.equilibria_interior,
-        },
-        {
-            "regime": "Regime B (Hypothetical): Attention Congestion (Strategic Complements)",
-            "is_hypothetical": True,
-            "beta_1": congestion_game.beta_1,
-            "beta_2": congestion_game.beta_2,
-            "beta_3": congestion_game.beta_3,
-            "beta_5": congestion_game.beta_5,
-            "x_nash": congestion_game.x_nash,
-            "x_so": congestion_game.x_so,
-            "marginal_E": congestion_game.marginal_external_congestion,
-            "delta_gap": congestion_game.nash_so_gap,
-            "price_of_anarchy": congestion_game.price_of_anarchy,
-            "price_of_anarchy_closed_form": congestion_game.price_of_anarchy_closed_form,
-            "contraction_rate": congestion_game.contraction_rate,
-            "overshooting": congestion_game.marginal_external_congestion < 0,
-            "equilibria_interior": congestion_game.equilibria_interior,
-        },
-        {
-            "regime": "Regime B' (Hypothetical): Attention Congestion (Empirical Interaction)",
-            "is_hypothetical": True,
-            "beta_1": congestion_game_b_prime.beta_1,
-            "beta_2": congestion_game_b_prime.beta_2,
-            "beta_3": congestion_game_b_prime.beta_3,
-            "beta_5": congestion_game_b_prime.beta_5,
-            "x_nash": congestion_game_b_prime.x_nash,
-            "x_so": congestion_game_b_prime.x_so,
-            "marginal_E": congestion_game_b_prime.marginal_external_congestion,
-            "delta_gap": congestion_game_b_prime.nash_so_gap,
-            "price_of_anarchy": congestion_game_b_prime.price_of_anarchy,
-            "price_of_anarchy_closed_form": congestion_game_b_prime.price_of_anarchy_closed_form,
-            "contraction_rate": congestion_game_b_prime.contraction_rate,
-            "overshooting": congestion_game_b_prime.marginal_external_congestion < 0,
-            "equilibria_interior": congestion_game_b_prime.equilibria_interior,
         },
     ])
     summary_csv_path = os.path.join(results_dir, "equilibrium_summary.csv")
@@ -537,8 +458,6 @@ def main():
         },
         "covariance_diagnostics": diag_info,
         "regime_A_empirical": empirical_summary,
-        "regime_B_hypothetical_congestion_complements": congestion_summary,
-        "regime_B_prime_hypothetical_congestion_empirical_interaction": congestion_b_prime_summary,
         "bootstrap_uncertainty_intervals": boot_summary,
         "mediator_formulas_guide": {
             "recommendation": "x_lambda = (1 - lambda) * x_nash + lambda * x_so",

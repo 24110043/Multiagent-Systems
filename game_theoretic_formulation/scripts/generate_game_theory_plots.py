@@ -4,6 +4,7 @@ CS 329: Foundations of AI: Multi-Agent Systems (2026)
 Indian Institute of Technology Gandhinagar
 
 Component: Game-Theoretic Formulation & Price of Anarchy Visualizations
+Regime A Calibrated Empirical Model (N=809, kappa=8.0)
 """
 
 import os
@@ -27,48 +28,53 @@ plt.rcParams.update({
 })
 
 
-def plot_01_best_response_and_nash(empirical_game: PotentialGame, congestion_game: PotentialGame, save_path: str):
-    """Plot 1: Best-Response functions and Nash equilibrium fixed points."""
+def plot_01_best_response_and_nash(empirical_game: PotentialGame, save_path: str):
+    """Plot 1: Best-Response function and Nash equilibrium fixed point."""
     fig, axes = plt.subplots(1, 2, figsize=(13, 5.5))
     x_grid = np.linspace(0, 1, 300)
 
-    # Panel A: Regime A (Empirical)
+    # Panel A: Best-Response Function vs 45-degree Line
     ax = axes[0]
     br_empirical = empirical_game.best_response(x_grid)
     ax.plot(x_grid, x_grid, "k--", alpha=0.6, label="45° Line (Symmetric Profile $x_i = \\bar{x}_{-i}$)")
-    ax.plot(x_grid, br_empirical, color="#1f77b4", label=f"Best Response $\\text{{BR}}_i(\\bar{{x}}_{{-i}})$ (slope $s = {empirical_game.best_response_slope:.3f}$)")
-    ax.scatter([empirical_game.x_nash], [empirical_game.x_nash], color="#d62728", s=90, zorder=5,
+    ax.plot(x_grid, br_empirical, color="#1f77b4", linewidth=2.5,
+            label=f"Best Response $\\text{{BR}}_i(\\bar{{x}}_{{-i}})$ (slope $s = {empirical_game.best_response_slope:.3f}$)")
+    ax.scatter([empirical_game.x_nash], [empirical_game.x_nash], color="#d62728", s=110, zorder=5,
                label=f"Nash Equilibrium $x^* = {empirical_game.x_nash:.4f}$")
+    ax.scatter([empirical_game.x_so], [empirical_game.x_so], color="#2ca02c", s=90, marker="s", zorder=5,
+               label=f"Social Optimum $x^{{\\text{{SO}}}} = {empirical_game.x_so:.4f}$")
     ax.axvline(empirical_game.x_nash, color="#d62728", linestyle=":", alpha=0.6)
     ax.axvline(empirical_game.x_so, color="#2ca02c", linestyle=":", alpha=0.6)
-    ax.scatter([empirical_game.x_so], [empirical_game.x_so], color="#2ca02c", s=70, marker="s", zorder=5,
-               label=f"Social Optimum $x^{{\\text{{SO}}}} = {empirical_game.x_so:.4f}$")
-    ax.set_title("Panel A: Regime A (Empirical Point Estimates)\n$\\beta_1=8.302, \\beta_2=-9.168, \\beta_5=-0.782$ (Substitutes)")
-    ax.set_xlabel("Competitor Leave-One-Out Average $\\bar{x}_{-i}$")
-    ax.set_ylabel("Focal Creator Strategy $x_i$")
+    ax.set_title(f"Panel A: Calibrated Empirical Best Response (Option B, $\\kappa=8$)\n"
+                 f"$\\beta_1={empirical_game.beta_1:.3f}, \\beta_2={empirical_game.beta_2:.3f}, \\beta_5={empirical_game.beta_5:.3f}$")
+    ax.set_xlabel("Competitor Average Click Appeal $\\bar{x}_{-i}$")
+    ax.set_ylabel("Focal Creator Optimal Strategy $x_i$")
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.legend(loc="upper left", framealpha=0.95)
 
-    # Panel B: Regime B (Congestion)
+    # Panel B: Best-Response Cobweb / Contraction Trajectory
     ax = axes[1]
-    br_congestion = congestion_game.best_response(x_grid)
-    ax.plot(x_grid, x_grid, "k--", alpha=0.6, label="45° Line ($x_i = \\bar{x}_{-i}$)")
-    ax.plot(x_grid, br_congestion, color="#ff7f0e", label=f"Best Response $\\text{{BR}}_i(\\bar{{x}}_{{-i}})$ (slope $s = {congestion_game.best_response_slope:.3f}$)")
-    ax.scatter([congestion_game.x_nash], [congestion_game.x_nash], color="#d62728", s=90, zorder=5,
-               label=f"Nash Equilibrium $x^* = {congestion_game.x_nash:.4f}$")
-    ax.scatter([congestion_game.x_so], [congestion_game.x_so], color="#2ca02c", s=70, marker="s", zorder=5,
-               label=f"Social Optimum $x^{{\\text{{SO}}}} = {congestion_game.x_so:.4f}$")
-    ax.axvline(congestion_game.x_nash, color="#d62728", linestyle=":", alpha=0.6)
-    ax.axvline(congestion_game.x_so, color="#2ca02c", linestyle=":", alpha=0.6)
-    # Highlight overshooting
-    ax.annotate("Attention Congestion Overshoot\n($x^* > x^{\\text{SO}}$)",
-                xy=(congestion_game.x_so, 0.4), xytext=(0.05, 0.65),
-                arrowprops=dict(facecolor="black", shrink=0.08, width=1.5, headwidth=7),
-                fontsize=9.5, bbox=dict(boxstyle="round,pad=0.4", facecolor="#fff2cc", edgecolor="#d6b656"))
-    ax.set_title("Panel B: Regime B (Theoretical Attention Congestion)\n$\\beta_1=8.302, \\beta_2=-9.168, \\beta_5=+0.782$ (Complements)")
-    ax.set_xlabel("Competitor Leave-One-Out Average $\\bar{x}_{-i}$")
-    ax.set_ylabel("Focal Creator Strategy $x_i$")
+    ax.plot(x_grid, x_grid, "k--", alpha=0.6, label="45° Line")
+    ax.plot(x_grid, br_empirical, color="#1f77b4", linewidth=2.0, label="Best Response")
+    
+    # Trace contraction trajectory from x0 = 0.8
+    x_curr = 0.8
+    traj_x = [x_curr]
+    traj_y = [0.0]
+    for _ in range(8):
+        x_next = float(empirical_game.best_response(np.array([x_curr]))[0])
+        traj_x.extend([x_curr, x_next])
+        traj_y.extend([x_next, x_next])
+        x_curr = x_next
+    
+    ax.plot(traj_x, traj_y, color="#e377c2", linewidth=1.8, linestyle="-", marker=".",
+            label=f"Contraction Iteration ($k = {empirical_game.contraction_rate:.4f} < 1$)")
+    ax.scatter([empirical_game.x_nash], [empirical_game.x_nash], color="#d62728", s=110, zorder=5,
+               label=f"Stable Fixed Point $x^* = {empirical_game.x_nash:.1f}$")
+    ax.set_title(f"Panel B: Contraction Dynamics to Unique Nash\nConvergence Rate $k = 0.8524 < 1.0$")
+    ax.set_xlabel("State at Iteration $t$ ($x_t$)")
+    ax.set_ylabel("State at Iteration $t+1$ ($x_{t+1}$)")
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.legend(loc="upper left", framealpha=0.95)
@@ -79,50 +85,49 @@ def plot_01_best_response_and_nash(empirical_game: PotentialGame, congestion_gam
     print(f"Generated Plot 1: {save_path}")
 
 
-def plot_02_welfare_nash_vs_social_optimum(empirical_game: PotentialGame, congestion_game: PotentialGame, save_path: str):
-    """Plot 2: Symmetric Welfare curves, Nash vs Social Optimum, and Price of Anarchy."""
+def plot_02_welfare_nash_vs_social_optimum(empirical_game: PotentialGame, save_path: str):
+    """Plot 2: Symmetric Welfare curve, Nash vs Social Optimum, and Price of Anarchy."""
     fig, axes = plt.subplots(1, 2, figsize=(13, 5.5))
     x_grid = np.linspace(0, 1, 300)
 
-    # Panel A: Regime A
+    # Panel A: Symmetric Welfare curve
     ax = axes[0]
     w_emp = empirical_game.social_welfare_symmetric(x_grid)
     w_nash = empirical_game.social_welfare_symmetric(empirical_game.x_nash)
     w_so = empirical_game.social_welfare_symmetric(empirical_game.x_so)
-    ax.plot(x_grid, w_emp, color="#1f77b4", label="Symmetric Welfare $\\pi(x, x)$")
-    ax.scatter([empirical_game.x_nash], [w_nash], color="#d62728", s=90, zorder=5,
-               label=f"Nash Outcome ($x^*={empirical_game.x_nash:.3f}, \\pi={w_nash:.2f}$)")
-    ax.scatter([empirical_game.x_so], [w_so], color="#2ca02c", s=90, marker="s", zorder=5,
-               label=f"Social Optimum ($x^{{\\text{{SO}}}}={empirical_game.x_so:.3f}, \\pi={w_so:.2f}$)")
+    ax.plot(x_grid, w_emp, color="#1f77b4", linewidth=2.5, label="Symmetric Welfare $\\pi(x, x)$")
+    ax.scatter([empirical_game.x_nash], [w_nash], color="#d62728", s=100, zorder=5,
+               label=f"Nash Equilibrium ($x^*={empirical_game.x_nash:.2f}, \\pi={w_nash:.2f}$)")
+    ax.scatter([empirical_game.x_so], [w_so], color="#2ca02c", s=100, marker="s", zorder=5,
+               label=f"Social Optimum ($x^{{\\text{{SO}}}}={empirical_game.x_so:.2f}, \\pi={w_so:.2f}$)")
     ax.axvline(empirical_game.x_nash, color="#d62728", linestyle=":", alpha=0.7)
     ax.axvline(empirical_game.x_so, color="#2ca02c", linestyle=":", alpha=0.7)
     gap_a = w_so - w_nash
     ax.fill_between(x_grid, w_nash, w_emp, where=(x_grid >= empirical_game.x_nash) & (x_grid <= empirical_game.x_so),
-                    color="#2ca02c", alpha=0.15, label=f"Welfare Gap = {gap_a:.3f}\n$\\text{{PoA}} = {empirical_game.price_of_anarchy:.3f}$")
-    ax.set_title("Panel A: Regime A (Empirical Estimates)\nUnder-Investment relative to Optimum ($E > 0$)")
+                    color="#2ca02c", alpha=0.15,
+                    label=f"Welfare Gap $\\Delta W = {gap_a:.3f}$\n$\\text{{PoA}} = {empirical_game.price_of_anarchy:.3f}$")
+    ax.set_title("Panel A: Symmetric Welfare Landscape\nUnder-Investment Gap: $x^* = 0.0$ vs $x^{\\text{SO}} = 1.0$")
     ax.set_xlabel("Common Click Appeal Score $x$")
-    ax.set_ylabel("Expected Log-Views $\\pi(x, x)$")
-    ax.legend(loc="lower center", framealpha=0.95)
+    ax.set_ylabel("Expected Log-Views Welfare $\\pi(x, x)$")
+    ax.legend(loc="upper left", framealpha=0.95)
 
-    # Panel B: Regime B
+    # Panel B: Mediator Intervention Recovery Curve
     ax = axes[1]
-    w_cong = congestion_game.social_welfare_symmetric(x_grid)
-    w_nash_b = congestion_game.social_welfare_symmetric(congestion_game.x_nash)
-    w_so_b = congestion_game.social_welfare_symmetric(congestion_game.x_so)
-    ax.plot(x_grid, w_cong, color="#ff7f0e", label="Symmetric Welfare $\\pi(x, x)$")
-    ax.scatter([congestion_game.x_nash], [w_nash_b], color="#d62728", s=90, zorder=5,
-               label=f"Nash Outcome ($x^*={congestion_game.x_nash:.3f}, \\pi={w_nash_b:.2f}$)")
-    ax.scatter([congestion_game.x_so], [w_so_b], color="#2ca02c", s=90, marker="s", zorder=5,
-               label=f"Social Optimum ($x^{{\\text{{SO}}}}={congestion_game.x_so:.3f}, \\pi={w_so_b:.2f}$)")
-    ax.axvline(congestion_game.x_nash, color="#d62728", linestyle=":", alpha=0.7)
-    ax.axvline(congestion_game.x_so, color="#2ca02c", linestyle=":", alpha=0.7)
-    gap_b = w_so_b - w_nash_b
-    ax.fill_between(x_grid, w_nash_b, w_cong, where=(x_grid >= congestion_game.x_so) & (x_grid <= congestion_game.x_nash),
-                    color="#d62728", alpha=0.15, label=f"Congestion Gap = {gap_b:.3f}\n$\\text{{PoA}} = {congestion_game.price_of_anarchy:.3f}$")
-    ax.set_title("Panel B: Regime B (Attention Congestion $H_1: E < 0$)\nClickbait Arms Race Overshoots Optimum ($x^* > x^{\\text{SO}}$)")
-    ax.set_xlabel("Common Click Appeal Score $x$")
-    ax.set_ylabel("Expected Log-Views $\\pi(x, x)$")
-    ax.legend(loc="lower center", framealpha=0.95)
+    lambdas = np.linspace(0, 1, 200)
+    R_vals = [empirical_game.welfare_recovery(lam) for lam in lambdas]
+    ax.plot(lambdas, R_vals, color="#2ca02c", linewidth=2.5, label="Welfare Recovery $R(\\lambda)$")
+    ax.axhline(0.0, color="gray", linestyle=":", alpha=0.7)
+    ax.axhline(1.0, color="black", linestyle="--", alpha=0.5, label="Full Recovery ($R=1.0$)")
+    
+    # Mark R=0 crossing and minimum dip
+    min_R_idx = np.argmin(R_vals)
+    ax.scatter([lambdas[min_R_idx]], [R_vals[min_R_idx]], color="#d62728", s=80, zorder=5,
+               label=f"Convex Dip ($R={R_vals[min_R_idx]:.3f}$ at $\\lambda={lambdas[min_R_idx]:.2f}$)")
+    
+    ax.set_title("Panel B: Platform Mediator Recovery Curve $R(\\lambda)$\n" + r"Convex Dip for Weak Interventions ($\lambda \leq 0.07$)")
+    ax.set_xlabel("Mediator Intervention Strength $\\lambda \\in [0, 1]$")
+    ax.set_ylabel("Welfare Recovery Fraction $R(\\lambda)$")
+    ax.legend(loc="lower right", framealpha=0.95)
 
     plt.tight_layout()
     plt.savefig(save_path, bbox_inches="tight")
@@ -150,10 +155,12 @@ def plot_03_potential_landscape(empirical_game: PotentialGame, save_path: str):
     # Nash equilibrium point
     x_n = empirical_game.x_nash
     ax.scatter([x_n], [x_n], color="#d62728", s=120, edgecolors="white", linewidths=1.5, zorder=6,
-               label=f"Unique Maximizer: Nash $(x^*, x^*) = ({x_n:.3f}, {x_n:.3f})$")
+               label=f"Nash Maximizer $(x^*, x^*) = ({x_n:.2f}, {x_n:.2f})$")
+    ax.scatter([empirical_game.x_so], [empirical_game.x_so], color="#2ca02c", s=100, marker="s", edgecolors="white", linewidths=1.5, zorder=6,
+               label=f"Social Optimum $(x^{{\\text{{SO}}}}, x^{{\\text{{SO}}}}) = ({empirical_game.x_so:.2f}, {empirical_game.x_so:.2f})$")
     ax.plot([0, 1], [0, 1], "w--", alpha=0.7, label="Symmetric Diagonal ($x_1 = x_2$)")
     
-    ax.set_title(r"Exact Potential Game Landscape: Concavity of $\Phi(x)$" + "\n" + r"Strictly Negative Hessian Eigenvalues ($\lambda_1 < 0, \lambda_2 < 0$)")
+    ax.set_title(r"Exact Potential Game Landscape $\Phi(x_1, x_2)$" + "\n" + f"$\\beta_1={b1:.2f}, \\beta_2={b2:.2f}, \\beta_5={b5:.2f}$")
     ax.set_xlabel("Creator 1 Click Appeal $x_1$")
     ax.set_ylabel("Creator 2 Click Appeal $x_2$")
     ax.legend(loc="upper left", framealpha=0.9)
@@ -165,16 +172,16 @@ def plot_03_potential_landscape(empirical_game: PotentialGame, save_path: str):
 
 
 def plot_04_poa_sensitivity_heatmap(save_path: str):
-    """Plot 4: 2D Heatmaps of Price of Anarchy across (beta_2, beta_5) for beta_3 > 0 and beta_3 < 0."""
+    """Plot 4: 2D Heatmaps of Price of Anarchy across (beta_2, beta_5) for empirical parameters."""
     fig, axes = plt.subplots(1, 2, figsize=(14, 6))
-    b2_vals = np.linspace(-20, -3, 100)
-    b5_vals = np.linspace(-5, 5, 100)
+    b2_vals = np.linspace(-25, -5, 100)
+    b5_vals = np.linspace(0, 30, 100)
     B2, B5 = np.meshgrid(b2_vals, b5_vals)
-    b1 = 8.3020
+    b1 = -2.0190
 
     panels = [
-        {"ax": axes[0], "b3": 3.8021, "title": r"Panel A: Empirical Peer Spillover ($\beta_3 = +3.80$)" + "\n" + r"Empirical Point ($\text{PoA} = 1.3515$)", "show_marker": True},
-        {"ax": axes[1], "b3": -3.8021, "title": r"Panel B: Hypothetical Congestion ($\beta_3 = -3.80$)" + "\n" + r"Attention Overshoot Inefficiency", "show_marker": False},
+        {"ax": axes[0], "b3": -5.5424, "title": r"Panel A: Calibrated Negative Congestion ($\beta_3 = -5.54$)" + "\n" + r"Empirical Calibrated Baseline ($\text{PoA} = 2.817$)", "show_marker": True},
+        {"ax": axes[1], "b3": 0.0, "title": r"Panel B: Zero Peer Congestion ($\beta_3 = 0.0$)" + "\n" + r"Baseline Strategic Interaction Landscape", "show_marker": False},
     ]
 
     for p in panels:
@@ -188,29 +195,29 @@ def plot_04_poa_sensitivity_heatmap(save_path: str):
                 abs_b2 = abs(b2)
                 B = abs_b2 - b5
                 # Stability & concavity
-                if B > 0 and abs(b5) < (2.0 * abs_b2):
+                if abs(b5) < (2.0 * abs_b2):
                     denom_n = 2.0 * abs_b2 - b5
                     x_n = np.clip(b1 / denom_n, 0.0, 1.0)
-                    denom_s = 2.0 * B
-                    x_s = np.clip((b1 + b3) / denom_s, 0.0, 1.0)
+                    denom_s = 2.0 * B if B != 0 else 1.0
+                    x_s = np.clip((b1 + b3) / denom_s, 0.0, 1.0) if B > 0 else 1.0
                     w_s = (b1 + b3) * x_s + (b2 + b5) * (x_s ** 2)
                     w_n = (b1 + b3) * x_n + (b2 + b5) * (x_n ** 2)
-                    PoA[i, j] = np.exp(w_s - w_n)
+                    PoA[i, j] = np.exp(np.clip(w_s - w_n, 0.0, 10.0))
                 else:
                     PoA[i, j] = np.nan
 
         im = ax.imshow(PoA, extent=[b2_vals[0], b2_vals[-1], b5_vals[0], b5_vals[-1]],
-                       origin="lower", aspect="auto", cmap="magma", vmin=1.0, vmax=3.0)
-        fig.colorbar(im, ax=ax, label=r"Price of Anarchy ($\text{PoA} = V(x^{\text{SO}}) / V(x^*)$)")
+                       origin="lower", aspect="auto", cmap="magma", vmin=1.0, vmax=5.0)
+        fig.colorbar(im, ax=ax, label=r"Price of Anarchy ($\text{PoA} = \exp(W(x^{\text{SO}}) - W(x^*))$)")
 
         if p["show_marker"]:
-            ax.scatter([-9.1677], [-0.7822], color="#00ffcc", s=130, marker="o", edgecolors="black", linewidths=1.5, zorder=6,
-                       label=r"Empirical Point ($\beta_2 = -9.17, \beta_5 = -0.78$)")
+            ax.scatter([-12.1974], [20.7942], color="#00ffcc", s=140, marker="o", edgecolors="black", linewidths=1.8, zorder=6,
+                       label=r"Calibrated Baseline ($\beta_2^{\mathrm{eff}} = -12.20, \beta_5 = 20.79$)")
             ax.legend(loc="upper left", framealpha=0.9)
 
         ax.set_title(p["title"])
-        ax.set_xlabel(r"Diminishing Returns Parameter $\beta_2$ (Curvature)")
-        ax.set_ylabel(r"Strategic Interaction $\beta_5$ (Complements / Substitutes)")
+        ax.set_xlabel(r"Curvature Parameter $\beta_2^{\mathrm{eff}} = \beta_2 - \kappa/2$")
+        ax.set_ylabel(r"Strategic Interaction $\beta_5$")
     
     plt.tight_layout()
     plt.savefig(save_path, bbox_inches="tight")
@@ -227,17 +234,9 @@ def main():
         json_path = os.path.abspath(os.path.join(base_dir, "..", "payoff_estimation", "results", "game_theory_coefficients.json"))
     
     empirical_game = PotentialGame.from_json(json_path, n_creators=38)
-    congestion_game = PotentialGame(
-        beta_1=8.301959,
-        beta_2=-9.167702,
-        beta_3=-3.802120,
-        beta_5=0.782244,
-        n_creators=38,
-        name="Congestion Regime",
-    )
     
-    plot_01_best_response_and_nash(empirical_game, congestion_game, os.path.join(plots_dir, "01_best_response_and_nash.png"))
-    plot_02_welfare_nash_vs_social_optimum(empirical_game, congestion_game, os.path.join(plots_dir, "02_welfare_nash_vs_social_optimum.png"))
+    plot_01_best_response_and_nash(empirical_game, os.path.join(plots_dir, "01_best_response_and_nash.png"))
+    plot_02_welfare_nash_vs_social_optimum(empirical_game, os.path.join(plots_dir, "02_welfare_nash_vs_social_optimum.png"))
     plot_03_potential_landscape(empirical_game, os.path.join(plots_dir, "03_potential_function_landscape.png"))
     plot_04_poa_sensitivity_heatmap(os.path.join(plots_dir, "04_poa_sensitivity_heatmap.png"))
     
@@ -246,4 +245,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

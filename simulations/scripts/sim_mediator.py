@@ -167,11 +167,9 @@ def main():
     print("=" * 60)
 
     game_A = make_regime("A")
-    game_B = make_regime("B")
-    game_Bp = make_regime("Bprime")
 
     all_rows = []
-    for game in [game_A, game_B, game_Bp]:
+    for game in [game_A]:
         rows = mediator_sweep(game)
         all_rows.extend(rows)
 

@@ -73,35 +73,35 @@ Because $E^2 \ge 0$ and $|\beta_2| - \beta_5 > 0$, $\text{PoA} \ge 1.0$ structur
 
 ---
 
-## 4. Empirical Evaluation & Dual-Regime Analysis
+## 4. Empirical Evaluation: Calibrated Strategic Game
 
-To address the empirical econometric findings from the full $N=809$ sample under Option B ($\kappa=8.0$), we evaluate three strategic regimes:
+To address the empirical econometric findings from the full $N=809$ sample under Option B ($\kappa=8.0$), we evaluate the calibrated empirical game:
 
-### Summary of Strategic Regimes
+### Summary of Strategic Model
 
-| Metric | Regime A: Calibrated ($N=809$, Assumed $\kappa=8$) | Regime B: Illustrative Benchmark (Complements) | Regime B': Illustrative Benchmark (Substitutes) |
-| :--- | :---: | :---: | :---: |
-| **Status** | **Calibrated Empirical Baseline (Option B)** | **Illustrative Benchmark (Legacy $N=186$)** | **Illustrative Benchmark (Legacy $N=186$)** |
-| **Parameters** | $\beta_1=-2.0190, \beta_2=-12.1974, \beta_3=-5.5424, \beta_5=20.7942$ | $\beta_1=8.3020, \beta_2=-9.1677, \beta_3=-3.8021, \beta_5=+0.7822$ | $\beta_1=8.3020, \beta_2=-9.1677, \beta_3=-3.8021, \beta_5=-0.7822$ |
-| **Strategic Nature** | Strategic Complements ($\beta_5 > 0$) | Strategic Complements ($\beta_5 > 0$) | Strategic Substitutes ($\beta_5 < 0$) |
-| **Contraction Rate ($k$)** | $0.8524 < 1.0$ (Contraction mapping holds) | $0.0427 < 1.0$ (Strong contraction) | $0.0427 < 1.0$ (Near dominant-strategy) |
-| **Hessian Eigenvalues** | $\lambda_1 = -3.6005, \ \lambda_2 = -24.9567$ | $\lambda_1 = -17.5532, \ \lambda_2 = -18.3565$ | $\lambda_1 = -19.1176, \ \lambda_2 = -18.3143$ |
-| **Potential Concavity** | **Strictly Concave** ($\lambda_1, \lambda_2 < 0$) | **Strictly Concave** ($\lambda_1, \lambda_2 < 0$) | **Strictly Concave** ($\lambda_1, \lambda_2 < 0$) |
-| **Welfare Concavity** | **Violated** ($\beta_2 + \beta_5 = +8.5969 > 0$, Convex!) | **Satisfied** ($\beta_2 + \beta_5 = -8.3855 < 0$) | **Satisfied** ($\beta_2 + \beta_5 = -9.9499 < 0$) |
-| **Well-Posedness** | `all_conditions_satisfied: false` (Convex welfare) | `all_conditions_satisfied: true` | `all_conditions_satisfied: true` |
-| **Symmetric Nash ($x^*$)** | **$0.0000$** (Clipped from $-0.5608$) | **$0.4730$** (Interior) | **$0.4343$** (Interior) |
-| **Social Optimum ($x^{\text{SO}}$)** | **$1.0000$** (Boundary maximizer) | **$0.2683$** (Interior) | **$0.2261$** (Interior) |
-| **Marginal Externality ($E$)** | **$-5.5424 < 0$** (Negative attention congestion) | **$-3.4321 < 0$** (Attention congestion) | **$-4.1418 < 0$** (Attention congestion) |
-| **Nash-SO Gap ($\Delta$)** | **$+1.0000$** (Severe under-investment) | **$-0.2046$** (Clickbait Overshoot!) | **$-0.2081$** (Clickbait Overshoot!) |
-| **Price of Anarchy ($\text{PoA}$)** | **$2.8166$** (Definition-based, $181.7\%$ view gap) | **$1.4208$** ($42.1\%$ view gap) | **$1.5388$** ($53.9\%$ view gap) |
+| Metric | Calibrated Baseline ($N=809$, Assumed $\kappa=8$) |
+| :--- | :---: |
+| **Status** | **Calibrated Empirical Baseline (Option B)** |
+| **Parameters** | $\beta_1=-2.0190, \beta_2=-12.1974, \beta_3=-5.5424, \beta_5=20.7942$ |
+| **Strategic Nature** | Strategic Complements ($\beta_5 > 0$) |
+| **Contraction Rate ($k$)** | $0.8524 < 1.0$ (Contraction mapping holds) |
+| **Hessian Eigenvalues** | $\lambda_1 = -3.6005, \ \lambda_2 = -24.9567$ |
+| **Potential Concavity** | **Strictly Concave** ($\lambda_1, \lambda_2 < 0$) |
+| **Welfare Concavity** | **Violated** ($\beta_2 + \beta_5 = +8.5969 > 0$, Convex!) |
+| **Well-Posedness** | `all_conditions_satisfied: false` (Convex welfare) |
+| **Symmetric Nash ($x^*$)** | **$0.0000$** (Clipped from $-0.5608$) |
+| **Social Optimum ($x^{\text{SO}}$)** | **$1.0000$** (Boundary maximizer) |
+| **Marginal Externality ($E$)** | **$-5.5424 < 0$** (Negative attention congestion) |
+| **Nash-SO Gap ($\Delta$)** | **$+1.0000$** (Severe under-investment) |
+| **Price of Anarchy ($\text{PoA}$)** | **$2.8166$** (Definition-based, $181.7\%$ view gap) |
 
 ### Key Theoretical Insights & Methodological Caveats:
-1. **Regime A is NOT Theoretically Well-Posed in the Potential Game Sense:**
+1. **Regime A is NOT Theoretically Well-Posed in the Classical Concave Sense:**
    While the best-response mapping is contractive ($k = 0.8524 < 1.0$) ensuring a unique symmetric Nash equilibrium at the lower boundary ($x_{\text{Nash}} = 0.0$), **welfare concavity fails** because $\beta_2^{\text{eff}} + \beta_5 = -12.1974 + 20.7942 = +8.5969 > 0$ ($B = |\beta_2^{\text{eff}}| - \beta_5 = -8.5969 < 0$). In `results/equilibrium_results.json`, `all_conditions_satisfied: false`. Total welfare is strictly convex in symmetric appeal, so the social optimum is located at the upper boundary ($x_{\text{SO}} = 1.0$).
 2. **Severe Under-Investment Rather than Overshooting:**
    Because $x_{\text{Nash}} = 0.0$ and $x_{\text{SO}} = 1.0$, decentralized competition yields minimal click appeal while social welfare coordinates at maximum appeal ($\Delta = +1.0$).
-3. **Illustrative Attention Congestion Regimes (B and B'):**
-   Regimes B and B' retain the legacy $N=186$ coefficients where individual and social welfare concavity are both satisfied ($B > 0$). They serve as **illustrative benchmarks** of the overshooting tragedy of the commons ($x_{\text{Nash}} > x_{\text{SO}}$).
+3. **Convex Welfare Dip Under Weak Interventions:**
+   Because welfare is convex in symmetric appeal and $E < 0$, weak mediator recommendations ($\lambda \le 0.07$) produce a temporary welfare dip before recovering toward the social optimum as $\lambda \to 1$.
 
 ---
 
@@ -155,13 +155,13 @@ Percentile Intervals (Contraction-Valid, 2,732 draws - Contains Point Estimate):
 All plots are rendered at 300 DPI and saved in `plots/`:
 
 1. `01_best_response_and_nash.png`:
-   - Dual-panel plot contrasting best-response curves $\text{BR}_i(\bar{x}_{-i})$ against the 45-degree line for Regime A and Regime B, illustrating contraction stability ($k = 0.8524$ vs $k = 0.0427$).
+   - Dual-panel plot contrasting best-response curves $\text{BR}_i(\bar{x}_{-i})$ against the 45-degree line and cobweb contraction iteration for the Calibrated Empirical Baseline ($k = 0.8524$).
 2. `02_welfare_nash_vs_social_optimum.png`:
-   - Symmetric log-view welfare $\pi(x, x)$ comparing Nash outcomes against Social Optima, shading the Price of Anarchy efficiency loss.
+   - Symmetric log-view welfare $\pi(x, x)$ comparing Nash outcomes against Social Optima, shading the Price of Anarchy efficiency loss ($\text{PoA} = 2.817$), along with the mediator recovery curve $R(\lambda)$.
 3. `03_potential_function_landscape.png`:
    - 2D contour surface of the exact potential function $\Phi(x_1, x_2)$, proving strict global concavity with its peak at the unique symmetric Nash equilibrium.
 4. `04_poa_sensitivity_heatmap.png`:
-   - Two-panel 2D sensitivity heatmaps comparing empirical peer spillover against hypothetical attention congestion across curvature $\beta_2 \in [-20, -3]$ and interaction $\beta_5 \in [-5, +5]$.
+   - 2D sensitivity heatmaps exploring Price of Anarchy variations across curvature $\beta_2^{\text{eff}}$ and strategic interaction $\beta_5$.
 
 ---
 
@@ -171,7 +171,7 @@ The outputs are exported and immediately importable by Part 4:
 - Python Class: `game_theoretic_formulation.scripts.game_theory_solver.PotentialGame`
 - Data Artifacts:
   - `results/equilibrium_results.json`: Full nested dictionary with parameters, equilibria, eigenvalues, covariance diagnostics, and $\varepsilon$-IC mediator limits.
-  - `results/equilibrium_summary.csv`: Tabular comparison of Regime A, Regime B, and Regime B'.
+  - `results/equilibrium_summary.csv`: Tabular summary of Calibrated Baseline Regime A.
   - `results/sensitivity_analysis_grid.csv`: 125-point parameter sweep.
   - `results/bootstrap_poa_distribution.csv`: Percentiles of bootstrap distributions.
 

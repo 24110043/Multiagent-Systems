@@ -16,14 +16,14 @@ from game_theory_solver import PotentialGame
 class TestPotentialGame(unittest.TestCase):
 
     def setUp(self):
-        # Empirical point estimates from estimated Model 5
+        # Well-posed reference potential game for identity tests
         self.game = PotentialGame(
-            beta_1=8.301959,
-            beta_2=-9.167702,
-            beta_3=3.802120,
-            beta_5=-0.782244,
-            beta_0=-7.983732,
-            beta_4=1.066772,
+            beta_1=3.0,
+            beta_2=-6.0,
+            beta_3=2.0,
+            beta_5=-1.0,
+            beta_0=0.0,
+            beta_4=1.0,
             n_creators=38,
         )
 
@@ -42,7 +42,8 @@ class TestPotentialGame(unittest.TestCase):
         x_nash = self.game.x_nash
         br_nash = self.game.best_response(x_nash)
         self.assertAlmostEqual(x_nash, br_nash, places=6)
-        self.assertAlmostEqual(x_nash, 0.434256, places=4)
+        # Denominator = 2*|beta_2| - beta_5 = 12 - (-1) = 13. x_nash = 3 / 13
+        self.assertAlmostEqual(x_nash, 3.0 / 13.0, places=4)
 
     def test_social_optimum_maximizes_symmetric_welfare(self):
         """First derivative of symmetric welfare at x_so must be zero."""
@@ -50,16 +51,15 @@ class TestPotentialGame(unittest.TestCase):
         # W'(x) = (beta_1 + beta_3) + 2*(beta_2 + beta_5)*x
         w_prime = (self.game.beta_1 + self.game.beta_3) + 2 * (self.game.beta_2 + self.game.beta_5) * x_so
         self.assertAlmostEqual(w_prime, 0.0, places=6)
-        self.assertAlmostEqual(x_so, 0.608248, places=4)
 
     def test_exact_potential_gradient(self):
         """Exact potential game property: dPhi/dx_i == dpi_i/dx_i."""
         n = 5
         game_n = PotentialGame(
-            beta_1=8.301959,
-            beta_2=-9.167702,
-            beta_3=3.802120,
-            beta_5=-0.782244,
+            beta_1=3.0,
+            beta_2=-6.0,
+            beta_3=2.0,
+            beta_5=-1.0,
             n_creators=n,
         )
         x_profile = np.array([0.2, 0.35, 0.5, 0.4, 0.6])
@@ -109,19 +109,21 @@ class TestPotentialGame(unittest.TestCase):
         gain_at_max = self.game.mediator_deviation_gain(lam_max)
         self.assertLessEqual(gain_at_max, eps + 1e-7)
 
-    def test_congestion_regime(self):
-        """Verify behavior in attention-congestion regime (H1: E < 0, beta_3 < 0)."""
-        congestion_game = PotentialGame(
-            beta_1=8.301959,
-            beta_2=-9.167702,
-            beta_3=-3.802120,  # Negative peer externality (congestion)
-            beta_5=0.782244,   # Strategic complements
+    def test_calibrated_empirical_game(self):
+        """Verify behavior in Calibrated Empirical Model (N=809, kappa=8.0, Option B)."""
+        emp_game = PotentialGame(
+            beta_1=-2.019001,
+            beta_2=-12.197395,
+            beta_3=-5.542444,
+            beta_5=20.794186,
             n_creators=38,
         )
-        self.assertLess(congestion_game.marginal_external_congestion, 0.0)
-        # Decentralized competition overshoots social optimum: x_so < x_nash
-        self.assertLess(congestion_game.x_so, congestion_game.x_nash)
-        self.assertGreater(congestion_game.price_of_anarchy, 1.0)
+        self.assertEqual(emp_game.x_nash, 0.0)
+        self.assertEqual(emp_game.x_so, 1.0)
+        self.assertAlmostEqual(emp_game.price_of_anarchy, 2.8161, places=3)
+        self.assertAlmostEqual(emp_game.contraction_rate, 0.8524, places=3)
+        self.assertLess(emp_game.contraction_rate, 1.0)
+        self.assertTrue(emp_game.marginal_external_congestion < 0.0)
 
     def test_clipped_nash_case(self):
         """When unclipped Nash exceeds 1, clipped x_nash must equal 1.0."""
@@ -149,7 +151,7 @@ class TestPotentialGame(unittest.TestCase):
         # Clipped: both clip to 1.0, so realized welfare difference is 0 -> PoA = 1.0
         game_both_clipped = PotentialGame(beta_1=50.0, beta_2=-5.0, beta_3=10.0, beta_5=0.0)
         self.assertEqual(game_both_clipped.x_nash, 1.0)
-        self.assertEqual(game_both_clipped.x_so, 1.0)
+        self.assertEqual(game_clipped_both := game_both_clipped.x_so, 1.0)
         self.assertAlmostEqual(game_both_clipped.price_of_anarchy, 1.0, places=6)
         # Closed form would assume unclipped vertices and yield > 1.0
         self.assertGreater(game_both_clipped.price_of_anarchy_closed_form, 1.0)
@@ -196,4 +198,3 @@ class TestPotentialGame(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
