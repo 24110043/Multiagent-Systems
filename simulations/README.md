@@ -2,13 +2,13 @@
 
 **CS 329: Foundations of AI: Multi-Agent Systems (2026)**  
 *Indian Institute of Technology Gandhinagar*  
-**Component:** *Simulation Experiments — Best-Response Dynamics, Payoff-Based Learning (RQ2), Welfare Verification, and Mediator Intervention*
+**Component:** *Simulation Experiments -- Best-Response Dynamics, Payoff-Based Learning (RQ2), Welfare Verification, and Mediator Intervention*
 
 ---
 
 ## 1. Overview & Role
 
-This component implements **empirical multi-agent simulations** using the game-theoretic framework from Part 3. All parameters flow from `payoff_calculation/results/game_theory_coefficients.json` ($N=809$, Option B cost-augmented $\kappa=8.0$) through the `PotentialGame` API and `make_regime` factory — **no new data inputs required.**
+This component implements **empirical multi-agent simulations** using the game-theoretic framework from Part 3. All parameters flow from `payoff_calculation/results/game_theory_coefficients.json` ($N=809$, Option B cost-augmented $\kappa=8.0$) through the `PotentialGame` API and `make_regime` factory -- **no new data inputs required.**
 
 It addresses two core research questions and empirical uncertainty:
 
@@ -28,7 +28,7 @@ simulations/
 ├── requirements.txt
 ├── scripts/
 │   ├── sim_dynamics.py          # Exp 1 & 2: BR dynamics + make_regime factory
-│   ├── sim_mediator.py          # Exp 3: mediator λ-sweep (+ numeric columns)
+│   ├── sim_mediator.py          # Exp 3: mediator lambda-sweep (+ numeric columns)
 │   ├── sim_regime_compare.py    # Master runner (--with-learning, --with-bootstrap, --with-sweeps)
 │   ├── sim_learning.py          # RQ2: payoff-based learning + sweep helper
 │   ├── sim_sweeps.py            # Task G: multi-parameter sweeps and plots 09-11
@@ -74,7 +74,7 @@ simulations/
 Agents iterate:
 $$x_i^{t+1} = \text{BR}_i\!\left(\bar{x}_{-i}^t\right) = \text{clip}\!\left(\frac{\beta_1 + \beta_5 \bar{x}_{-i}^t}{2|\beta_2^{\mathrm{eff}}|}, 0, 1\right)$$
 
-By the **contraction mapping theorem**, with $k = |\beta_5|/(2|\beta_2^{\mathrm{eff}}|) = 0.8524 < 1.0$ under Regime A Option B, dynamics contract to $x_{\mathrm{Nash}} = 0.0$ from any starting point. Independent numeric verification (`sim_numeric.py`) confirms closed-form equilibria via bracketed bisection on $g(x) = \text{BR}(x) - x$.
+By the **contraction mapping theorem**, with $k = \frac{|\beta_5|}{2|\beta_2^{\mathrm{eff}}|} = 0.8524 < 1.0$ under Regime A Option B, dynamics contract to $x_{\mathrm{Nash}} = 0.0$ from any starting point. Independent numeric verification (`sim_numeric.py`) confirms closed-form equilibria via bracketed bisection on $g(x) = \text{BR}(x) - x$.
 
 Theoretical error decay: $\|x_t - x_{\mathrm{Nash}}\|_\infty \le k^t \cdot \|x_0 - x_{\mathrm{Nash}}\|_\infty$.
 
@@ -115,7 +115,7 @@ Creators observe **only** their own noisy payoff $y_i^t = \pi_i(x_i^t, \bar{x}_{
 
 ## 4. Experiments & Results
 
-### Experiment 1 & 2 — Best-Response Dynamics
+### Experiment 1 & 2 -- Best-Response Dynamics
 
 **Setup:** 100 random starting profiles, $n = 38$ agents, synchronous BR, max 500 iterations.
 
@@ -125,12 +125,12 @@ Creators observe **only** their own noisy payoff $y_i^t = \pi_i(x_i^t, \bar{x}_{
 | Mean iterations | 36.2 |
 | Mean error to Nash | < 1e-6 |
 | Simulated PoA | 2.8166 |
-| Theoretical PoA | 2.8166 ✓ |
-| Numeric PoA (independent check) | 2.8166 ✓ |
+| Theoretical PoA | 2.8166 (verified) |
+| Numeric PoA (independent check) | 2.8166 (verified) |
 
 **Key finding:** Under the calibrated empirical parameters ($N=809$ Option B, $\kappa=8.0$), contraction holds at $k = 0.8524 < 1.0$, converging to the unique stable Nash equilibrium $x_{\mathrm{Nash}} = 0.0000$ with social optimum $x_{\mathrm{SO}} = 1.0000$, yielding a Price of Anarchy $\mathrm{PoA} = 2.8166$.
 
-### Experiment 3 — Mediator Sweep (Regime A)
+### Experiment 3 -- Mediator Sweep (Regime A)
 
 | $\epsilon$ | $\lambda_{\max}$ | $R(\lambda_{\max})$ log-view | $R_V(\lambda_{\max})$ view | Interpretation |
 |---|-------|-------------------|-----------------|----------------|
@@ -142,7 +142,7 @@ Creators observe **only** their own noisy payoff $y_i^t = \pi_i(x_i^t, \bar{x}_{
 > [!NOTE]
 > In Regime A, moving along the recommendation path $x_\lambda = (1-\lambda)x_{\text{Nash}} + \lambda x_{\text{SO}}$ from $x_{\text{Nash}}=0$ toward $x_{\text{SO}}=1$ encounters negative initial marginal externality ($E = \beta_3 = -5.5424 < 0$). Because welfare is convex ($\beta_2^{\mathrm{eff}} + \beta_5 = +8.597 > 0$), welfare initially decreases before rising to exceed $W(0)$ at $\lambda \approx 0.145$. Thus, small mediator interventions $(\lambda \le 0.07)$ achieve **negative** welfare recovery.
 
-### RQ2 — Payoff-Based Learning & Dispersion
+### RQ2 -- Payoff-Based Learning & Dispersion
 
 **Summary of Learning Performance at Horizon $T=500$ (low and high starts reported separately):**
 
@@ -214,7 +214,7 @@ Parametric bootstrap draws ($N=10,000$) were generated from $\mathcal{N}(\hat{\b
 | `04_regime_comparison.png` | Grouped bar chart comparing equilibria, PoA, $\lambda_{\max}$, and iterations across regimes. |
 | `05_learning_convergence.png` | Population mean $\bar{x}_t$ vs round $t$ for all regimes. |
 | `06_learning_welfare.png` | Noise-free view welfare $W_V(t)$ vs round $t$. |
-| `07_learning_dispersion.png` | Individual dispersion $\max_i |x_i - x_{\mathrm{Nash}}|$ vs round $t$ with 10–90% band. |
+| `07_learning_dispersion.png` | Individual dispersion $\max_i |x_i - x_{\mathrm{Nash}}|$ vs round $t$ with 10-90% band. |
 | `08_bootstrap_mediator.png` | Histograms of $\lambda_{\max}$, $R$, and $R_V$ across well-posed bootstrap draws. |
 | `09_noise_sweep.png` | Sensitivity of dispersion $D_T$ and mean gap $\Delta_T$ across payoff noise $\sigma \in [0, 1.14]$. |
 | `10_step_size_sweep.png` | Sensitivity of dispersion $D_T$ and mean gap $\Delta_T$ across base step sizes $\eta \in [0.01, 0.4]$. |

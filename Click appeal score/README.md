@@ -122,8 +122,8 @@ python scripts/07_validate_results.py
 | Metric | Formula / Role | Mean | Std | Min | Median | Max |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: |
 | **`score_weighted` ($X_v$)** | **$0.4 X_{\text{title}} + 0.6 X_{\text{thumb}}$ (Primary)** | **0.3924** | **0.1037** | **0.0054** | **0.3977** | **0.6843** |
-| `score_title` | $(x_{\text{caps}} + x_{\text{trig}} + x_{\text{sens}} + x_{\text{sym}}) / 4$ | 0.1659 | 0.1395 | 0.0000 | 0.1250 | 0.7326 |
-| `score_thumbnail` | $(x_{\text{face}} + x_{\text{expr}} + x_{\text{cont}} + x_{\text{sat}}) / 4$ | 0.5434 | 0.1377 | 0.0091 | 0.5512 | 0.8898 |
+| `score_title` | $\frac{x_{\text{caps}} + x_{\text{trig}} + x_{\text{sens}} + x_{\text{sym}}}{4}$ | 0.1659 | 0.1395 | 0.0000 | 0.1250 | 0.7326 |
+| `score_thumbnail` | $\frac{x_{\text{face}} + x_{\text{expr}} + x_{\text{cont}} + x_{\text{sat}}}{4}$ | 0.5434 | 0.1377 | 0.0091 | 0.5512 | 0.8898 |
 | `score_equal_weight` | $\frac{1}{8} \sum_{j=1}^8 x_j$ | 0.3546 | 0.1023 | 0.0045 | 0.3551 | 0.6620 |
 | `score_pca` | Projection onto baseline PC1 | 0.5340 | 0.1681 | 0.0000 | 0.5367 | 1.0000 |
 

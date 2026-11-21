@@ -78,7 +78,7 @@ To address the empirical econometric findings from the full $N=809$ sample under
 | **Parameters** | $\beta_1=-2.0190, \beta_2=-12.1974, \beta_3=-5.5424, \beta_5=20.7942$ |
 | **Strategic Nature** | Strategic Complements ($\beta_5 > 0$) |
 | **Contraction Rate ($k$)** | $0.8524 < 1.0$ (Contraction mapping holds) |
-| **Hessian Eigenvalues** | $\lambda_1 = -3.6005, \ \lambda_2 = -24.9567$ |
+| **Hessian Eigenvalues** | $\lambda_1 = -3.6005, \quad \lambda_2 = -24.9567$ |
 | **Potential Concavity** | **Strictly Concave** ($\lambda_1, \lambda_2 < 0$) |
 | **Welfare Concavity** | **Violated** ($\beta_2 + \beta_5 = +8.5969 > 0$, Convex!) |
 | **Well-Posedness** | `all_conditions_satisfied: false` (Convex welfare) |
@@ -137,8 +137,8 @@ Percentile Intervals (Contraction-Valid, 2,732 draws - Contains Point Estimate):
 
 ## 6. Limitations & Methodological Clarifications
 
-1. **Assumed Regularization ($\kappa=8.0$):** In the unaugmented $N=809$ estimation, individual concavity is not statistically established ($\beta_{2,u} = -8.1974$, $p=0.26$). The quadratic cost parameter $\kappa=8.0$ is an assumed regularizer ($\beta_{2,\text{eff}} = \beta_{2,u} - \kappa/2 = -12.1974$) rather than an empirically estimated cost.
-2. **Identification of Peer Packaging:** Within a single niche at any time $t$, competitor leave-one-out averages $\bar{x}_{-i,t}$ vary across creators only through the focal creator's own packaging $x_{it}$ ($\partial \bar{x}_{-i,t} / \partial x_{it} = -1/(n-1)$). Cross-sectional peer variation is therefore $O(1/n)$, meaning $\beta_3$ and $\beta_5$ are identified primarily through aggregate time variation across the 24-month window.
+1. **Assumed Regularization ($\kappa=8.0$):** In the unaugmented $N=809$ estimation, individual concavity is not statistically established ($\beta_{2,u} = -8.1974$, $p=0.26$). The quadratic cost parameter $\kappa=8.0$ is an assumed regularizer ($\beta_{2,\text{eff}} = \beta_{2,u} - \frac{\kappa}{2} = -12.1974$) rather than an empirically estimated cost.
+2. **Identification of Peer Packaging:** Within a single niche at any time $t$, competitor leave-one-out averages $\bar{x}_{-i,t}$ vary across creators only through the focal creator's own packaging $x_{it}$ ($\frac{\partial \bar{x}_{-i,t}}{\partial x_{it}} = -\frac{1}{n-1}$). Cross-sectional peer variation is therefore $O\left(\frac{1}{n}\right)$, meaning $\beta_3$ and $\beta_5$ are identified primarily through aggregate time variation across the 24-month window.
 3. **Mediator Interpretation:** Because potential games with unique contraction equilibria have no correlated equilibria outside the Nash equilibrium, the platform mediator is formally an **$\varepsilon$-Nash incentive-compatibility device** ($\varepsilon$-IC) evaluating unilateral deviation gains, rather than an expanded Aumann correlated equilibrium.
 
 ---

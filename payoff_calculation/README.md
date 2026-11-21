@@ -61,7 +61,7 @@ Analytically derived from centered coefficients with verified prediction equival
 
 ```
 +------------------------+-------------+-------------+-------------+-------------+
-| Model                  | Train R²    | LOCO-CV R²  | Val R²_OOS  | Test R²_OOS |
+| Model                  | Train R^2   | LOCO-CV R^2 | Val R^2_OOS | Test R^2_OOS |
 |                        | (N=541)     | (26 folds)  | (N=136)     | (N=132)     |
 +------------------------+-------------+-------------+-------------+-------------+
 | Model 0 (Controls Base)|   0.6324    |   0.5741    |   0.4768    |   0.7535    |
@@ -81,7 +81,7 @@ Analytically derived from centered coefficients with verified prediction equival
 
 | Parameter | Centered Estimate | CRSE SE | Student-$t$ $p$ | Uncentered Est. ($b_u$) | Delta SE | Student-$t$ $p$ |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Intercept ($b_0$)** | $-2.7904$ | $2.4168$ | $0.2557$ | $-1.7604$ | — | — |
+| **Intercept ($b_0$)** | $-2.7904$ | $2.4168$ | $0.2557$ | $-1.7604$ | -- | -- |
 | **Own Appeal ($b_1$)** | $-0.3135$ | $1.9191$ | $0.8711$ | $-2.0190$ | $20.9201$ | $0.9236$ |
 | **Curvature ($b_2$)** | $-8.1974$ | $8.2994$ | $0.3297$ | $-8.1974$ | $8.2994$ | $0.3297$ |
 | **Peer Congestion ($b_3$)**| $+2.6172$ | $6.0386$ | $0.6672$ | $-5.5424$ | $22.8522$ | $0.8097$ |
@@ -96,17 +96,17 @@ Analytically derived from centered coefficients with verified prediction equival
 - **Joint Packaging Significance:** $F(4, 37) = 0.4739$ ($p = 0.7546$). Controls explain $99.3\%$ of the variance; packaging terms are jointly insignificant.
 - **Diminishing Returns ($H_0: \beta_2 \ge 0$):** Wild Cluster Bootstrap one-sided $p = 0.2600$. Retained at $\alpha = 0.05$. Concavity is not statistically confirmed.
 - **Strategic Interaction ($H_0: \beta_5 = 0$):** Wild Cluster Bootstrap two-sided $p = 0.7795$. Retained at $\alpha = 0.05$.
-- **Original Proposal Hypotheses (H1–H4):** Not supported by the data:
+- **Original Proposal Hypotheses (H1-H4):** Not supported by the data:
   - *H1 ($b_1 > 0$):* not supported ($p = 0.92$) (uncentered point estimate $b_{1\_u} = -2.0190$, $\mathrm{SE} = 20.9201$).
   - *H2 ($b_2 < 0$):* Insignificant ($p = 0.3297$).
   - *H3 ($b_3 < 0$):* Insignificant ($p = 0.8097$).
   - *H4 ($b_5 < 0$):* Point estimate is positive ($+20.7942$, complements) and insignificant ($p = 0.7318$).
 
 ### Cluster-Pairs Bootstrap Diagnostics ($B = 2{,}000$)
-- **Standard Error Verification:** Ratio $\mathrm{SE}_{\mathrm{boot}} / \mathrm{SE}_{\mathrm{CRSE}}$ is between $0.95$ and $1.06$ for all variables (log-subscribers ratio is $1.064$, resolving the earlier 12x deflation artifact).
-- **Concave Draws ($b_2 < 0$):** $81.40\%$ ($1{,}628 / 2{,}000$).
-- **Contraction & Concave Satisfied ($\rho < 1$ and $b_2 < 0$):** Exactly $18.65\%$ ($373 / 2{,}000$).
-- **Contraction Ratio ($\rho = |b_5| / (2|b_2|)$ among concave draws):**
+- **Standard Error Verification:** Ratio $\frac{\mathrm{SE}_{\mathrm{boot}}}{\mathrm{SE}_{\mathrm{CRSE}}}$ is between $0.95$ and $1.06$ for all variables (log-subscribers ratio is $1.064$, resolving the earlier 12x deflation artifact).
+- **Concave Draws ($b_2 < 0$):** $81.40\%$ ($\frac{1{,}628}{2{,}000}$).
+- **Contraction & Concave Satisfied ($\rho < 1$ and $b_2 < 0$):** Exactly $18.65\%$ ($\frac{373}{2{,}000}$).
+- **Contraction Ratio ($\rho = \frac{|b_5|}{2|b_2|}$ among concave draws):**
   - Point estimate: $\rho = 1.2683$
   - 95% Confidence Interval: $[0.1140, 35.7036]$
   - Median: $2.1528$ ($p_{10} = 0.4200, p_{25} = 1.1053, p_{75} = 4.0546, p_{90} = 9.4619$).
@@ -169,7 +169,7 @@ payoff_calculation/
 |   |--  bootstrap_draws.npz                   # 2,000 cluster-pairs bootstrap parameter draws
 |   |--  congestion_test.csv                   # Stage 10: Congestion function E(x) grid & bootstrap results
 |   |--  training_regression_results.csv       # Training model estimates
-|   |--  training_model_comparison.csv         # Training AIC, BIC, R²
+|   |--  training_model_comparison.csv         # Training AIC, BIC, R^2
 |   |--  training_multicollinearity_diagnostics.csv # Centered vs uncentered VIFs
 |   |--  subscriber_robustness_table.csv       # Scale and FE robustness specifications
 |   |--  loco_cv_aggregate_summary.csv         # Stage 4 LOCO-CV summary
@@ -180,7 +180,7 @@ payoff_calculation/
 |   |--  test_channel_dispersion.csv           # Stage 6 test channel breakdown
 |   \--  backward_looking_peer_robustness.csv  # Contemporaneous vs backward peer table
 |--  plots/
-|   |--  01_model_progression_fit.png          # Figure 1: In-sample vs OOS R² and AIC/BIC
+|   |--  01_model_progression_fit.png          # Figure 1: In-sample vs OOS R^2 and AIC/BIC
 |   |--  02_actual_vs_predicted.png            # Figure 2: Actual vs predicted log views
 |   |--  03_residual_audit.png                 # Figure 3: Four-panel residual diagnostics
 |   |--  04_payoff_response_curves.png         # Figure 4: Payoff response under production costs
@@ -195,7 +195,7 @@ payoff_calculation/
 |--  _extras/                                  # Archived downstream equilibrium scripts, sweeps & legacy files
 |--  payoff_estimation.py                     # Master execution runner
 \--  README.md                                  # This document
-``````
+```
 
 ---
 
