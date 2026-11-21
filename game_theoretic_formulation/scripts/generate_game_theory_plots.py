@@ -222,7 +222,9 @@ def main():
     base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     plots_dir = os.path.join(base_dir, "plots")
     os.makedirs(plots_dir, exist_ok=True)
-    json_path = os.path.abspath(os.path.join(base_dir, "..", "payoff_estimation", "results", "game_theory_coefficients.json"))
+    json_path = os.path.abspath(os.path.join(base_dir, "..", "payoff_calculation", "results", "game_theory_coefficients.json"))
+    if not os.path.exists(json_path):
+        json_path = os.path.abspath(os.path.join(base_dir, "..", "payoff_estimation", "results", "game_theory_coefficients.json"))
     
     empirical_game = PotentialGame.from_json(json_path, n_creators=38)
     congestion_game = PotentialGame(

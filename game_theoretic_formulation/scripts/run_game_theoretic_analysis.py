@@ -18,13 +18,72 @@ import pandas as pd
 from game_theory_solver import PotentialGame
 
 
-def load_empirical_inputs(json_path: str):
-    """Load empirical coefficients and cluster-robust covariance matrix."""
+def load_empirical_inputs(json_path: str, kappa: float = 8.0, use_option_b: bool = True):
+    """Load empirical coefficients and cluster-robust / delta-method covariance matrix."""
+    if not os.path.exists(json_path):
+        candidates = [
+            json_path,
+            os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "payoff_calculation", "results", "game_theory_coefficients.json")),
+            os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "payoff_estimation", "results", "game_theory_coefficients.json")),
+        ]
+        found = False
+        for c in candidates:
+            if os.path.exists(c):
+                json_path = c
+                found = True
+                break
+        if not found:
+            raise FileNotFoundError(f"Could not find JSON payload at: {json_path}")
+
     with open(json_path, "r", encoding="utf-8") as f:
         data = json.load(f)
-        
+
+    # Schema 1: N=809 payoff_calculation
+    if "uncentered_structural_coefficients_for_game_theory" in data:
+        sec = data["uncentered_structural_coefficients_for_game_theory"]
+        b1 = float(sec["b1_u_own_linear_appeal"])
+        b2_raw = float(sec["b2_u_quadratic_curvature"])
+        b3 = float(sec["b3_u_peer_congestion"])
+        b5 = float(sec["b5_u_strategic_interaction"])
+        b0 = float(sec.get("b0_u_intercept", 0.0))
+        b4 = float(sec.get("gamma_subscribers", 0.0))
+
+        eff_kappa = kappa if use_option_b else 0.0
+        eff_b2 = b2_raw - (eff_kappa / 2.0)
+
+        uncentered = {
+            "beta_1_own_click_appeal": b1,
+            "beta_2_quadratic_own_appeal": eff_b2,
+            "beta_2_raw": b2_raw,
+            "beta_3_competitor_click_appeal": b3,
+            "beta_5_strategic_interaction": b5,
+            "beta_0_intercept": b0,
+            "beta_4_log_subscribers": b4,
+            "kappa": eff_kappa,
+        }
+
+        cov_sub = np.array(sec["covariance_matrix_delta_method"], dtype=float)
+        cov_sub = 0.5 * (cov_sub + cov_sub.T)
+        min_eig = float(np.min(np.real(np.linalg.eigvals(cov_sub))))
+        eigenvalue_shift_triggered = False
+        shift_amount = 0.0
+        if min_eig < 1e-8:
+            shift_amount = float(abs(min_eig) + 1e-6)
+            cov_sub += shift_amount * np.eye(4)
+            eigenvalue_shift_triggered = True
+
+        diag_info = {
+            "covariance_parametrization": "Uncentered Delta-Method (N=809 Full Calibration, Option B Cost-Augmented)",
+            "min_eigenvalue_before_shift": min_eig,
+            "eigenvalue_shift_triggered": eigenvalue_shift_triggered,
+            "shift_amount": shift_amount,
+            "option_b_kappa": eff_kappa,
+        }
+        return uncentered, cov_sub, data, diag_info
+
+    # Schema 2: Legacy N=186 payoff_estimation
     if "point_estimates_uncentered_model_5" not in data:
-        raise KeyError("Missing required key 'point_estimates_uncentered_model_5' in JSON")
+        raise KeyError("Missing required key 'uncentered_structural_coefficients_for_game_theory' or 'point_estimates_uncentered_model_5' in JSON")
     uncentered = data["point_estimates_uncentered_model_5"]
     
     if "parameter_covariance_matrix_cluster_robust" not in data:
@@ -39,10 +98,6 @@ def load_empirical_inputs(json_path: str):
         "beta_3": "x_bar_roll90",
         "beta_5": "x_inter_roll90",
     }
-    
-    for ki, row_k in key_mapping.items():
-        if row_k not in uncentered and f"{ki}_own_click_appeal" not in uncentered:
-            pass  # uncentered verified below
     
     mean_vec = np.array([
         uncentered["beta_1_own_click_appeal"],
@@ -283,10 +338,14 @@ def main():
     results_dir = os.path.join(base_dir, "results")
     os.makedirs(results_dir, exist_ok=True)
     
-    # Path to upstream payoff estimation handover
+    # Path to upstream payoff handover (prefer payoff_calculation N=809, fallback to payoff_estimation)
     json_path = os.path.abspath(
-        os.path.join(base_dir, "..", "payoff_estimation", "results", "game_theory_coefficients.json")
+        os.path.join(base_dir, "..", "payoff_calculation", "results", "game_theory_coefficients.json")
     )
+    if not os.path.exists(json_path):
+        json_path = os.path.abspath(
+            os.path.join(base_dir, "..", "payoff_estimation", "results", "game_theory_coefficients.json")
+        )
     if not os.path.exists(json_path):
         raise FileNotFoundError(f"Upstream file not found: {json_path}")
         

@@ -75,65 +75,78 @@ Because $E^2 \ge 0$ and $|\beta_2| - \beta_5 > 0$, $\text{PoA} \ge 1.0$ structur
 
 ## 4. Empirical Evaluation & Dual-Regime Analysis
 
-To address the empirical econometric findings, we evaluate three strategic regimes:
+To address the empirical econometric findings from the full $N=809$ sample under Option B ($\kappa=8.0$), we evaluate three strategic regimes:
 
 ### Summary of Strategic Regimes
 
-| Metric | Regime A: Empirical Point Estimates (Model 5) | Regime B (Hypothetical): Attention Congestion (Complements) | Regime B' (Hypothetical): Attention Congestion (Empirical Interaction) |
+| Metric | Regime A: Calibrated ($N=809$, Assumed $\kappa=8$) | Regime B: Illustrative Benchmark (Complements) | Regime B': Illustrative Benchmark (Substitutes) |
 | :--- | :---: | :---: | :---: |
-| **Status** | **Calibrated Empirical Baseline** | **Hypothetical Benchmark** | **Hypothetical Benchmark** |
-| **Parameters** | $\beta_1=8.3020, \beta_2=-9.1677, \beta_3=3.8021, \beta_5=-0.7822$ | $\beta_1=8.3020, \beta_2=-9.1677, \beta_3=-3.8021, \beta_5=+0.7822$ | $\beta_1=8.3020, \beta_2=-9.1677, \beta_3=-3.8021, \beta_5=-0.7822$ |
-| **Strategic Nature** | Strategic Substitutes ($\beta_5 < 0$) | Strategic Complements ($\beta_5 > 0$) | Strategic Substitutes ($\beta_5 < 0$) |
-| **Contraction Rate ($k$)** | $0.0427 < 1.0$ (Near dominant-strategy) | $0.0427 < 1.0$ (Strong contraction) | $0.0427 < 1.0$ (Near dominant-strategy) |
-| **Hessian Eigenvalues** | $\lambda_1 = -19.1176, \ \lambda_2 = -18.3143$ | $\lambda_1 = -17.5532, \ \lambda_2 = -18.3565$ | $\lambda_1 = -19.1176, \ \lambda_2 = -18.3143$ |
+| **Status** | **Calibrated Empirical Baseline (Option B)** | **Illustrative Benchmark (Legacy $N=186$)** | **Illustrative Benchmark (Legacy $N=186$)** |
+| **Parameters** | $\beta_1=-2.0190, \beta_2=-12.1974, \beta_3=-5.5424, \beta_5=20.7942$ | $\beta_1=8.3020, \beta_2=-9.1677, \beta_3=-3.8021, \beta_5=+0.7822$ | $\beta_1=8.3020, \beta_2=-9.1677, \beta_3=-3.8021, \beta_5=-0.7822$ |
+| **Strategic Nature** | Strategic Complements ($\beta_5 > 0$) | Strategic Complements ($\beta_5 > 0$) | Strategic Substitutes ($\beta_5 < 0$) |
+| **Contraction Rate ($k$)** | $0.8524 < 1.0$ (Contraction mapping holds) | $0.0427 < 1.0$ (Strong contraction) | $0.0427 < 1.0$ (Near dominant-strategy) |
+| **Hessian Eigenvalues** | $\lambda_1 = -3.6005, \ \lambda_2 = -24.9567$ | $\lambda_1 = -17.5532, \ \lambda_2 = -18.3565$ | $\lambda_1 = -19.1176, \ \lambda_2 = -18.3143$ |
 | **Potential Concavity** | **Strictly Concave** ($\lambda_1, \lambda_2 < 0$) | **Strictly Concave** ($\lambda_1, \lambda_2 < 0$) | **Strictly Concave** ($\lambda_1, \lambda_2 < 0$) |
-| **Symmetric Nash ($x^*$)** | **$0.4343$** (Interior) | **$0.4730$** (Interior) | **$0.4343$** (Interior) |
-| **Social Optimum ($x^{\text{SO}}$)** | **$0.6082$** (Interior) | **$0.2683$** (Interior) | **$0.2261$** (Interior) |
-| **Marginal Externality ($E$)** | **$+3.4624 > 0$** (Positive peer spillover) | **$-3.4321 < 0$** (Attention congestion) | **$-4.1418 < 0$** (Attention congestion) |
-| **Nash-SO Gap ($\Delta$)** | **$+0.1740$** (Under-investment) | **$-0.2046$** (Clickbait Overshoot!) | **$-0.2081$** (Clickbait Overshoot!) |
-| **Price of Anarchy ($\text{PoA}$)** | **$1.3515$** (35.1% view gap) | **$1.4208$** (42.1% view gap) | **$1.5388$** (53.9% view gap) |
+| **Welfare Concavity** | **Violated** ($\beta_2 + \beta_5 = +8.5969 > 0$, Convex!) | **Satisfied** ($\beta_2 + \beta_5 = -8.3855 < 0$) | **Satisfied** ($\beta_2 + \beta_5 = -9.9499 < 0$) |
+| **Well-Posedness** | `all_conditions_satisfied: false` (Convex welfare) | `all_conditions_satisfied: true` | `all_conditions_satisfied: true` |
+| **Symmetric Nash ($x^*$)** | **$0.0000$** (Clipped from $-0.5608$) | **$0.4730$** (Interior) | **$0.4343$** (Interior) |
+| **Social Optimum ($x^{\text{SO}}$)** | **$1.0000$** (Boundary maximizer) | **$0.2683$** (Interior) | **$0.2261$** (Interior) |
+| **Marginal Externality ($E$)** | **$-5.5424 < 0$** (Negative attention congestion) | **$-3.4321 < 0$** (Attention congestion) | **$-4.1418 < 0$** (Attention congestion) |
+| **Nash-SO Gap ($\Delta$)** | **$+1.0000$** (Severe under-investment) | **$-0.2046$** (Clickbait Overshoot!) | **$-0.2081$** (Clickbait Overshoot!) |
+| **Price of Anarchy ($\text{PoA}$)** | **$2.8166$** (Definition-based, $181.7\%$ view gap) | **$1.4208$** ($42.1\%$ view gap) | **$1.5388$** ($53.9\%$ view gap) |
 
-### Key Theoretical Insights:
-1. **$H_1$ Congestion Hypothesis Not Supported at Point Estimates:** At the calibrated point estimates (Regime A), $\beta_3 = +3.8021 > 0$ and $E = +3.4624 > 0$. Creators generate positive mutual view spillovers. Consequently, decentralized competition results in **under-investment** relative to the social optimum ($x^* = 0.434 < x^{\text{SO}} = 0.608$), meaning a platform planner would nudge creators toward *higher* click appeal.
-2. **Near Dominant-Strategy Game:** The contraction rate $k = \frac{|\beta_5|}{2|\beta_2|} \approx 0.0427 \ll 1$ indicates that creators' best responses are nearly independent of peer actions (slope $s = -0.043$). Nearly all of the external gap $E = \beta_3 + \beta_5 x^*$ is driven by the level shift $\beta_3$, which affects group welfare but scarcely alters individual incentives.
-3. **Hypothetical Attention Congestion Regimes (B and B'):** Under negative peer externalities ($\beta_3 = -3.8021$), decentralized competition cleanly overshoots the social optimum ($x^* > x^{\text{SO}}$), creating a classic clickbait arms race where Price of Anarchy rises to $1.4208$ (complements) and $1.5388$ (substitutes).
+### Key Theoretical Insights & Methodological Caveats:
+1. **Regime A is NOT Theoretically Well-Posed in the Potential Game Sense:**
+   While the best-response mapping is contractive ($k = 0.8524 < 1.0$) ensuring a unique symmetric Nash equilibrium at the lower boundary ($x_{\text{Nash}} = 0.0$), **welfare concavity fails** because $\beta_2^{\text{eff}} + \beta_5 = -12.1974 + 20.7942 = +8.5969 > 0$ ($B = |\beta_2^{\text{eff}}| - \beta_5 = -8.5969 < 0$). In `results/equilibrium_results.json`, `all_conditions_satisfied: false`. Total welfare is strictly convex in symmetric appeal, so the social optimum is located at the upper boundary ($x_{\text{SO}} = 1.0$).
+2. **Severe Under-Investment Rather than Overshooting:**
+   Because $x_{\text{Nash}} = 0.0$ and $x_{\text{SO}} = 1.0$, decentralized competition yields minimal click appeal while social welfare coordinates at maximum appeal ($\Delta = +1.0$).
+3. **Illustrative Attention Congestion Regimes (B and B'):**
+   Regimes B and B' retain the legacy $N=186$ coefficients where individual and social welfare concavity are both satisfied ($B > 0$). They serve as **illustrative benchmarks** of the overshooting tragedy of the commons ($x_{\text{Nash}} > x_{\text{SO}}$).
 
 ---
 
 ## 5. Parametric Bootstrap Uncertainty Analysis
 
-Because parameter standard errors carry estimation noise once channel scale is controlled, we performed a **10,000-draw parametric bootstrap** drawing parameter vectors directly from $\boldsymbol{\beta} \sim \mathcal{N}(\hat{\boldsymbol{\beta}}, \hat{\boldsymbol{\Sigma}}_{\beta})$ using the uncentered cluster-robust covariance matrix:
+Because parameter standard errors carry estimation noise once channel scale is controlled, we performed a **10,000-draw parametric bootstrap** drawing parameter vectors directly from $\boldsymbol{\beta} \sim \mathcal{N}(\hat{\boldsymbol{\beta}}, \hat{\boldsymbol{\Sigma}}_{\beta})$ using the uncentered cluster-robust covariance matrix of Model 5 ($N=809$, Option B):
 
 ```text
 Parametric Bootstrap Diagnostics (10,000 draws ~ N(beta_hat, Sigma_hat)):
-  P(beta_2 < 0) [Individual Concavity]:         86.57%
-  P(B > 0) [Welfare Concavity]:                 59.73%
-  P(|beta_5| < 2|beta_2|) [Contraction]:        33.76%
-  P(Well-Posed Potential Game - All 3 Conds):   25.15% (2,515 valid draws)
-  P(E < 0) [Congestion Overshoot - All Draws]:  27.97%
-  P(E < 0) [Conditional on Well-Posedness]:     22.47%
-  Fraction Valid with Clipped x_Nash:           0.52%
-  Fraction Valid with Clipped x_SO:             13.36%
-  Fraction Valid with Any Clipped Equilibrium:  13.36%
+  P(beta_2 < 0) [Individual Concavity]:         92.96%
+  P(B > 0) [Welfare Concavity]:                 44.25%
+  P(|beta_5| < 2|beta_2|) [Contraction]:        27.61%
+  P(Well-Posed Potential Game - All 3 Conds):   17.96% (1,796 valid draws)
+  P(Contraction-Valid, beta_2 < 0 & k < 1):     27.32% (2,732 valid draws)
+  P(E < 0) [Congestion Overshoot - All Draws]:  22.95%
+  P(E < 0) [Conditional on Well-Posedness]:     32.35%
+  Fraction Valid with Clipped x_Nash:           1.95%
+  Fraction Valid with Clipped x_SO:             17.98%
+  Fraction Valid with Any Clipped Equilibrium:  18.37%
 
-Percentile Intervals (Conditional on Well-Posedness, 2,515 draws):
-  x^Nash:  [0.2928,  0.6532]  (Median: 0.3923)
-  x^SO:    [0.0507,  1.0000]  (Median: 0.4816)
-  Delta:   [-0.3048, 0.6350]  (Median: 0.0835)
-  PoA:     [1.0003, 103.140]  (Median: 1.3225)
+Percentile Intervals (Conditional on Well-Posedness, 1,796 draws):
+  x^Nash:  [0.0256,  0.3653]  (Median: 0.2685, Mean: 0.2513)
+  x^SO:    [0.0000,  1.0000]  (Median: 0.3715, Mean: 0.3759)
+  Delta:   [-0.2647, 0.8358]  (Median: 0.0845, Mean: 0.1247)
+  PoA:     [1.0006, 121.430]  (Median: 1.4665, Mean: 129.33)
+
+Percentile Intervals (Contraction-Valid, 2,732 draws - Contains Point Estimate):
+  x^Nash:  [0.0000,  0.3569]  (Median: 0.2124, Mean: 0.1788)
+  x^SO:    [0.0000,  1.0000]  (Median: 0.4559, Mean: 0.5385)
+  Delta:   [-0.2467, 1.0000]  (Median: 0.1802, Mean: 0.3597)
+  PoA:     [0.0292, 17952.8]  (Median: 1.6502)
 ```
 
-### Statistical Interpretation & Cautionary Notes:
-- **PoA Lower Bound Interpretation:** Structurally, $\text{PoA} \ge 1.0$ by construction. An empirical bootstrap interval whose lower bound touches $1.0003$ indicates that efficiency loss is statistically indistinguishable from zero at conventional significance levels once estimation variance is recognized.
-- **Inconclusive Direction of Inefficiency:** The 95% confidence interval for $\Delta = x^{\text{SO}} - x^*$ spans from $-0.3048$ (congestion overshoot) to $+0.6350$ (under-investment), and includes zero. Only $22.47\%$ of well-posed draws exhibit overshooting ($E < 0$), showing that empirical YouTube data cannot statistically confirm whether creator competition over- or under-invests in packaging.
-- **Parametric Sampling Nature:** This bootstrap reflects parameter uncertainty from the estimated linear model, not non-parametric channel-level resampling.
+### Statistical Interpretation & Dual Conditioning:
+- **Conditioning on Well-Posedness ($N=1,796$, 17.96%):** Requires $B > 0$ (concave welfare). This isolates the lower tail of $\beta_5$ and **excludes the empirical point estimate itself** ($B = -8.597 < 0$).
+- **Contraction-Valid Set ($N=2,732$, 27.32%):** Requires only $\beta_2 < 0$ and $|\beta_5| < 2|\beta_2|$. **The empirical point estimate belongs to this set.** Equilibria are clipped to $[0, 1]$ and PoA is evaluated definitionally.
+- **Inconclusive Direction of Inefficiency:** In both subsets, the confidence interval for $\Delta$ spans both negative (overshoot) and positive (under-investment) values, including zero. Only $22.95\%$ of all draws exhibit negative marginal externality ($E < 0$).
 
 ---
 
 ## 6. Limitations & Methodological Clarifications
 
-1. **Identification of Peer Packaging:** Within a single niche at any time $t$, competitor leave-one-out averages $\bar{x}_{-i,t}$ vary across creators only through the focal creator's own packaging $x_{it}$ ($\partial \bar{x}_{-i,t} / \partial x_{it} = -1/(n-1)$). Cross-sectional peer variation is therefore $O(1/n)$, meaning $\beta_3$ and $\beta_5$ are identified primarily through aggregate time variation across the 24-month window, which may partially absorb unobserved platform algorithm adjustments or temporal trends.
-2. **Mediator Interpretation:** Because potential games with unique contraction equilibria have no correlated equilibria outside the Nash equilibrium, the platform mediator is formally an **$\varepsilon$-Nash incentive-compatibility device** ($\varepsilon$-IC) evaluating unilateral deviation gains, rather than an expanded Aumann correlated equilibrium.
+1. **Assumed Regularization ($\kappa=8.0$):** In the unaugmented $N=809$ estimation, individual concavity is not statistically established ($\beta_{2,u} = -8.1974$, $p=0.26$). The quadratic cost parameter $\kappa=8.0$ is an assumed regularizer ($\beta_{2,\text{eff}} = \beta_{2,u} - \kappa/2 = -12.1974$) rather than an empirically estimated cost.
+2. **Identification of Peer Packaging:** Within a single niche at any time $t$, competitor leave-one-out averages $\bar{x}_{-i,t}$ vary across creators only through the focal creator's own packaging $x_{it}$ ($\partial \bar{x}_{-i,t} / \partial x_{it} = -1/(n-1)$). Cross-sectional peer variation is therefore $O(1/n)$, meaning $\beta_3$ and $\beta_5$ are identified primarily through aggregate time variation across the 24-month window.
+3. **Mediator Interpretation:** Because potential games with unique contraction equilibria have no correlated equilibria outside the Nash equilibrium, the platform mediator is formally an **$\varepsilon$-Nash incentive-compatibility device** ($\varepsilon$-IC) evaluating unilateral deviation gains, rather than an expanded Aumann correlated equilibrium.
 
 ---
 
@@ -142,13 +155,13 @@ Percentile Intervals (Conditional on Well-Posedness, 2,515 draws):
 All plots are rendered at 300 DPI and saved in `plots/`:
 
 1. `01_best_response_and_nash.png`:
-   - Dual-panel plot contrasting best-response curves $\text{BR}_i(\bar{x}_{-i})$ against the 45-degree line for Regime A and Regime B, illustrating contraction stability ($s = -0.043$ vs $s = +0.043$) and highlighting attention congestion overshooting ($x^* > x^{\text{SO}}$).
+   - Dual-panel plot contrasting best-response curves $\text{BR}_i(\bar{x}_{-i})$ against the 45-degree line for Regime A and Regime B, illustrating contraction stability ($k = 0.8524$ vs $k = 0.0427$).
 2. `02_welfare_nash_vs_social_optimum.png`:
    - Symmetric log-view welfare $\pi(x, x)$ comparing Nash outcomes against Social Optima, shading the Price of Anarchy efficiency loss.
 3. `03_potential_function_landscape.png`:
-   - 2D contour surface of the exact potential function $\Phi(x_1, x_2)$, proving strict global concavity with its peak at the unique symmetric Nash equilibrium $(0.434, 0.434)$.
+   - 2D contour surface of the exact potential function $\Phi(x_1, x_2)$, proving strict global concavity with its peak at the unique symmetric Nash equilibrium.
 4. `04_poa_sensitivity_heatmap.png`:
-   - Two-panel 2D sensitivity heatmaps comparing empirical peer spillover ($\beta_3 = +3.80$) with the marked empirical point ($\text{PoA} = 1.3515$) against hypothetical attention congestion ($\beta_3 = -3.80$) using exact clipped Price of Anarchy across curvature $\beta_2 \in [-20, -3]$ and interaction $\beta_5 \in [-5, +5]$.
+   - Two-panel 2D sensitivity heatmaps comparing empirical peer spillover against hypothetical attention congestion across curvature $\beta_2 \in [-20, -3]$ and interaction $\beta_5 \in [-5, +5]$.
 
 ---
 
@@ -168,16 +181,16 @@ import sys
 sys.path.append("../game_theoretic_formulation/scripts")
 from game_theory_solver import PotentialGame
 
-# Load empirical game
-game = PotentialGame.from_json("../payoff_estimation/results/game_theory_coefficients.json")
+# Load empirical game (Option B, kappa=8.0)
+game = PotentialGame.from_json("../payoff_calculation/results/game_theory_coefficients.json")
 
 # Ground truth benchmarks for Part 4
-x_nash = game.x_nash        # 0.4343
-x_so = game.x_so            # 0.6082
-poa = game.price_of_anarchy # 1.3515
+x_nash = game.x_nash        # 0.0000 (clipped)
+x_so = game.x_so            # 1.0000 (boundary maximizer)
+poa = game.price_of_anarchy # 2.8166
 
 # Mediator formulas
-lam_max = game.mediator_max_lambda(epsilon=0.01) # Max admissible lambda at 1% deviation budget
+lam_max = game.mediator_max_lambda(epsilon=0.01) # 0.0051 (admissible lambda at 1% deviation budget)
 welfare_rec = game.welfare_recovery(lam_max)     # Welfare recovery R(lambda)
 ```
 
