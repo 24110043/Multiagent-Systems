@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Multi-Agent Simulation: Click Appeal as a Potential Game</title>
+<style>
+  :root {
+    --bg-dark: #090d16;
+    --card-bg: #121826;
+    --card-border: #1f293d;
+    --accent-red: #ff4757;
+    --accent-blue: #38bdf8;
+    --accent-green: #2ed573;
+    --accent-gold: #ffa502;
+    --accent-purple: #a855f7;
+    --text-primary: #f1f5f9;
+    --text-muted: #94a3b8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+  header {
+    background: linear-gradient(180deg, #161f36 0%, #0d1322 100%);
+    border-bottom: 1px solid var(--card-border);
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .title-group h1 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    background: linear-gradient(90deg, #38bdf8, #a855f7, #ff4757);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .title-group p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  .badge-container {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .status-badge {
+    padding: 0.25rem 0.65rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: rgba(56, 189, 248, 0.15);
+    color: var(--accent-blue);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+  }
+  .status-badge.running {
+    background: rgba(46, 213, 115, 0.15);
+    color: var(--accent-green);
+    border-color: rgba(46, 213, 115, 0.3);
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  /* Main Grid */
+  .layout {
+    display: grid;
+    grid-template-columns: 320px 1fr 340px;
+    gap: 1rem;
+    padding: 1rem;
+    flex: 1;
+  }
+  @media (max-width: 1200px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .panel-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--card-border);
+    padding-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Controls */
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+  }
+  label span.val {
+    color: var(--accent-blue);
+    font-weight: 600;
+  }
+  select, input[type="range"] {
+    width: 100%;
+    background: #0b0f19;
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    padding: 0.45rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    outline: none;
+  }
+  input[type="range"] {
+    padding: 0;
+    height: 6px;
+    accent-color: var(--accent-blue);
+    cursor: pointer;
+  }
+  select:focus { border-color: var(--accent-blue); }
+
+  .btn-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+  button {
+    background: #1e293b;
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    padding: 0.6rem 0.5rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+  }
+  button:hover { background: #334155; border-color: #475569; }
+  button.primary {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    border-color: #3b82f6;
+  }
+  button.primary:hover {
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  }
+  button.danger {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--accent-red);
+    border-color: rgba(239, 68, 68, 0.3);
+  }
+  button.danger:hover {
+    background: rgba(239, 68, 68, 0.3);
+  }
+
+  /* Center Arena */
+  .center-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .arena-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    position: relative;
+  }
+  canvas {
+    width: 100%;
+    display: block;
+    background: #090e1a;
+    border-radius: 8px;
+    border: 1px solid #192237;
+  }
+
+  /* Metrics Cards */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+  .metric-box {
+    background: #0b0f19;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+  }
+  .metric-box .m-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+  .metric-box .m-val {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-top: 0.2rem;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .creator-strip {
+    height: 90px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Tooltip */
+  #tooltip {
+    position: absolute;
+    display: none;
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.75rem;
+    pointer-events: none;
+    z-index: 100;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-group">
+    <h1>Multi-Agent Click-Appeal Arena</h1>
+    <p>Real-Time Simulation of Best-Response Dynamics & Payoff-Based Trial-and-Error Learning</p>
+  </div>
+  <div class="badge-container">
+    <span id="regimeBadge" class="status-badge">Regime A: Calibrated (N=809, κ=8)</span>
+    <span id="simStateBadge" class="status-badge">READY</span>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- LEFT: Configuration & Controls -->
+  <div class="panel">
+    <div class="panel-title">Simulation Control</div>
+
+    <div class="btn-row">
+      <button id="btnPlayPause" class="primary">▶ Run</button>
+      <button id="btnStep">⏭ Step</button>
+      <button id="btnReset" class="danger">↺ Reset</button>
+    </div>
+
+    <div class="control-group">
+      <label>Simulation Engine</label>
+      <select id="selEngine">
+        <option value="learning">Payoff Learning (Paper Eq. 16, RQ2)</option>
+        <option value="br">Best-Response Dynamics (Exp 1 & 2)</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label>Regime / Parameter Calibration</label>
+      <select id="selRegime">
+        <option value="A" selected>Regime A: Calibrated (N=809, κ=8.0)</option>
+        <option value="B">Regime B: Illustrative B (legacy N=186)</option>
+        <option value="Bp">Regime B': Illustrative B' (legacy N=186)</option>
+      </select>
+    </div>
+
+    <div class="panel-title" style="margin-top:0.5rem;">Parameters</div>
+
+    <div class="control-group">
+      <label>Number of Creators (n): <span id="valN" class="val">38</span></label>
+      <input type="range" id="rngN" min="5" max="80" value="38" step="1">
+    </div>
+
+    <div class="control-group" id="grpNoise">
+      <label>Payoff Noise (σ): <span id="valSigma" class="val">0.05</span></label>
+      <input type="range" id="rngSigma" min="0" max="1.20" value="0.05" step="0.01">
+    </div>
+
+    <div class="control-group" id="grpEta">
+      <label>Learning Rate (η): <span id="valEta" class="val">0.10</span></label>
+      <input type="range" id="rngEta" min="0.01" max="0.40" value="0.10" step="0.01">
+    </div>
+
+    <div class="control-group">
+      <label>Initialisation Mode</label>
+      <select id="selInit">
+        <option value="low">Low Bias: U[0.0, 0.3] (near Nash in A)</option>
+        <option value="high">High Bias: U[0.7, 1.0] (near SO in A)</option>
+        <option value="uniform">Uniform: U[0.0, 1.0]</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label>Animation Speed: <span id="valSpeed" class="val">30 rounds/s</span></label>
+      <input type="range" id="rngSpeed" min="1" max="60" value="30" step="1">
+    </div>
+
+    <div class="panel-title" style="margin-top:0.5rem;">Platform Mediator (RQ1)</div>
+
+    <div class="control-group">
+      <label>Mediator Strength (λ): <span id="valLambda" class="val">0.00</span></label>
+      <input type="range" id="rngLambda" min="0" max="1" value="0.00" step="0.01">
+    </div>
+    <div style="font-size:0.75rem; color:var(--text-muted);">
+      Recommended click-appeal: <span id="txtRecX" style="color:var(--accent-purple);font-weight:600;">0.000</span>
+    </div>
+  </div>
+
+  <!-- CENTER: Visual Arena & Agent Trajectories -->
+  <div class="center-container">
+    <!-- Live Arena Canvas -->
+    <div class="arena-card">
+      <div class="panel-title">
+        <span>Live Creator Spectrum [0 = No Clickbait, 1 = Maximum Clickbait]</span>
+        <div style="display:flex;gap:0.8rem;">
+          <div class="legend-item"><span class="legend-dot" style="background:var(--accent-gold);"></span> Nash</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--accent-blue);"></span> Social Optimum</div>
+          <div class="legend-item"><span class="legend-dot" style="background:var(--accent-purple);"></span> Pop. Mean (x̄)</div>
+        </div>
+      </div>
+      <canvas id="arenaCanvas" height="120"></canvas>
+    </div>
+
+    <!-- Live Trajectory Line Chart -->
+    <div class="arena-card" style="flex: 2;">
+      <div class="panel-title">
+        <span>Trajectory History (xᵢ over rounds)</span>
+        <span id="roundCounter" style="color:var(--accent-blue);font-family:monospace;font-weight:700;">Round: 0 / 500</span>
+      </div>
+      <canvas id="trajectoryCanvas" height="230"></canvas>
+    </div>
+  </div>
+
+  <!-- RIGHT: Real-Time Game Theoretic Metrics -->
+  <div class="panel">
+    <div class="panel-title">Live Payoff & Convergence Metrics</div>
+
+    <div class="metrics-grid">
+      <div class="metric-box">
+        <div class="m-label">Pop. Mean (x̄)</div>
+        <div id="mXbar" class="m-val" style="color:var(--accent-purple);">0.000</div>
+      </div>
+      <div class="metric-box">
+        <div class="m-label">Nash Target (x*)</div>
+        <div id="mNash" class="m-val" style="color:var(--accent-gold);">0.000</div>
+      </div>
+      <div class="metric-box">
+        <div class="m-label">Dispersion D_t (max gap)</div>
+        <div id="mDt" class="m-val">0.000</div>
+      </div>
+      <div class="metric-box">
+        <div class="m-label">Within δ=0.05</div>
+        <div id="mShareDelta" class="m-val" style="color:var(--accent-green);">100%</div>
+      </div>
+    </div>
+
+    <div class="panel-title" style="margin-top:0.5rem;">Welfare & Efficiency</div>
+
+    <div class="metrics-grid">
+      <div class="metric-box">
+        <div class="m-label">Current Welfare W(t)</div>
+        <div id="mCurWelfare" class="m-val">0.00</div>
+      </div>
+      <div class="metric-box">
+        <div class="m-label">Social Optimum (x_SO)</div>
+        <div id="mSoWelfare" class="m-val" style="color:var(--accent-blue);">1.000</div>
+      </div>
+      <div class="metric-box">
+        <div class="m-label">Price of Anarchy</div>
+        <div id="mPoA" class="m-val" style="color:var(--accent-red);">2.817</div>
+      </div>
+      <div class="metric-box">
+        <div class="m-label">Mediator Recovery R(λ)</div>
+        <div id="mRecovery" class="m-val">0.0%</div>
+      </div>
+    </div>
+
+    <div class="panel-title" style="margin-top:0.5rem;">Active Regime Info</div>
+    <div id="regimeExplainer" style="font-size:0.75rem; color:var(--text-muted); line-height:1.45; background:#0b0f19; padding:0.75rem; border-radius:6px; border:1px solid var(--card-border);">
+      <strong>Regime A (N=809, κ=8.0):</strong><br>
+      • Strategic Complements (β₅ = +20.79)<br>
+      • Under-investment trap: Nash = 0.0, SO = 1.0<br>
+      • Contraction k = 0.852 &lt; 1<br>
+      • Welfare is convex: moving toward SO first lowers welfare!
+    </div>
+  </div>
+</div>
+
+<div id="tooltip"></div>
+
+<script>
+// ============================================================================
+// GAME THEORETIC SPECIFICATION (Exact values from Python codebase)
+// ============================================================================
+const REGIMES = {
+  A: {
+    label: "Calibrated (N=809, assumed κ=8)",
+    b0: 15.1741,
+    b1: -2.0190,
+    b2_eff: -12.1974, // b2 = -4.1974, minus kappa=8
+    b3: -5.5424,
+    b5: 20.7942,
+    x_nash: 0.0,
+    x_so: 1.0,
+    poa: 2.8166,
+    k: 0.8524,
+    convexWelfare: true,
+    desc: "<strong>Regime A (N=809, κ=8.0):</strong><br>• Strategic Complements (β₅ = +20.79)<br>• Under-investment: Nash = 0.0, SO = 1.0<br>• Contraction k = 0.8524<br>• Convex social welfare: initial mediator steps lower welfare (E &lt; 0)."
+  },
+  B: {
+    label: "Illustrative B (legacy N=186)",
+    b0: 10.511,
+    b1: 2.6845,
+    b2_eff: -2.8377,
+    b3: -3.4321,
+    b5: 0.2421,
+    x_nash: 0.4730,
+    x_so: 0.2683,
+    poa: 1.4208,
+    k: 0.0427,
+    convexWelfare: false,
+    desc: "<strong>Regime B (legacy N=186):</strong><br>• Strategic Complements (weak β₅ = +0.24)<br>• Over-investment tragedy: Nash = 0.473 &gt; SO = 0.268<br>• Rapid contraction k = 0.0427<br>• Concave welfare: mediator achieves classic R = 2λ − λ² recovery."
+  },
+  Bp: {
+    label: "Illustrative B' (legacy N=186)",
+    b0: 10.511,
+    b1: 2.5976,
+    b2_eff: -2.8377,
+    b3: -4.1418,
+    b5: -0.2421,
+    x_nash: 0.4343,
+    x_so: 0.2261,
+    poa: 1.5388,
+    k: 0.0427,
+    convexWelfare: false,
+    desc: "<strong>Regime B' (legacy N=186):</strong><br>• Strategic Substitutes (β₅ = −0.24)<br>• Over-investment: Nash = 0.434 &gt; SO = 0.226<br>• Rapid contraction k = 0.0427<br>• Concave welfare: mediator achieves monotonic welfare recovery."
+  }
+};
+
+// ============================================================================
+// SIMULATION STATE
+// ============================================================================
+let activeRegimeKey = "A";
+let activeEngine = "learning"; // 'learning' or 'br'
+let numAgents = 38;
+let sigma = 0.05;
+let baseEta = 0.10;
+let initMode = "low";
+let mediatorLambda = 0.0;
+let speedFps = 30;
+
+let isRunning = false;
+let currentRound = 0;
+const MAX_ROUNDS = 500;
+let timerId = null;
+
+// Agents state
+let agents = []; // array of { id, x, last_x, dir, last_y, payoff, color }
+let trajectoryHistory = []; // array of { round, xbar, agents: [x0, x1...] }
+
+// Canvas contexts
+const arenaCanvas = document.getElementById("arenaCanvas");
+const arenaCtx = arenaCanvas.getContext("2d");
+const trajCanvas = document.getElementById("trajectoryCanvas");
+const trajCtx = trajCanvas.getContext("2d");
+
+// Responsive resize
+function resizeCanvases() {
+  arenaCanvas.width = arenaCanvas.parentElement.clientWidth - 24;
+  arenaCanvas.height = 110;
+  trajCanvas.width = trajCanvas.parentElement.clientWidth - 24;
+  trajCanvas.height = 230;
+  render();
+}
+window.addEventListener("resize", resizeCanvases);
+
+// Random normal generator (Box-Muller)
+function randomNormal(mean = 0, std = 1) {
+  let u = 0, v = 0;
+  while(u === 0) u = Math.random();
+  while(v === 0) v = Math.random();
+  return mean + std * Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+}
+
+function clip(v, min, max) {
+  return Math.min(Math.max(v, min), max);
+}
+
+// ============================================================================
+// GAME THEORETIC PAYOFF & WELFARE FUNCTIONS
+// ============================================================================
+function computePayoff(regime, xi, xbar_neg_i) {
+  return regime.b0 + regime.b1 * xi + regime.b2_eff * (xi * xi) + regime.b3 * xbar_neg_i + regime.b5 * xi * xbar_neg_i;
+}
+
+function computeBR(regime, xbar_neg_i) {
+  const denom = 2.0 * Math.abs(regime.b2_eff);
+  const unc = (regime.b1 + regime.b5 * xbar_neg_i) / denom;
+  return clip(unc, 0.0, 1.0);
+}
+
+function computeSymmetricWelfare(regime, x) {
+  return regime.b0 + (regime.b1 + regime.b3) * x + (regime.b2_eff + regime.b5) * (x * x);
+}
+
+// ============================================================================
+// AGENT INITIALISATION
+// ============================================================================
+function initAgents() {
+  const reg = REGIMES[activeRegimeKey];
+  agents = [];
+  trajectoryHistory = [];
+  currentRound = 0;
+
+  for (let i = 0; i < numAgents; i++) {
+    let x0;
+    if (initMode === "low") {
+      x0 = 0.0 + 0.3 * Math.random();
+    } else if (initMode === "high") {
+      x0 = 0.7 + 0.3 * Math.random();
+    } else {
+      x0 = Math.random();
+    }
+
+    const dir0 = Math.random() < 0.5 ? 1 : -1;
+    // Distinct hues
+    const hue = Math.floor((i / numAgents) * 360);
+    agents.push({
+      id: i,
+      x: x0,
+      last_x: x0,
+      dir: dir0,
+      last_y: 0,
+      payoff: 0,
+      color: `hsl(${hue}, 80%, 60%)`
+    });
+  }
+
+  // Initial round-0 payoffs evaluation (boundary condition)
+  const sumX = agents.reduce((acc, a) => acc + a.x, 0);
+  for (let i = 0; i < numAgents; i++) {
+    const xbar_neg_i = numAgents > 1 ? (sumX - agents[i].x) / (numAgents - 1) : agents[i].x;
+    const baseP = computePayoff(reg, agents[i].x, xbar_neg_i);
+    const noisyP = baseP + randomNormal(0, sigma);
+    agents[i].last_y = noisyP;
+    agents[i].payoff = noisyP;
+  }
+
+  recordHistory();
+  updateUI();
+  render();
+}
+
+function recordHistory() {
+  const xbar = agents.reduce((sum, a) => sum + a.x, 0) / agents.length;
+  trajectoryHistory.push({
+    round: currentRound,
+    xbar: xbar,
+    agents: agents.map(a => a.x)
+  });
+}
+
+// ============================================================================
+// STEP LOGIC (1 ROUND)
+// ============================================================================
+function stepSimulation() {
+  if (currentRound >= MAX_ROUNDS) {
+    pauseSimulation();
+    return;
+  }
+
+  const reg = REGIMES[activeRegimeKey];
+  currentRound++;
+
+  const sumX = agents.reduce((acc, a) => acc + a.x, 0);
+  const nextX = new Array(numAgents);
+
+  if (activeEngine === "br") {
+    // ----------------------------------------------------
+    // BEST-RESPONSE DYNAMICS (Synchronous)
+    // ----------------------------------------------------
+    for (let i = 0; i < numAgents; i++) {
+      const xbar_neg_i = numAgents > 1 ? (sumX - agents[i].x) / (numAgents - 1) : agents[i].x;
+      let target = computeBR(reg, xbar_neg_i);
+
+      // If mediator active
+      if (mediatorLambda > 0) {
+        const x_rec = (1 - mediatorLambda) * reg.x_nash + mediatorLambda * reg.x_so;
+        target = (1 - mediatorLambda) * target + mediatorLambda * x_rec;
+      }
+      nextX[i] = clip(target, 0.0, 1.0);
+    }
+
+    for (let i = 0; i < numAgents; i++) {
+      agents[i].last_x = agents[i].x;
+      agents[i].x = nextX[i];
+      const xbar_neg_i = numAgents > 1 ? (sumX - agents[i].x) / (numAgents - 1) : agents[i].x;
+      agents[i].payoff = computePayoff(reg, agents[i].x, xbar_neg_i);
+    }
+
+  } else {
+    // ----------------------------------------------------
+    // PAYOFF-BASED TRIAL-AND-ERROR LEARNING (Eq. 16)
+    // ----------------------------------------------------
+    const eta_t = baseEta / Math.sqrt(currentRound);
+
+    for (let i = 0; i < numAgents; i++) {
+      const a = agents[i];
+      // Current round observed payoff
+      const xbar_neg_i = numAgents > 1 ? (sumX - a.x) / (numAgents - 1) : a.x;
+      const basePayoff = computePayoff(reg, a.x, xbar_neg_i);
+      const current_y = basePayoff + randomNormal(0, sigma);
+
+      // Direction update rule:
+      // If payoff increased or equal, keep direction; else reverse!
+      if (current_y < a.last_y) {
+        a.dir = -a.dir;
+      }
+
+      // Step action
+      let cand_x = a.x + eta_t * a.dir;
+
+      // Platform mediator nudge (soft recommendation pull)
+      if (mediatorLambda > 0) {
+        const x_rec = (1 - mediatorLambda) * reg.x_nash + mediatorLambda * reg.x_so;
+        cand_x = cand_x + 0.05 * mediatorLambda * (x_rec - cand_x);
+      }
+
+      nextX[i] = clip(cand_x, 0.0, 1.0);
+      a.last_y = current_y;
+      a.payoff = current_y;
+    }
+
+    for (let i = 0; i < numAgents; i++) {
+      agents[i].last_x = agents[i].x;
+      agents[i].x = nextX[i];
+    }
+  }
+
+  recordHistory();
+  updateUI();
+  render();
+}
+
+function runLoop() {
+  if (!isRunning) return;
+  stepSimulation();
+  timerId = setTimeout(runLoop, 1000 / speedFps);
+}
+
+function startSimulation() {
+  if (isRunning) return;
+  if (currentRound >= MAX_ROUNDS) {
+    initAgents();
+  }
+  isRunning = true;
+  document.getElementById("btnPlayPause").textContent = "⏸ Pause";
+  document.getElementById("btnPlayPause").classList.add("danger");
+  document.getElementById("btnPlayPause").classList.remove("primary");
+  document.getElementById("simStateBadge").textContent = "RUNNING";
+  document.getElementById("simStateBadge").classList.add("running");
+  runLoop();
+}
+
+function pauseSimulation() {
+  isRunning = false;
+  if (timerId) clearTimeout(timerId);
+  document.getElementById("btnPlayPause").textContent = "▶ Run";
+  document.getElementById("btnPlayPause").classList.add("primary");
+  document.getElementById("btnPlayPause").classList.remove("danger");
+  document.getElementById("simStateBadge").textContent = currentRound >= MAX_ROUNDS ? "FINISHED" : "PAUSED";
+  document.getElementById("simStateBadge").classList.remove("running");
+}
+
+function resetSimulation() {
+  pauseSimulation();
+  initAgents();
+}
+
+// ============================================================================
+// RENDERING
+// ============================================================================
+function render() {
+  const reg = REGIMES[activeRegimeKey];
+  const wA = arenaCanvas.width;
+  const hA = arenaCanvas.height;
+  const wT = trajCanvas.width;
+  const hT = trajCanvas.height;
+
+  // ----------------------------------------------------
+  // 1. RENDER ARENA (1D SPECTRUM WITH ACTIVE AGENTS)
+  // ----------------------------------------------------
+  arenaCtx.clearRect(0, 0, wA, hA);
+
+  const padX = 35;
+  const trackW = wA - 2 * padX;
+  const trackY = hA / 2 + 10;
+
+  // Background track
+  const grad = arenaCtx.createLinearGradient(padX, 0, padX + trackW, 0);
+  grad.addColorStop(0, "rgba(56, 189, 248, 0.4)");
+  grad.addColorStop(0.5, "rgba(168, 85, 247, 0.4)");
+  grad.addColorStop(1, "rgba(255, 71, 87, 0.5)");
+
+  arenaCtx.strokeStyle = grad;
+  arenaCtx.lineWidth = 6;
+  arenaCtx.lineCap = "round";
+  arenaCtx.beginPath();
+  arenaCtx.moveTo(padX, trackY);
+  arenaCtx.lineTo(padX + trackW, trackY);
+  arenaCtx.stroke();
+
+  // Tick marks
+  arenaCtx.fillStyle = "#64748b";
+  arenaCtx.font = "10px monospace";
+  arenaCtx.textAlign = "center";
+  for (let t = 0; t <= 10; t++) {
+    const frac = t / 10;
+    const tx = padX + frac * trackW;
+    arenaCtx.fillRect(tx - 0.5, trackY - 6, 1, 12);
+    arenaCtx.fillText(frac.toFixed(1), tx, trackY + 22);
+  }
+
+  // Mark Nash Target (Gold)
+  const nashX = padX + reg.x_nash * trackW;
+  arenaCtx.strokeStyle = "#ffa502";
+  arenaCtx.lineWidth = 2;
+  arenaCtx.beginPath();
+  arenaCtx.moveTo(nashX, trackY - 24);
+  arenaCtx.lineTo(nashX, trackY + 12);
+  arenaCtx.stroke();
+  arenaCtx.fillStyle = "#ffa502";
+  arenaCtx.font = "bold 10px sans-serif";
+  arenaCtx.fillText("Nash (" + reg.x_nash.toFixed(2) + ")", nashX, trackY - 28);
+
+  // Mark SO Target (Cyan)
+  const soX = padX + reg.x_so * trackW;
+  arenaCtx.strokeStyle = "#38bdf8";
+  arenaCtx.lineWidth = 2;
+  arenaCtx.beginPath();
+  arenaCtx.moveTo(soX, trackY - 24);
+  arenaCtx.lineTo(soX, trackY + 12);
+  arenaCtx.stroke();
+  arenaCtx.fillStyle = "#38bdf8";
+  arenaCtx.fillText("SO (" + reg.x_so.toFixed(2) + ")", soX, trackY - 28);
+
+  // Mark Mediator Recommendation if active
+  if (mediatorLambda > 0) {
+    const x_rec = (1 - mediatorLambda) * reg.x_nash + mediatorLambda * reg.x_so;
+    const rx = padX + x_rec * trackW;
+    arenaCtx.strokeStyle = "#a855f7";
+    arenaCtx.setLineDash([3, 3]);
+    arenaCtx.beginPath();
+    arenaCtx.moveTo(rx, 10);
+    arenaCtx.lineTo(rx, hA - 10);
+    arenaCtx.stroke();
+    arenaCtx.setLineDash([]);
+    arenaCtx.fillStyle = "#a855f7";
+    arenaCtx.fillText("Med λ", rx, 14);
+  }
+
+  // Draw Creator Dots / Avatars
+  agents.forEach(a => {
+    const ax = padX + a.x * trackW;
+    // Slight vertical jitter based on ID to avoid total overlap
+    const jitter = Math.sin(a.id * 1.7) * 12;
+    const ay = trackY + jitter;
+
+    // Outer glow
+    arenaCtx.fillStyle = a.color;
+    arenaCtx.beginPath();
+    arenaCtx.arc(ax, ay, 5.5, 0, 2 * Math.PI);
+    arenaCtx.fill();
+
+    // Direction arrow if learning
+    if (activeEngine === "learning" && isRunning) {
+      arenaCtx.strokeStyle = "#ffffff";
+      arenaCtx.lineWidth = 1.5;
+      arenaCtx.beginPath();
+      arenaCtx.moveTo(ax, ay);
+      arenaCtx.lineTo(ax + a.dir * 8, ay);
+      arenaCtx.stroke();
+    }
+  });
+
+  // ----------------------------------------------------
+  // 2. RENDER TRAJECTORY HISTORY CHART
+  // ----------------------------------------------------
+  trajCtx.clearRect(0, 0, wT, hT);
+
+  const tPadL = 40;
+  const tPadR = 20;
+  const tPadT = 20;
+  const tPadB = 30;
+  const plotW = wT - tPadL - tPadR;
+  const plotH = hT - tPadT - tPadB;
+
+  // Grid lines
+  trajCtx.strokeStyle = "#1e293b";
+  trajCtx.lineWidth = 1;
+  trajCtx.fillStyle = "#64748b";
+  trajCtx.font = "10px monospace";
+  trajCtx.textAlign = "right";
+
+  for (let yVal = 0; yVal <= 1.0; yVal += 0.25) {
+    const py = tPadT + (1.0 - yVal) * plotH;
+    trajCtx.beginPath();
+    trajCtx.moveTo(tPadL, py);
+    trajCtx.lineTo(tPadL + plotW, py);
+    trajCtx.stroke();
+    trajCtx.fillText(yVal.toFixed(2), tPadL - 6, py + 3);
+  }
+
+  // Target reference lines (Nash & SO)
+  const nashY = tPadT + (1.0 - reg.x_nash) * plotH;
+  trajCtx.strokeStyle = "rgba(255, 165, 2, 0.6)";
+  trajCtx.lineWidth = 1.5;
+  trajCtx.setLineDash([5, 5]);
+  trajCtx.beginPath();
+  trajCtx.moveTo(tPadL, nashY);
+  trajCtx.lineTo(tPadL + plotW, nashY);
+  trajCtx.stroke();
+
+  const soY = tPadT + (1.0 - reg.x_so) * plotH;
+  trajCtx.strokeStyle = "rgba(56, 189, 248, 0.6)";
+  trajCtx.beginPath();
+  trajCtx.moveTo(tPadL, soY);
+  trajCtx.lineTo(tPadL + plotW, soY);
+  trajCtx.stroke();
+  trajCtx.setLineDash([]);
+
+  // Plot trajectories if history exists
+  if (trajectoryHistory.length > 1) {
+    const totalPoints = Math.max(MAX_ROUNDS, trajectoryHistory.length);
+
+    // Draw individual creator lines (faded)
+    for (let i = 0; i < numAgents; i++) {
+      trajCtx.strokeStyle = agents[i].color;
+      trajCtx.globalAlpha = 0.28;
+      trajCtx.lineWidth = 1.0;
+      trajCtx.beginPath();
+
+      for (let t = 0; t < trajectoryHistory.length; t++) {
+        const h = trajectoryHistory[t];
+        const px = tPadL + (h.round / MAX_ROUNDS) * plotW;
+        const py = tPadT + (1.0 - h.agents[i]) * plotH;
+        if (t === 0) trajCtx.moveTo(px, py);
+        else trajCtx.lineTo(px, py);
+      }
+      trajCtx.stroke();
+    }
+    trajCtx.globalAlpha = 1.0;
+
+    // Draw Population Mean x̄ (Bold Purple)
+    trajCtx.strokeStyle = "#c084fc";
+    trajCtx.lineWidth = 2.8;
+    trajCtx.beginPath();
+    for (let t = 0; t < trajectoryHistory.length; t++) {
+      const h = trajectoryHistory[t];
+      const px = tPadL + (h.round / MAX_ROUNDS) * plotW;
+      const py = tPadT + (1.0 - h.xbar) * plotH;
+      if (t === 0) trajCtx.moveTo(px, py);
+      else trajCtx.lineTo(px, py);
+    }
+    trajCtx.stroke();
+  }
+
+  // X Axis Label
+  trajCtx.fillStyle = "#64748b";
+  trajCtx.textAlign = "center";
+  trajCtx.fillText("Round 0", tPadL, hT - 10);
+  trajCtx.fillText("Round " + MAX_ROUNDS, tPadL + plotW, hT - 10);
+}
+
+// ============================================================================
+// UI & METRICS UPDATE
+// ============================================================================
+function updateUI() {
+  const reg = REGIMES[activeRegimeKey];
+  const xbar = agents.length > 0 ? (agents.reduce((acc, a) => acc + a.x, 0) / agents.length) : 0;
+  const d_t = agents.length > 0 ? Math.max(...agents.map(a => Math.abs(a.x - reg.x_nash))) : 0;
+  const shareDelta = agents.length > 0
+    ? (agents.filter(a => Math.abs(a.x - reg.x_nash) < 0.05).length / agents.length * 100)
+    : 0;
+
+  const currentWelfare = computeSymmetricWelfare(reg, xbar);
+  const wNash = computeSymmetricWelfare(reg, reg.x_nash);
+  const wSo = computeSymmetricWelfare(reg, reg.x_so);
+
+  // Recovery R(lambda)
+  let recR = 0;
+  if (Math.abs(wSo - wNash) > 1e-6) {
+    recR = ((currentWelfare - wNash) / (wSo - wNash)) * 100;
+  }
+
+  document.getElementById("roundCounter").textContent = `Round: ${currentRound} / ${MAX_ROUNDS}`;
+  document.getElementById("mXbar").textContent = xbar.toFixed(3);
+  document.getElementById("mNash").textContent = reg.x_nash.toFixed(3);
+  document.getElementById("mDt").textContent = d_t.toFixed(3);
+  document.getElementById("mShareDelta").textContent = shareDelta.toFixed(1) + "%";
+
+  document.getElementById("mCurWelfare").textContent = currentWelfare.toFixed(2);
+  document.getElementById("mSoWelfare").textContent = reg.x_so.toFixed(3);
+  document.getElementById("mPoA").textContent = reg.poa.toFixed(3);
+  document.getElementById("mRecovery").textContent = (recR > 0 ? "+" : "") + recR.toFixed(1) + "%";
+  document.getElementById("mRecovery").style.color = recR >= 0 ? "var(--accent-green)" : "var(--accent-red)";
+
+  // Update Mediator Recommended click
+  const x_rec = (1 - mediatorLambda) * reg.x_nash + mediatorLambda * reg.x_so;
+  document.getElementById("txtRecX").textContent = x_rec.toFixed(3);
+}
+
+// ============================================================================
+// EVENT LISTENERS & USER INTERACTION
+// ============================================================================
+document.getElementById("btnPlayPause").addEventListener("click", () => {
+  if (isRunning) pauseSimulation();
+  else startSimulation();
+});
+
+document.getElementById("btnStep").addEventListener("click", () => {
+  pauseSimulation();
+  stepSimulation();
+});
+
+document.getElementById("btnReset").addEventListener("click", () => {
+  resetSimulation();
+});
+
+document.getElementById("selEngine").addEventListener("change", (e) => {
+  activeEngine = e.target.value;
+  document.getElementById("grpNoise").style.display = activeEngine === "learning" ? "flex" : "none";
+  document.getElementById("grpEta").style.display = activeEngine === "learning" ? "flex" : "none";
+  resetSimulation();
+});
+
+document.getElementById("selRegime").addEventListener("change", (e) => {
+  activeRegimeKey = e.target.value;
+  const reg = REGIMES[activeRegimeKey];
+  document.getElementById("regimeBadge").textContent = "Regime " + activeRegimeKey + ": " + reg.label;
+  document.getElementById("regimeExplainer").innerHTML = reg.desc;
+  resetSimulation();
+});
+
+document.getElementById("rngN").addEventListener("input", (e) => {
+  numAgents = parseInt(e.target.value);
+  document.getElementById("valN").textContent = numAgents;
+  resetSimulation();
+});
+
+document.getElementById("rngSigma").addEventListener("input", (e) => {
+  sigma = parseFloat(e.target.value);
+  document.getElementById("valSigma").textContent = sigma.toFixed(2);
+});
+
+document.getElementById("rngEta").addEventListener("input", (e) => {
+  baseEta = parseFloat(e.target.value);
+  document.getElementById("valEta").textContent = baseEta.toFixed(2);
+});
+
+document.getElementById("selInit").addEventListener("change", (e) => {
+  initMode = e.target.value;
+  resetSimulation();
+});
+
+document.getElementById("rngSpeed").addEventListener("input", (e) => {
+  speedFps = parseInt(e.target.value);
+  document.getElementById("valSpeed").textContent = speedFps + " rounds/s";
+  if (isRunning) {
+    if (timerId) clearTimeout(timerId);
+    runLoop();
+  }
+});
+
+document.getElementById("rngLambda").addEventListener("input", (e) => {
+  mediatorLambda = parseFloat(e.target.value);
+  document.getElementById("valLambda").textContent = mediatorLambda.toFixed(2);
+  updateUI();
+  render();
+});
+
+// Initial boot
+resizeCanvases();
+initAgents();
+</script>
+</body>
+</html>
