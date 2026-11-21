@@ -16,8 +16,7 @@ It addresses two core research questions and empirical uncertainty:
 - **RQ2 (Learning):** Does decentralised payoff-based trial-and-error learning converge to the Nash equilibrium without knowledge of the payoff function's parameters?
 - **Parametric Uncertainty (Bootstrap):** Evaluates finite-sample sampling uncertainty across 10,000 draws from the cluster-robust parameter covariance matrix, reporting both all-draw diagnostics and dual conditional subsets (well-posed $N=1,796$ vs. contraction-valid $N=2,732$).
 
-> [!IMPORTANT]
-> **Regime A under-invests** ($x_{\mathrm{Nash}} = 0.0000, x_{\mathrm{SO}} = 1.0000, \Delta = +1.0000 > 0, \mathrm{PoA} = 2.8166$): under the calibrated $N=809$ parameters with Option B cost-augmentation ($\kappa=8.0$), individual revenue concavity is an assumed regularization rather than a rejection of $\beta_2 \ge 0$. Decentralized competition yields zero click appeal while the social optimum coordinates at maximum click appeal. Regimes B and B' are **illustrative attention-congestion benchmarks** that illustrate the overshooting commons tragedy ($x_{\mathrm{Nash}} > x_{\mathrm{SO}}$).
+Under the calibrated $N=809$ parameters with Option B cost-augmentation ($\kappa=8.0$), the unique Nash equilibrium is at $x_{\mathrm{Nash}} = 0.0000$ and the Social Optimum is at $x_{\mathrm{SO}} = 1.0000$ ($\mathrm{PoA} = 2.8161$). Decentralized competition yields zero click appeal while the social optimum coordinates at maximum click appeal.
 
 ---
 

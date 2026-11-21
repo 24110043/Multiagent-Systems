@@ -43,7 +43,7 @@ Let the normalized title features be $x_{\text{caps}}$, $x_{\text{trigger}}$, $x
 Click appeal score/
 │
 ├── data/
-│   ├── original/          # Raw input CSVs (original 186 and expanded 690)
+│   ├── original/          # Raw input video metadata CSVs
 │   └── processed/
 │       ├── cleaned_videos.csv    # Final working dataset of 809 unique videos
 │       ├── cleaning_log.csv      # Audit trail of the 12 recovered #NAME? IDs

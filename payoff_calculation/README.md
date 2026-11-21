@@ -1,13 +1,8 @@
 # Empirical Payoff Function Estimation & Econometric Analysis
 
-**CS 329: Foundations of AI: Multi-Agent Systems (Autumn 2026)**  
+**CS 329: Foundations of AI: Multi-Agent Systems**  
 *Indian Institute of Technology Gandhinagar*  
 **Project:** Click Appeal as a Potential Game: Modeling Creator Incentives, Attention Congestion, and Social Welfare in YouTube  
-**Author:** Bhavya Shah (24110324) — *Empirical Payoff Function Estimation & Econometric Analysis*  
-**Collaborators:**  
-- Ankita Kushwaha (24110043) — *Multimodal Scoring & Data Preprocessing*  
-- Harshita Singh (24110342) — *Platform Mediation & Algorithmic Simulation*  
-- Khushi Shah (24110326) — *Game Theory, Potential Function Analysis & Social Welfare*  
 
 ---
 
@@ -15,7 +10,7 @@
 
 This component provides the empirical foundation for modeling YouTube creator packaging competition as a **Continuous Aggregative Exact Potential Game**. Rather than assuming synthetic or arbitrary payoff functions, we estimate the structural parameters of the creator revenue function directly from multimodal video packaging metrics and YouTube performance data ($N = 809$ videos across 38 distinct creator channels).
 
-The fitted parameters, delta-method covariance matrices, and well-posedness conditions are delivered directly to the game theory component (Khushi Shah) for pure-strategy Nash Equilibrium derivation, best-response dynamics, and Price of Anarchy analysis.
+The fitted parameters, delta-method covariance matrices, and well-posedness conditions are delivered directly to the game theory component for pure-strategy Nash Equilibrium derivation, best-response dynamics, and Price of Anarchy analysis.
 
 > [!NOTE]
 > **Data vs. Proposal Scope Clarification:**  
@@ -120,7 +115,7 @@ Analytically derived from centered coefficients with verified prediction equival
 
 ## 5. Output for Downstream Use (Game-Theoretic Parameters)
 
-This section provides the calibrated empirical structural parameters and covariance structure for downstream game-theoretic modeling (Khushi Shah).
+This section provides the calibrated empirical structural parameters and covariance structure for downstream game-theoretic modeling.
 
 ### Primary Structural Parameters (Paper Eq. 2)
 The uncentered empirical payoff function parameters corresponding to paper Equation (2) are:
@@ -199,7 +194,6 @@ payoff_calculation/
 |   \--  test_encoding.py                      # UTF-8 and mojibake audit test
 |--  _extras/                                  # Archived downstream equilibrium scripts, sweeps & legacy files
 |--  payoff_estimation.py                     # Master execution runner
-|--  FINAL_PAYOFF_REPORT.md                     # Comprehensive master research report
 \--  README.md                                  # This document
 ``````
 
