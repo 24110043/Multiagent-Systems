@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulation Dashboard — Click Appeal as a Potential Game</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f1117; color: #e0e0e0; }
+  header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); padding: 2rem 2rem 1.5rem; border-bottom: 2px solid #e94560; }
+  header h1 { font-size: 1.8rem; color: #fff; margin-bottom: 0.3rem; }
+  header p { color: #aab; font-size: 0.95rem; }
+  .tabs { display: flex; gap: 0; background: #161b22; border-bottom: 2px solid #30363d; padding: 0 1rem; overflow-x: auto; }
+  .tab { padding: 0.8rem 1.4rem; cursor: pointer; color: #8b949e; font-weight: 600; font-size: 0.9rem; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; }
+  .tab:hover { color: #c9d1d9; background: #1c2128; }
+  .tab.active { color: #e94560; border-bottom-color: #e94560; }
+  .content { max-width: 1400px; margin: 0 auto; padding: 1.5rem; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  .card { background: #161b22; border: 1px solid #30363d; border-radius: 10px; padding: 1.5rem; margin-bottom: 1.5rem; }
+  .card h2 { color: #e94560; font-size: 1.3rem; margin-bottom: 1rem; }
+  .card h3 { color: #58a6ff; font-size: 1.05rem; margin: 1rem 0 0.5rem; }
+  .plot-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(600px, 1fr)); gap: 1.5rem; }
+  .plot-card { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; overflow: hidden; transition: transform 0.2s; }
+  .plot-card:hover { transform: scale(1.01); border-color: #e94560; }
+  .plot-card img { width: 100%; display: block; }
+  .plot-card .caption { padding: 0.7rem 1rem; color: #8b949e; font-size: 0.85rem; border-top: 1px solid #30363d; }
+  table { width: 100%; border-collapse: collapse; margin: 0.5rem 0; font-size: 0.88rem; }
+  th { background: #1c2128; color: #58a6ff; padding: 0.6rem 0.8rem; text-align: left; border-bottom: 2px solid #30363d; }
+  td { padding: 0.5rem 0.8rem; border-bottom: 1px solid #21262d; }
+  tr:hover td { background: #1c2128; }
+  .regime-a { color: #e94560; font-weight: 600; }
+  .regime-b { color: #58a6ff; font-weight: 600; }
+  .regime-bp { color: #3fb950; font-weight: 600; }
+  .metric-good { color: #3fb950; }
+  .metric-bad { color: #f85149; }
+  .metric-warn { color: #d29922; }
+  .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .kpi { background: #1c2128; border: 1px solid #30363d; border-radius: 8px; padding: 1rem; text-align: center; }
+  .kpi .value { font-size: 1.8rem; font-weight: 700; color: #fff; }
+  .kpi .label { font-size: 0.8rem; color: #8b949e; margin-top: 0.3rem; }
+  .kpi.red .value { color: #e94560; }
+  .kpi.blue .value { color: #58a6ff; }
+  .kpi.green .value { color: #3fb950; }
+  .kpi.orange .value { color: #d29922; }
+  .note { background: #1c2128; border-left: 3px solid #d29922; padding: 0.8rem 1rem; margin: 1rem 0; border-radius: 0 6px 6px 0; font-size: 0.88rem; color: #c9d1d9; }
+  .note strong { color: #d29922; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+  .badge-pass { background: #238636; color: #fff; }
+  .badge-fail { background: #da3633; color: #fff; }
+  .full-width { grid-column: 1 / -1; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎮 Click Appeal as a Potential Game — Simulation Dashboard</h1>
+  <p>CS 329: Multi-Agent Systems | IIT Gandhinagar | N=809, Option B (κ=8.0)</p>
+</header>
+
+<div class="tabs">
+  <div class="tab active" data-panel="overview">Overview</div>
+  <div class="tab" data-panel="dynamics">BR Dynamics</div>
+  <div class="tab" data-panel="mediator">Mediator (RQ1)</div>
+  <div class="tab" data-panel="learning">Learning (RQ2)</div>
+  <div class="tab" data-panel="sweeps">Parameter Sweeps</div>
+  <div class="tab" data-panel="bootstrap">Bootstrap</div>
+</div>
+
+<div class="content">
+
+  <!-- OVERVIEW -->
+  <div class="panel active" id="overview">
+    <div class="kpi-row">
+      <div class="kpi red"><div class="value">2.8166</div><div class="label">PoA (Regime A)</div></div>
+      <div class="kpi blue"><div class="value">0.8524</div><div class="label">Contraction Rate k</div></div>
+      <div class="kpi orange"><div class="value">0.0051</div><div class="label">λ_max (ε=0.01)</div></div>
+      <div class="kpi green"><div class="value">41 / 41</div><div class="label">Tests Passing</div></div>
+    </div>
+    <div class="card">
+      <h2>Regime Summary</h2>
+      <table>
+        <tr><th>Regime</th><th>Label</th><th>x_Nash</th><th>x_SO</th><th>PoA</th><th>k</th><th>Type</th></tr>
+        <tr><td class="regime-a">A</td><td>Calibrated (N=809, κ=8)</td><td>0.0000</td><td>1.0000</td><td>2.8166</td><td>0.8524</td><td>Complements</td></tr>
+        <tr><td class="regime-b">B</td><td>Illustrative B (legacy N=186)</td><td>0.4730</td><td>0.2683</td><td>1.4208</td><td>0.0427</td><td>Complements</td></tr>
+        <tr><td class="regime-bp">B'</td><td>Illustrative B' (legacy N=186)</td><td>0.4343</td><td>0.2261</td><td>1.5388</td><td>0.0427</td><td>Substitutes</td></tr>
+      </table>
+      <div class="note"><strong>⚠️ Regime A caveat:</strong> Coefficients are jointly insignificant (F p=0.755), welfare is convex (B=−8.60), concavity not established (p=0.26), κ=8 is an assumption, and Nash=0 / SO=1 lie outside observed click-appeal range (~0.07–0.66).</div>
+    </div>
+    <div class="plot-grid">
+      <div class="plot-card"><img src="plots/04_regime_comparison.png" alt="Regime Comparison"><div class="caption">04 — Grouped bar chart: equilibria, PoA, λ_max, iterations across regimes</div></div>
+    </div>
+  </div>
+
+  <!-- BR DYNAMICS -->
+  <div class="panel" id="dynamics">
+    <div class="card">
+      <h2>Experiment 1 & 2 — Best-Response Dynamics</h2>
+      <p style="color:#8b949e;margin-bottom:1rem;">100 random starting profiles, n=38 agents, synchronous BR, max 500 iterations.</p>
+      <table>
+        <tr><th>Metric</th><th class="regime-a">Regime A</th><th class="regime-b">Regime B</th><th class="regime-bp">Regime B'</th></tr>
+        <tr><td>Converged (of 100)</td><td>100 ✓</td><td>100 ✓</td><td>100 ✓</td></tr>
+        <tr><td>Mean iterations</td><td>5.5</td><td>4.8</td><td>4.9</td></tr>
+        <tr><td>Mean error to Nash</td><td>&lt; 1e-6</td><td>&lt; 1e-6</td><td>&lt; 1e-6</td></tr>
+        <tr><td>Simulated PoA</td><td>2.8166</td><td>1.4208</td><td>1.5388</td></tr>
+        <tr><td>Theory match</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
+      </table>
+    </div>
+    <div class="plot-grid">
+      <div class="plot-card"><img src="plots/01_br_convergence.png" alt="BR Convergence"><div class="caption">01 — Log-scale ‖xₜ − x_Nash‖∞ vs iteration</div></div>
+      <div class="plot-card"><img src="plots/02_welfare_trajectory.png" alt="Welfare Trajectory"><div class="caption">02 — Symmetric welfare π(x̄ₜ, x̄ₜ) vs iteration with PoA gap</div></div>
+    </div>
+  </div>
+
+  <!-- MEDIATOR -->
+  <div class="panel" id="mediator">
+    <div class="card">
+      <h2>RQ1 — Platform Mediator Sweep</h2>
+      <table>
+        <tr><th>ε</th><th>λ_max</th><th>R(λ_max) log-view</th><th>R_V(λ_max) view</th><th>Interpretation</th></tr>
+        <tr><td>0.001</td><td>0.0005</td><td class="metric-bad">−0.37%</td><td class="metric-bad">−0.21%</td><td>Near-ineffective</td></tr>
+        <tr><td>0.01</td><td>0.0051</td><td class="metric-bad">−3.68%</td><td class="metric-bad">−2.06%</td><td>Near-ineffective</td></tr>
+        <tr><td>0.05</td><td>0.0281</td><td class="metric-bad">−19.89%</td><td class="metric-bad">−11.66%</td><td>Negative welfare dip</td></tr>
+        <tr><td>0.10</td><td>0.0710</td><td class="metric-bad">−47.65%</td><td class="metric-bad">−29.28%</td><td>Substantial welfare loss</td></tr>
+      </table>
+      <div class="note"><strong>📉 Why negative?</strong> In Regime A, E = β₃ = −5.54 &lt; 0 and welfare is convex. Moving from x_Nash=0 toward x_SO=1 initially <em>decreases</em> welfare. R(λ) crosses zero at λ ≈ 0.145. The closed-form R=2λ−λ² only holds when welfare is concave (Regimes B, B').</div>
+    </div>
+    <div class="plot-grid">
+      <div class="plot-card full-width"><img src="plots/03_mediator_sweep.png" alt="Mediator Sweep"><div class="caption">03 — G(λ) deviation gain and R(λ) welfare recovery vs λ. Regime A R-axis goes negative.</div></div>
+    </div>
+  </div>
+
+  <!-- LEARNING -->
+  <div class="panel" id="learning">
+    <div class="card">
+      <h2>RQ2 — Payoff-Based Learning (T=500, low & high starts separate)</h2>
+      <table>
+        <tr><th>Regime</th><th>Init</th><th>σ</th><th>D_T</th><th>Δ_T</th><th>Frac Conv</th><th>Share ∈ δ</th><th>T_δ</th></tr>
+        <tr><td class="regime-a">A</td><td>low</td><td>0.05</td><td class="metric-good">0.0518</td><td class="metric-good">0.0148</td><td class="metric-good">1.00</td><td class="metric-good">97.9%</td><td>5.1</td></tr>
+        <tr><td class="regime-a">A</td><td>high</td><td>0.05</td><td class="metric-bad">0.3437</td><td class="metric-bad">0.2656</td><td class="metric-bad">0.00</td><td class="metric-bad">0.0%</td><td>NaN</td></tr>
+        <tr><td class="regime-a">A</td><td>low</td><td>1.14</td><td class="metric-warn">0.4533</td><td class="metric-warn">0.1614</td><td class="metric-bad">0.00</td><td class="metric-warn">17.8%</td><td>NaN</td></tr>
+        <tr><td class="regime-a">A</td><td>high</td><td>1.14</td><td class="metric-bad">0.9617</td><td class="metric-bad">0.7255</td><td class="metric-bad">0.00</td><td class="metric-bad">0.0%</td><td>NaN</td></tr>
+        <tr><td class="regime-b">B</td><td>low</td><td>0.05</td><td class="metric-good">0.0955</td><td class="metric-good">0.0046</td><td class="metric-good">1.00</td><td class="metric-good">75.1%</td><td>18.8</td></tr>
+        <tr><td class="regime-b">B</td><td>high</td><td>0.05</td><td class="metric-good">0.1061</td><td class="metric-good">0.0062</td><td class="metric-good">1.00</td><td class="metric-good">75.9%</td><td>8.4</td></tr>
+        <tr><td class="regime-b">B</td><td>low</td><td>1.14</td><td class="metric-warn">0.4438</td><td class="metric-warn">0.1983</td><td class="metric-bad">0.00</td><td class="metric-warn">10.5%</td><td>NaN</td></tr>
+        <tr><td class="regime-b">B</td><td>high</td><td>1.14</td><td class="metric-warn">0.4955</td><td class="metric-warn">0.2340</td><td class="metric-bad">0.00</td><td class="metric-bad">6.8%</td><td>NaN</td></tr>
+      </table>
+    </div>
+    <div class="plot-grid">
+      <div class="plot-card"><img src="plots/05_learning_convergence.png" alt="Learning Convergence"><div class="caption">05 — Population mean x̄ₜ vs round t for all regimes</div></div>
+      <div class="plot-card"><img src="plots/06_learning_welfare.png" alt="Learning Welfare"><div class="caption">06 — Noise-free view welfare W_V(t) vs round t</div></div>
+      <div class="plot-card full-width"><img src="plots/07_learning_dispersion.png" alt="Learning Dispersion"><div class="caption">07 — Individual dispersion max_i |x_i − x_Nash| vs round t with 10–90% band</div></div>
+    </div>
+  </div>
+
+  <!-- SWEEPS -->
+  <div class="panel" id="sweeps">
+    <div class="card">
+      <h2>Parameter Sensitivity Sweeps</h2>
+      <h3>Noise Sensitivity (σ)</h3>
+      <table>
+        <tr><th>σ</th><th colspan="3" style="text-align:center" class="regime-a">Regime A (low / high)</th><th colspan="3" style="text-align:center" class="regime-b">Regime B (low / high)</th></tr>
+        <tr><th></th><th>D_T low</th><th>D_T high</th><th>Conv low</th><th>D_T low</th><th>D_T high</th><th>Conv low</th></tr>
+        <tr><td>0.00</td><td class="metric-good">0.000</td><td class="metric-bad">0.999</td><td class="metric-good">1.00</td><td class="metric-warn">0.207</td><td class="metric-warn">0.190</td><td class="metric-bad">0.00</td></tr>
+        <tr><td>0.05</td><td class="metric-good">0.051</td><td class="metric-bad">0.344</td><td class="metric-good">1.00</td><td class="metric-good">0.096</td><td class="metric-good">0.112</td><td class="metric-good">1.00</td></tr>
+        <tr><td>0.10</td><td class="metric-good">0.089</td><td class="metric-bad">0.378</td><td class="metric-good">1.00</td><td class="metric-warn">0.139</td><td class="metric-warn">0.150</td><td class="metric-good">1.00</td></tr>
+        <tr><td>0.25</td><td class="metric-warn">0.201</td><td class="metric-bad">0.645</td><td class="metric-warn">0.20</td><td class="metric-warn">0.262</td><td class="metric-warn">0.258</td><td class="metric-warn">0.40</td></tr>
+        <tr><td>0.50</td><td class="metric-warn">0.298</td><td class="metric-bad">0.860</td><td class="metric-bad">0.00</td><td class="metric-bad">0.388</td><td class="metric-bad">0.396</td><td class="metric-bad">0.00</td></tr>
+        <tr><td>1.14</td><td class="metric-bad">0.446</td><td class="metric-bad">0.960</td><td class="metric-bad">0.00</td><td class="metric-bad">0.449</td><td class="metric-bad">0.503</td><td class="metric-bad">0.00</td></tr>
+      </table>
+    </div>
+    <div class="plot-grid">
+      <div class="plot-card"><img src="plots/09_noise_sweep.png" alt="Noise Sweep"><div class="caption">09 — D_T and Δ_T vs σ, Regimes A and B, low & high init</div></div>
+      <div class="plot-card"><img src="plots/10_step_size_sweep.png" alt="Step Size Sweep"><div class="caption">10 — D_T and Δ_T vs η (step size), Regimes A and B</div></div>
+      <div class="plot-card full-width"><img src="plots/11_kappa_sensitivity.png" alt="Kappa Sensitivity"><div class="caption">11 — Regime A sensitivity: equilibria, k, PoA, mediator, learning vs κ</div></div>
+    </div>
+  </div>
+
+  <!-- BOOTSTRAP -->
+  <div class="panel" id="bootstrap">
+    <div class="kpi-row">
+      <div class="kpi orange"><div class="value">17.96%</div><div class="label">P(well-posed)</div></div>
+      <div class="kpi blue"><div class="value">27.32%</div><div class="label">P(contraction-valid)</div></div>
+      <div class="kpi red"><div class="value">22.95%</div><div class="label">P(E &lt; 0)</div></div>
+      <div class="kpi green"><div class="value">92.96%</div><div class="label">P(β₂ &lt; 0)</div></div>
+    </div>
+    <div class="card">
+      <h2>Bootstrap Uncertainty (10,000 Draws)</h2>
+      <table>
+        <tr><th>Metric</th><th>Point Est.</th><th>Well-Posed Median [95% CI]</th><th>Contraction-Valid Median [95% CI]</th></tr>
+        <tr><td>λ_max(ε=0.01)</td><td>0.0051</td><td>0.1739 [0.048, 1.000]</td><td>0.1221 [0.002, 1.000]</td></tr>
+        <tr><td>R(λ_max)</td><td>−0.037</td><td>0.286 [0.062, 1.000]</td><td>0.205 [−0.073, 1.000]</td></tr>
+        <tr><td>R_V(λ_max)</td><td>−0.021</td><td>0.248 [0.001, 1.000]</td><td>0.152 [−0.029, 1.000]</td></tr>
+        <tr><td>k</td><td>0.852</td><td>0.321 [0.016, 0.940]</td><td>0.494 [0.023, 0.975]</td></tr>
+        <tr><td>PoA</td><td>2.817</td><td>1.467 [1.001, 121.4]</td><td>1.650 [0.029, 17953]</td></tr>
+      </table>
+    </div>
+    <div class="plot-grid">
+      <div class="plot-card full-width"><img src="plots/08_bootstrap_mediator.png" alt="Bootstrap Mediator"><div class="caption">08 — Histograms of λ_max, R, and R_V across well-posed bootstrap draws</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.panel).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
