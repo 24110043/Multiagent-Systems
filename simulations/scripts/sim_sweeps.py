@@ -6,7 +6,7 @@ Indian Institute of Technology Gandhinagar
 Executes Task G parameter sweeps:
   - sigma in [0, 0.05, 0.1, 0.25, 0.5, 1.14]
   - eta in [0.01, 0.05, 0.1, 0.2, 0.4]
-  - beta_5 (Regime A: [-10, 0, 10, 20.79]; Regime B: [-5, -0.78, 0, 3, 8])
+  - beta_5 in [-10, 0, 10, 20.79] (Regime A)
   - n_creators in [5, 10, 20, 38, 100]
   - kappa in [4.5, 6, 8, 12, 16] (Regime A)
 
@@ -55,26 +55,21 @@ def run_all_sweeps(n_trials: int = 10, t_horizon: int = 500):
     print("\n[1/5] Sweeping sigma...")
     sigma_vals = [0.0, 0.05, 0.1, 0.25, 0.5, 1.14]
     sweep("sigma", sigma_vals, base_regime="A", n_trials=n_trials, output_dir=SWEEPS_DIR, config=cfg)
-    sweep("sigma", sigma_vals, base_regime="B", n_trials=n_trials, output_dir=SWEEPS_DIR, config=cfg, append=True)
 
     # 2. Eta sweep
     print("\n[2/5] Sweeping eta...")
     eta_vals = [0.01, 0.05, 0.1, 0.2, 0.4]
     sweep("eta", eta_vals, base_regime="A", n_trials=n_trials, output_dir=SWEEPS_DIR, config=cfg)
-    sweep("eta", eta_vals, base_regime="B", n_trials=n_trials, output_dir=SWEEPS_DIR, config=cfg, append=True)
 
     # 3. Beta_5 sweep
     print("\n[3/5] Sweeping beta_5...")
     b5_vals_A = [-10.0, 0.0, 10.0, 20.7942]
-    b5_vals_B = [-5.0, -0.782244, 0.0, 3.0, 8.0]
     sweep("beta_5", b5_vals_A, base_regime="A", n_trials=n_trials, output_dir=SWEEPS_DIR, config=cfg)
-    sweep("beta_5", b5_vals_B, base_regime="B", n_trials=n_trials, output_dir=SWEEPS_DIR, config=cfg, append=True)
 
     # 4. N_creators sweep
     print("\n[4/5] Sweeping n_creators...")
     n_vals = [5, 10, 20, 38, 100]
     sweep("n_creators", n_vals, base_regime="A", n_trials=n_trials, output_dir=SWEEPS_DIR, config=cfg)
-    sweep("n_creators", n_vals, base_regime="B", n_trials=n_trials, output_dir=SWEEPS_DIR, config=cfg, append=True)
 
     # 5. Kappa sweep (Regime A only)
     print("\n[5/5] Sweeping kappa (Regime A)...")
@@ -97,7 +92,6 @@ def plot_09_noise_sweep(outdir: str = PLOTS_DIR):
         rows = list(csv.DictReader(f))
 
     rows_A = [r for r in rows if r.get("regime") == "A"]
-    rows_B = [r for r in rows if r.get("regime") == "B"]
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5))
     fig.suptitle("Noise Sensitivity: Individual Dispersion & Mean Gap vs Payoff Noise $\\sigma$",
@@ -108,8 +102,7 @@ def plot_09_noise_sweep(outdir: str = PLOTS_DIR):
         (ax2, "Delta_T", r"Population Mean Gap $\Delta_T = |\bar{x}_T - x_{\mathrm{Nash}}|$", r"$\Delta_T$ (Mean Distance)"),
     ]:
         for r_rows, reg_key, color, label in [
-            (rows_A, "A", PALETTE["A"], "Regime A: Calibrated (Option B)"),
-            (rows_B, "B", PALETTE["B"], "Regime B: Illustrative Benchmark"),
+            (rows_A, "A", PALETTE["A"], "Regime A: Calibrated Baseline"),
         ]:
             if not r_rows:
                 continue
@@ -162,7 +155,6 @@ def plot_10_step_size_sweep(outdir: str = PLOTS_DIR):
         rows = list(csv.DictReader(f))
 
     rows_A = [r for r in rows if r.get("regime") == "A"]
-    rows_B = [r for r in rows if r.get("regime") == "B"]
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5))
     fig.suptitle(r"Step-Size Sensitivity: Learning Dynamics vs Base Step Size $\eta$",
@@ -173,8 +165,7 @@ def plot_10_step_size_sweep(outdir: str = PLOTS_DIR):
         (ax2, "Delta_T", r"Population Mean Gap $\Delta_T = |\bar{x}_T - x_{\mathrm{Nash}}|$", r"$\Delta_T$ (Mean Distance)"),
     ]:
         for r_rows, reg_key, color, label in [
-            (rows_A, "A", PALETTE["A"], "Regime A: Calibrated (Option B)"),
-            (rows_B, "B", PALETTE["B"], "Regime B: Illustrative Benchmark"),
+            (rows_A, "A", PALETTE["A"], "Regime A: Calibrated Baseline"),
         ]:
             if not r_rows:
                 continue

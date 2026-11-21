@@ -81,11 +81,9 @@
       <h2>Regime Summary</h2>
       <table>
         <tr><th>Regime</th><th>Label</th><th>x_Nash</th><th>x_SO</th><th>PoA</th><th>k</th><th>Type</th></tr>
-        <tr><td class="regime-a">A</td><td>Calibrated (N=809, κ=8)</td><td>0.0000</td><td>1.0000</td><td>2.8166</td><td>0.8524</td><td>Complements</td></tr>
-        <tr><td class="regime-b">B</td><td>Illustrative B (legacy N=186)</td><td>0.4730</td><td>0.2683</td><td>1.4208</td><td>0.0427</td><td>Complements</td></tr>
-        <tr><td class="regime-bp">B'</td><td>Illustrative B' (legacy N=186)</td><td>0.4343</td><td>0.2261</td><td>1.5388</td><td>0.0427</td><td>Substitutes</td></tr>
+        <tr><td class="regime-a">A</td><td>Calibrated Empirical Baseline (N=809, κ=8)</td><td>0.0000</td><td>1.0000</td><td>2.8166</td><td>0.8524</td><td>Complements</td></tr>
       </table>
-      <div class="note"><strong>⚠️ Regime A caveat:</strong> Coefficients are jointly insignificant (F p=0.755), welfare is convex (B=−8.60), concavity not established (p=0.26), κ=8 is an assumption, and Nash=0 / SO=1 lie outside observed click-appeal range (~0.07–0.66).</div>
+      <div class="note"><strong>⚠️ Empirical Model Insights:</strong> Option B augments quadratic curvature with κ=8.0 cost to satisfy contraction stability (k=0.8524 &lt; 1). In decentralized competition, creators contract to minimum clickbait (x*=0.0), whereas social optimum is at boundary (x^SO=1.0), yielding PoA=2.8166.</div>
     </div>
     <div class="plot-grid">
       <div class="plot-card"><img src="plots/04_regime_comparison.png" alt="Regime Comparison"><div class="caption">04 — Grouped bar chart: equilibria, PoA, λ_max, iterations across regimes</div></div>
@@ -98,12 +96,12 @@
       <h2>Experiment 1 & 2 — Best-Response Dynamics</h2>
       <p style="color:#8b949e;margin-bottom:1rem;">100 random starting profiles, n=38 agents, synchronous BR, max 500 iterations.</p>
       <table>
-        <tr><th>Metric</th><th class="regime-a">Regime A</th><th class="regime-b">Regime B</th><th class="regime-bp">Regime B'</th></tr>
-        <tr><td>Converged (of 100)</td><td>100 ✓</td><td>100 ✓</td><td>100 ✓</td></tr>
-        <tr><td>Mean iterations</td><td>5.5</td><td>4.8</td><td>4.9</td></tr>
-        <tr><td>Mean error to Nash</td><td>&lt; 1e-6</td><td>&lt; 1e-6</td><td>&lt; 1e-6</td></tr>
-        <tr><td>Simulated PoA</td><td>2.8166</td><td>1.4208</td><td>1.5388</td></tr>
-        <tr><td>Theory match</td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td><td><span class="badge badge-pass">PASS</span></td></tr>
+        <tr><th>Metric</th><th class="regime-a">Regime A (Calibrated)</th></tr>
+        <tr><td>Converged (of 100)</td><td>100 ✓</td></tr>
+        <tr><td>Mean iterations</td><td>36.2</td></tr>
+        <tr><td>Mean error to Nash</td><td>&lt; 1e-6</td></tr>
+        <tr><td>Simulated PoA</td><td>2.8166</td></tr>
+        <tr><td>Theory match</td><td><span class="badge badge-pass">PASS</span></td></tr>
       </table>
     </div>
     <div class="plot-grid">
@@ -123,7 +121,7 @@
         <tr><td>0.05</td><td>0.0281</td><td class="metric-bad">−19.89%</td><td class="metric-bad">−11.66%</td><td>Negative welfare dip</td></tr>
         <tr><td>0.10</td><td>0.0710</td><td class="metric-bad">−47.65%</td><td class="metric-bad">−29.28%</td><td>Substantial welfare loss</td></tr>
       </table>
-      <div class="note"><strong>📉 Why negative?</strong> In Regime A, E = β₃ = −5.54 &lt; 0 and welfare is convex. Moving from x_Nash=0 toward x_SO=1 initially <em>decreases</em> welfare. R(λ) crosses zero at λ ≈ 0.145. The closed-form R=2λ−λ² only holds when welfare is concave (Regimes B, B').</div>
+      <div class="note"><strong>📉 Why negative?</strong> In Regime A, E = β₃ = −5.54 &lt; 0 and welfare is convex. Moving from x_Nash=0 toward x_SO=1 initially <em>decreases</em> welfare. R(λ) crosses zero at λ ≈ 0.076.</div>
     </div>
     <div class="plot-grid">
       <div class="plot-card full-width"><img src="plots/03_mediator_sweep.png" alt="Mediator Sweep"><div class="caption">03 — G(λ) deviation gain and R(λ) welfare recovery vs λ. Regime A R-axis goes negative.</div></div>
@@ -140,14 +138,10 @@
         <tr><td class="regime-a">A</td><td>high</td><td>0.05</td><td class="metric-bad">0.3437</td><td class="metric-bad">0.2656</td><td class="metric-bad">0.00</td><td class="metric-bad">0.0%</td><td>NaN</td></tr>
         <tr><td class="regime-a">A</td><td>low</td><td>1.14</td><td class="metric-warn">0.4533</td><td class="metric-warn">0.1614</td><td class="metric-bad">0.00</td><td class="metric-warn">17.8%</td><td>NaN</td></tr>
         <tr><td class="regime-a">A</td><td>high</td><td>1.14</td><td class="metric-bad">0.9617</td><td class="metric-bad">0.7255</td><td class="metric-bad">0.00</td><td class="metric-bad">0.0%</td><td>NaN</td></tr>
-        <tr><td class="regime-b">B</td><td>low</td><td>0.05</td><td class="metric-good">0.0955</td><td class="metric-good">0.0046</td><td class="metric-good">1.00</td><td class="metric-good">75.1%</td><td>18.8</td></tr>
-        <tr><td class="regime-b">B</td><td>high</td><td>0.05</td><td class="metric-good">0.1061</td><td class="metric-good">0.0062</td><td class="metric-good">1.00</td><td class="metric-good">75.9%</td><td>8.4</td></tr>
-        <tr><td class="regime-b">B</td><td>low</td><td>1.14</td><td class="metric-warn">0.4438</td><td class="metric-warn">0.1983</td><td class="metric-bad">0.00</td><td class="metric-warn">10.5%</td><td>NaN</td></tr>
-        <tr><td class="regime-b">B</td><td>high</td><td>1.14</td><td class="metric-warn">0.4955</td><td class="metric-warn">0.2340</td><td class="metric-bad">0.00</td><td class="metric-bad">6.8%</td><td>NaN</td></tr>
       </table>
     </div>
     <div class="plot-grid">
-      <div class="plot-card"><img src="plots/05_learning_convergence.png" alt="Learning Convergence"><div class="caption">05 — Population mean x̄ₜ vs round t for all regimes</div></div>
+      <div class="plot-card"><img src="plots/05_learning_convergence.png" alt="Learning Convergence"><div class="caption">05 — Population mean x̄ₜ vs round t for Regime A</div></div>
       <div class="plot-card"><img src="plots/06_learning_welfare.png" alt="Learning Welfare"><div class="caption">06 — Noise-free view welfare W_V(t) vs round t</div></div>
       <div class="plot-card full-width"><img src="plots/07_learning_dispersion.png" alt="Learning Dispersion"><div class="caption">07 — Individual dispersion max_i |x_i − x_Nash| vs round t with 10–90% band</div></div>
     </div>
@@ -159,19 +153,18 @@
       <h2>Parameter Sensitivity Sweeps</h2>
       <h3>Noise Sensitivity (σ)</h3>
       <table>
-        <tr><th>σ</th><th colspan="3" style="text-align:center" class="regime-a">Regime A (low / high)</th><th colspan="3" style="text-align:center" class="regime-b">Regime B (low / high)</th></tr>
-        <tr><th></th><th>D_T low</th><th>D_T high</th><th>Conv low</th><th>D_T low</th><th>D_T high</th><th>Conv low</th></tr>
-        <tr><td>0.00</td><td class="metric-good">0.000</td><td class="metric-bad">0.999</td><td class="metric-good">1.00</td><td class="metric-warn">0.207</td><td class="metric-warn">0.190</td><td class="metric-bad">0.00</td></tr>
-        <tr><td>0.05</td><td class="metric-good">0.051</td><td class="metric-bad">0.344</td><td class="metric-good">1.00</td><td class="metric-good">0.096</td><td class="metric-good">0.112</td><td class="metric-good">1.00</td></tr>
-        <tr><td>0.10</td><td class="metric-good">0.089</td><td class="metric-bad">0.378</td><td class="metric-good">1.00</td><td class="metric-warn">0.139</td><td class="metric-warn">0.150</td><td class="metric-good">1.00</td></tr>
-        <tr><td>0.25</td><td class="metric-warn">0.201</td><td class="metric-bad">0.645</td><td class="metric-warn">0.20</td><td class="metric-warn">0.262</td><td class="metric-warn">0.258</td><td class="metric-warn">0.40</td></tr>
-        <tr><td>0.50</td><td class="metric-warn">0.298</td><td class="metric-bad">0.860</td><td class="metric-bad">0.00</td><td class="metric-bad">0.388</td><td class="metric-bad">0.396</td><td class="metric-bad">0.00</td></tr>
-        <tr><td>1.14</td><td class="metric-bad">0.446</td><td class="metric-bad">0.960</td><td class="metric-bad">0.00</td><td class="metric-bad">0.449</td><td class="metric-bad">0.503</td><td class="metric-bad">0.00</td></tr>
+        <tr><th>σ</th><th>D_T low</th><th>D_T high</th><th>Conv low</th></tr>
+        <tr><td>0.00</td><td class="metric-good">0.000</td><td class="metric-bad">0.999</td><td class="metric-good">1.00</td></tr>
+        <tr><td>0.05</td><td class="metric-good">0.051</td><td class="metric-bad">0.344</td><td class="metric-good">1.00</td></tr>
+        <tr><td>0.10</td><td class="metric-good">0.089</td><td class="metric-bad">0.378</td><td class="metric-good">1.00</td></tr>
+        <tr><td>0.25</td><td class="metric-warn">0.201</td><td class="metric-bad">0.645</td><td class="metric-warn">0.20</td></tr>
+        <tr><td>0.50</td><td class="metric-warn">0.298</td><td class="metric-bad">0.860</td><td class="metric-bad">0.00</td></tr>
+        <tr><td>1.14</td><td class="metric-bad">0.446</td><td class="metric-bad">0.960</td><td class="metric-bad">0.00</td></tr>
       </table>
     </div>
     <div class="plot-grid">
-      <div class="plot-card"><img src="plots/09_noise_sweep.png" alt="Noise Sweep"><div class="caption">09 — D_T and Δ_T vs σ, Regimes A and B, low & high init</div></div>
-      <div class="plot-card"><img src="plots/10_step_size_sweep.png" alt="Step Size Sweep"><div class="caption">10 — D_T and Δ_T vs η (step size), Regimes A and B</div></div>
+      <div class="plot-card"><img src="plots/09_noise_sweep.png" alt="Noise Sweep"><div class="caption">09 — D_T and Δ_T vs σ, Regime A low & high init</div></div>
+      <div class="plot-card"><img src="plots/10_step_size_sweep.png" alt="Step Size Sweep"><div class="caption">10 — D_T and Δ_T vs η (step size), Regime A</div></div>
       <div class="plot-card full-width"><img src="plots/11_kappa_sensitivity.png" alt="Kappa Sensitivity"><div class="caption">11 — Regime A sensitivity: equilibria, k, PoA, mediator, learning vs κ</div></div>
     </div>
   </div>

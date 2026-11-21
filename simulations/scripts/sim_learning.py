@@ -548,10 +548,8 @@ def main():
     RESULTS_DIR = os.path.abspath(os.path.join(_HERE, "..", "results"))
 
     game_A = make_regime("A")
-    game_B = make_regime("B")
-    game_Bp = make_regime("Bprime")
 
-    regimes = [("A_empirical", game_A), ("B_hypothetical", game_B), ("Bprime_hypothetical", game_Bp)]
+    regimes = [("A_empirical", game_A)]
 
     for label, game in regimes:
         print(f"\nLearning — Regime {label}")

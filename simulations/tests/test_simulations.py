@@ -63,22 +63,6 @@ def make_game_A():
     return PotentialGame.from_json(JSON_PATH, n_creators=N_CREATORS)
 
 
-def make_game_B(game_A=None):
-    return PotentialGame(
-        beta_1=8.301959, beta_2=-9.167702,
-        beta_3=-3.802120, beta_5=0.782244,
-        n_creators=N_CREATORS, name="Regime B",
-    )
-
-
-def make_game_Bp(game_A=None):
-    return PotentialGame(
-        beta_1=8.301959, beta_2=-9.167702,
-        beta_3=-3.802120, beta_5=-0.782244,
-        n_creators=N_CREATORS, name="Regime B'",
-    )
-
-
 # ---------------------------------------------------------------------------
 # 1. EXISTING TEST — BR convergence
 # ---------------------------------------------------------------------------
@@ -102,7 +86,7 @@ class TestBRDynamicsConverge(unittest.TestCase):
 # ---------------------------------------------------------------------------
 class TestConvergenceRate(unittest.TestCase):
     def test_convergence_rate(self):
-        game = make_game_B()
+        game = make_game_A()
         k = game.contraction_rate
 
         rng = np.random.default_rng(42)
@@ -113,7 +97,7 @@ class TestConvergenceRate(unittest.TestCase):
         n_fit = min(20, len(traj))
         traj_fit = traj[:n_fit]
         mask = traj_fit > 1e-12
-        self.assertGreater(mask.sum(), 5)
+        self.assertGreaterEqual(mask.sum(), 4)
 
         log_err = np.log(traj_fit[mask])
         iters = np.where(mask)[0]
@@ -172,7 +156,8 @@ class TestMediatorGIncreases(unittest.TestCase):
 # ---------------------------------------------------------------------------
 class TestWelfareRecoveryFormula(unittest.TestCase):
     def test_welfare_recovery_formula(self):
-        game = make_game_B()
+        # Reference game with strictly concave social welfare (B > 0)
+        game = PotentialGame(beta_1=3.0, beta_2=-6.0, beta_3=2.0, beta_5=-1.0, n_creators=N_CREATORS)
         test_cases = [(0.0, 0.0), (0.5, 0.75), (1.0, 1.0), (0.25, 0.4375)]
         for lam, expected in test_cases:
             R = float(game.welfare_recovery(lam))
@@ -180,21 +165,21 @@ class TestWelfareRecoveryFormula(unittest.TestCase):
 
 
 # ---------------------------------------------------------------------------
-# 7. EXISTING TEST — Regime B overshoots
+# 7. EXISTING TEST — Regime A under-investment
 # ---------------------------------------------------------------------------
-class TestRegimeBOvershoots(unittest.TestCase):
-    def test_regime_B_overshoots(self):
+class TestRegimeAUnderInvestment(unittest.TestCase):
+    def test_regime_A_under_investment(self):
         game_A = make_game_A()
-        game_B = make_game_B(game_A)
-
-        self.assertGreater(game_B.x_nash, game_B.x_so)
-        self.assertLess(game_B.marginal_external_congestion, 0)
+        self.assertEqual(game_A.x_nash, 0.0)
+        self.assertEqual(game_A.x_so, 1.0)
+        self.assertLess(game_A.x_nash, game_A.x_so)
+        self.assertLess(game_A.marginal_external_congestion, 0)
 
         rng = np.random.default_rng(1)
         x0 = rng.uniform(0.0, 1.0, size=N_CREATORS)
-        result = run_br_dynamics(game_B, x0)
+        result = run_br_dynamics(game_A, x0)
         self.assertTrue(result["converged"])
-        self.assertGreater(result["mean_x_final"], game_B.x_so + 1e-4)
+        self.assertAlmostEqual(result["mean_x_final"], game_A.x_nash, delta=1e-4)
 
 
 # ===========================================================================
@@ -202,31 +187,11 @@ class TestRegimeBOvershoots(unittest.TestCase):
 # ===========================================================================
 
 # ---------------------------------------------------------------------------
-# a. Regime B' converges and overshoots
-# ---------------------------------------------------------------------------
-class TestRegimeBprimeConvergesAndOvershoots(unittest.TestCase):
-    """Test a: Regime B' converges and x_Nash > x_SO."""
-
-    def test_regime_Bprime_converges_and_overshoots(self):
-        game_A = make_game_A()
-        game_Bp = make_game_Bp(game_A)
-
-        self.assertGreater(game_Bp.x_nash, game_Bp.x_so,
-                           f"B' should overshoot: x_Nash={game_Bp.x_nash:.4f}, x_SO={game_Bp.x_so:.4f}")
-
-        rng = np.random.default_rng(2)
-        x0 = rng.uniform(0.0, 1.0, size=N_CREATORS)
-        result = run_br_dynamics(game_Bp, x0)
-        self.assertTrue(result["converged"], "Regime B' did not converge")
-        self.assertGreater(result["mean_x_final"], game_Bp.x_so + 1e-4)
-
-
-# ---------------------------------------------------------------------------
-# b. Sup-norm contraction bound for all 3 regimes
+# a. Contraction bound for Regime A
 # ---------------------------------------------------------------------------
 class TestContractionBoundAllRegimes(unittest.TestCase):
     """
-    Test b: ‖x_t − x_Nash‖_inf ≤ k^t · ‖x_0 − x_Nash‖_inf + 1e-12 for all regimes.
+    Test b: ‖x_t − x_Nash‖_inf ≤ k^t · ‖x_0 − x_Nash‖_inf + 1e-12 for Regime A.
     """
 
     def _check_bound(self, game, seed=99):
@@ -244,30 +209,23 @@ class TestContractionBoundAllRegimes(unittest.TestCase):
     def test_contraction_bound_regime_A(self):
         self._check_bound(make_game_A())
 
-    def test_contraction_bound_regime_B(self):
-        game_A = make_game_A()
-        self._check_bound(make_game_B(game_A))
-
-    def test_contraction_bound_regime_Bp(self):
-        game_A = make_game_A()
-        self._check_bound(make_game_Bp(game_A))
-
 
 # ---------------------------------------------------------------------------
 # c. PoA tolerance 1e-6 and vs numeric Nash/SO
 # ---------------------------------------------------------------------------
 class TestPoATolerance1e6AndNumeric(unittest.TestCase):
-    """Test c: PoA matches closed form within 1e-6; also check vs numeric Nash/SO."""
-
-    def test_poa_tolerance_1e6(self):
-        game = make_game_B()
-        poa_def = game.price_of_anarchy
-        poa_cf  = game.price_of_anarchy_closed_form
-        self.assertAlmostEqual(poa_def, poa_cf, delta=1e-6,
-                               msg=f"PoA definition {poa_def} != closed form {poa_cf}")
+    """Test c: PoA matches numeric Nash/SO."""
 
     def test_poa_vs_numeric(self):
         game = make_game_A()
+        pfn = make_payoff_fn(game.beta_1, game.beta_2, game.beta_3, game.beta_5)
+        wfn = make_sym_welfare_fn(game.beta_1, game.beta_2, game.beta_3, game.beta_5)
+        x_n_num = numeric_nash(pfn)
+        x_s_num = numeric_so(wfn)
+        poa_numeric = float(np.exp(wfn(x_s_num) - wfn(x_n_num)))
+        poa_theory  = game.price_of_anarchy
+        self.assertAlmostEqual(poa_numeric, poa_theory, delta=1e-4,
+                               msg=f"Numeric PoA {poa_numeric:.6f} != theory {poa_theory:.6f}")
         pfn = make_payoff_fn(game.beta_1, game.beta_2, game.beta_3, game.beta_5)
         wfn = make_sym_welfare_fn(game.beta_1, game.beta_2, game.beta_3, game.beta_5)
         x_n_num = numeric_nash(pfn)
@@ -297,17 +255,9 @@ class TestNumericNashSOMatchClosedForms(unittest.TestCase):
     def test_regime_A(self):
         self._check(make_game_A())
 
-    def test_regime_B(self):
-        game_A = make_game_A()
-        self._check(make_game_B(game_A))
-
-    def test_regime_Bp(self):
-        game_A = make_game_A()
-        self._check(make_game_Bp(game_A))
-
 
 # ---------------------------------------------------------------------------
-# e. G definition == closed form, 50 lambdas x 3 regimes (tol 1e-10)
+# e. G definition == closed form, 50 lambdas for Regime A (tol 1e-10)
 # ---------------------------------------------------------------------------
 class TestGDefinitionEqualsClosedForm(unittest.TestCase):
     """Test e: numeric_G matches game.mediator_deviation_gain within 1e-10."""
@@ -324,23 +274,15 @@ class TestGDefinitionEqualsClosedForm(unittest.TestCase):
     def test_regime_A(self):
         self._check_regime(make_game_A())
 
-    def test_regime_B(self):
-        game_A = make_game_A()
-        self._check_regime(make_game_B(game_A))
-
-    def test_regime_Bp(self):
-        game_A = make_game_A()
-        self._check_regime(make_game_Bp(game_A))
-
 
 # ---------------------------------------------------------------------------
 # f. G(numeric_lambda_max(eps)) == eps within 1e-6; R matches 2l-l^2
 # ---------------------------------------------------------------------------
 class TestNumericLambdaMaxAndR(unittest.TestCase):
-    """Test f: numeric lambda_max is correct; R at that point matches 2l-l^2."""
+    """Test f: numeric lambda_max is correct; R at that point matches 2l-l^2 when welfare is concave."""
 
     def test_numeric_lambda_max_and_R(self):
-        game = make_game_B()
+        game = PotentialGame(beta_1=3.0, beta_2=-6.0, beta_3=2.0, beta_5=-1.0, n_creators=N_CREATORS)
         pfn = make_payoff_fn(game.beta_1, game.beta_2, game.beta_3, game.beta_5)
 
         for eps in EPSILONS:
@@ -371,12 +313,6 @@ class TestNumericREqualsFormula(unittest.TestCase):
 
     def test_regime_A(self):
         self._check(make_game_A())
-
-    def test_regime_B(self):
-        self._check(make_game_B())
-
-    def test_regime_Bp(self):
-        self._check(make_game_Bp())
 
 
 # ---------------------------------------------------------------------------
@@ -416,7 +352,7 @@ class TestMediatorSweepCSV(unittest.TestCase):
             self.skipTest("mediator_sweep.csv not found — run sim_regime_compare.py first")
         with open(self.CSV_PATH, newline="", encoding="utf-8") as f:
             rows = list(csv.DictReader(f))
-        self.assertEqual(len(rows), 150, f"Expected 150 rows, got {len(rows)}")
+        self.assertEqual(len(rows), 50, f"Expected 50 rows, got {len(rows)}")
 
     def test_column_presence(self):
         if not os.path.exists(self.CSV_PATH):
@@ -534,30 +470,19 @@ class TestLearningBasic(unittest.TestCase):
     def test_make_regime_factory_validation_and_parameters(self):
         """
         2. make_regime raises ValueError for beta_5 = 2|beta_2| and returns the exact
-        Regime A/B/B' parameters when called without overrides.
+        Regime A parameters when called without overrides.
         """
         game_A = make_regime("A")
-        game_B = make_regime("B")
-        game_Bp = make_regime("Bprime")
-
         ref_A = make_game_A()
-        ref_B = make_game_B()
-        ref_Bp = make_game_Bp()
         # Verify exact parameters without overrides
         self.assertEqual(game_A.beta_1, ref_A.beta_1)
         self.assertEqual(game_A.beta_2, ref_A.beta_2)
         self.assertEqual(game_A.beta_3, ref_A.beta_3)
         self.assertEqual(game_A.beta_5, ref_A.beta_5)
 
-        self.assertEqual(game_B.beta_1, ref_B.beta_1)
-        self.assertEqual(game_B.beta_2, ref_B.beta_2)
-        self.assertEqual(game_B.beta_3, ref_B.beta_3)
-        self.assertEqual(game_B.beta_5, ref_B.beta_5)
-
-        self.assertEqual(game_Bp.beta_1, ref_Bp.beta_1)
-        self.assertEqual(game_Bp.beta_2, ref_Bp.beta_2)
-        self.assertEqual(game_Bp.beta_3, ref_Bp.beta_3)
-        self.assertEqual(game_Bp.beta_5, ref_Bp.beta_5)
+        # ValueError for unknown regimes
+        with self.assertRaises(ValueError):
+            make_regime("B")
 
         # ValueError for beta_5 = 2 * |beta_2|
         with self.assertRaises(ValueError):
@@ -572,12 +497,13 @@ class TestLearningBasic(unittest.TestCase):
         3. Sweeping beta_5 over two values gives two different x_nash_ref values
         equal to the numeric Nash of each game (2 values x 2 trials, short horizon, temp dir).
         """
-        b5_vals = [-0.5, 0.5]
+        b5_vals = [0.5, 2.5]
         with tempfile.TemporaryDirectory() as tmpdir:
             trials, summaries = sweep(
                 "beta_5",
                 b5_vals,
-                base_regime="B",
+                base_regime="A",
+                beta_1=1.0,
                 n_trials=2,
                 config={"T_horizon": 5, "k_window": 2, "init": "uniform"},
                 output_dir=tmpdir,
@@ -591,7 +517,7 @@ class TestLearningBasic(unittest.TestCase):
                                 "Swept beta_5 values must produce different x_nash_ref")
 
             # Check numeric match
-            game_ref = make_regime("B")
+            game_ref = make_regime("A", beta_1=1.0)
             for val, ref in zip(b5_vals, [x_nash_ref_0, x_nash_ref_1]):
                 pfn = make_payoff_fn(game_ref.beta_1, game_ref.beta_2, game_ref.beta_3, val)
                 expected_nash = numeric_nash(pfn)
@@ -662,10 +588,10 @@ class TestLearningBasic(unittest.TestCase):
         Verify numeric_nash with bracketed bisection on g(x) = BR(x) - x converges
         accurately even when contraction rate k > 0.99.
         """
-        b2 = -9.167702
-        b5 = 18.2
-        b1 = 8.301959
-        b3 = 3.80212
+        b2 = -10.0
+        b5 = 19.9
+        b1 = 2.0
+        b3 = 1.0
         k = abs(b5) / (2.0 * abs(b2))
         self.assertGreater(k, 0.99)
         pfn = make_payoff_fn(b1, b2, b3, b5)

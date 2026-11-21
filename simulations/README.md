@@ -8,7 +8,7 @@
 
 ## 1. Overview & Role
 
-This component implements **empirical multi-agent simulations** using the game-theoretic framework from Part 3. All parameters flow from `payoff_calculation/results/game_theory_coefficients.json` ($N=809$, Option B cost-augmented $\kappa=8.0$, with fallback to legacy $N=186$) through the `PotentialGame` API and `make_regime` factory — **no new data inputs required.**
+This component implements **empirical multi-agent simulations** using the game-theoretic framework from Part 3. All parameters flow from `payoff_calculation/results/game_theory_coefficients.json` ($N=809$, Option B cost-augmented $\kappa=8.0$) through the `PotentialGame` API and `make_regime` factory — **no new data inputs required.**
 
 It addresses two core research questions and empirical uncertainty:
 
@@ -17,7 +17,7 @@ It addresses two core research questions and empirical uncertainty:
 - **Parametric Uncertainty (Bootstrap):** Evaluates finite-sample sampling uncertainty across 10,000 draws from the cluster-robust parameter covariance matrix, reporting both all-draw diagnostics and dual conditional subsets (well-posed $N=1,796$ vs. contraction-valid $N=2,732$).
 
 > [!IMPORTANT]
-> **Regime A under-invests** ($x_{\mathrm{Nash}} = 0.0000, x_{\mathrm{SO}} = 1.0000, \Delta = +1.0000 > 0, \mathrm{PoA} = 2.8166$): under the calibrated $N=809$ parameters with Option B cost-augmentation ($\kappa=8.0$), individual revenue concavity is an assumed regularization rather than a rejection of $\beta_2 \ge 0$. Decentralized competition yields zero click appeal while the social optimum coordinates at maximum click appeal. Regimes B and B' are **illustrative attention-congestion benchmarks** (using legacy $N=186$ coefficients) that illustrate the overshooting commons tragedy ($x_{\mathrm{Nash}} > x_{\mathrm{SO}}$).
+> **Regime A under-invests** ($x_{\mathrm{Nash}} = 0.0000, x_{\mathrm{SO}} = 1.0000, \Delta = +1.0000 > 0, \mathrm{PoA} = 2.8166$): under the calibrated $N=809$ parameters with Option B cost-augmentation ($\kappa=8.0$), individual revenue concavity is an assumed regularization rather than a rejection of $\beta_2 \ge 0$. Decentralized competition yields zero click appeal while the social optimum coordinates at maximum click appeal. Regimes B and B' are **illustrative attention-congestion benchmarks** that illustrate the overshooting commons tragedy ($x_{\mathrm{Nash}} > x_{\mathrm{SO}}$).
 
 ---
 
@@ -37,16 +37,10 @@ simulations/
 │   └── sim_bootstrap.py         # Parametric bootstrap uncertainty analysis
 ├── results/
 │   ├── dynamics_regime_A_empirical.csv
-│   ├── dynamics_regime_B_hypothetical.csv
-│   ├── dynamics_regime_Bprime_hypothetical.csv
 │   ├── mediator_sweep.csv
 │   ├── regime_comparison_summary.csv
 │   ├── learning_A_empirical.csv                       [--with-learning, sigma=0.05]
 │   ├── learning_A_empirical_sigma_1.14.csv            [--with-learning, sigma=1.14]
-│   ├── learning_B_hypothetical.csv                    [--with-learning, sigma=0.05]
-│   ├── learning_B_hypothetical_sigma_1.14.csv         [--with-learning, sigma=1.14]
-│   ├── learning_Bprime_hypothetical.csv               [--with-learning, sigma=0.05]
-│   ├── learning_Bprime_hypothetical_sigma_1.14.csv    [--with-learning, sigma=1.14]
 │   ├── learning_trajectories_*.csv                    [--with-learning]
 │   ├── bootstrap_draws.csv                            [--with-bootstrap]
 │   ├── bootstrap_mediator_summary.csv                 [--with-bootstrap]
@@ -124,18 +118,18 @@ Creators observe **only** their own noisy payoff $y_i^t = \pi_i(x_i^t, \bar{x}_{
 
 ### Experiment 1 & 2 — Best-Response Dynamics
 
-**Setup:** 100 random starting profiles per regime, $n = 38$ agents, synchronous BR, max 500 iterations.
+**Setup:** 100 random starting profiles, $n = 38$ agents, synchronous BR, max 500 iterations.
 
-| Metric | Regime A: Calibrated ($N=809, \kappa=8$) | Regime B: Illustrative | Regime B': Illustrative |
-|--------|-----------------------------------------|------------------------|-------------------------|
-| Converged (of 100) | 100 | 100 | 100 |
-| Mean iterations | 5.5 | 4.8 | 4.9 |
-| Mean error to Nash | < 1e-6 | < 1e-6 | < 1e-6 |
-| Simulated PoA | 2.8166 | 1.4208 | 1.5388 |
-| Theoretical PoA | 2.8166 ✓ | 1.4208 ✓ | 1.5388 ✓ |
-| Numeric PoA (independent check) | 2.8166 ✓ | 1.4208 ✓ | 1.5388 ✓ |
+| Metric | Calibrated Baseline ($N=809, \kappa=8$) |
+|--------|-----------------------------------------|
+| Converged (of 100) | 100 |
+| Mean iterations | 36.2 |
+| Mean error to Nash | < 1e-6 |
+| Simulated PoA | 2.8166 |
+| Theoretical PoA | 2.8166 ✓ |
+| Numeric PoA (independent check) | 2.8166 ✓ |
 
-**Key finding:** In Regime A under $N=809$ Option B ($\kappa=8.0$), contraction holds at $k = 0.8524 < 1.0$, converging to boundary $x_{\mathrm{Nash}} = 0.0000$ with $x_{\mathrm{SO}} = 1.0000$ ($\mathrm{PoA} = 2.8166$). Regimes B and B' show rapid convergence ($k \approx 0.043$) with classic attention-congestion overshooting.
+**Key finding:** Under the calibrated empirical parameters ($N=809$ Option B, $\kappa=8.0$), contraction holds at $k = 0.8524 < 1.0$, converging to the unique stable Nash equilibrium $x_{\mathrm{Nash}} = 0.0000$ with social optimum $x_{\mathrm{SO}} = 1.0000$, yielding a Price of Anarchy $\mathrm{PoA} = 2.8166$.
 
 ### Experiment 3 — Mediator Sweep (Regime A)
 

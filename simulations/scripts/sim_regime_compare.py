@@ -66,13 +66,9 @@ DPI         = 300
 # Shared style
 PALETTE = {
     "A":  "#1f77b4",   # blue
-    "B":  "#d62728",   # red
-    "Bp": "#2ca02c",   # green
 }
 REGIME_LABELS = {
     "A":  "Calibrated (N=809, assumed kappa=8)",
-    "B":  "Illustrative B (legacy N=186 coefficients)",
-    "Bp": "Illustrative B' (legacy N=186 coefficients)",
 }
 
 
@@ -81,9 +77,7 @@ REGIME_LABELS = {
 # ---------------------------------------------------------------------------
 def build_games(json_path: str = None):
     game_A = make_regime("A")
-    game_B = make_regime("B")
-    game_Bp = make_regime("Bprime")
-    return {"A": game_A, "B": game_B, "Bp": game_Bp}
+    return {"A": game_A}
 
 
 # ---------------------------------------------------------------------------
@@ -94,7 +88,9 @@ def plot_01_br_convergence(dynamics_data: dict, outdir: str):
     Log-scale error ‖x_t − x_Nash‖_inf vs iteration.
     Thin lines = individual trials, bold = mean, dashed = theoretical decay k^t.
     """
-    fig, axes = plt.subplots(1, 3, figsize=(15, 5), sharey=False)
+    n_reg = len(dynamics_data)
+    fig, axes = plt.subplots(1, n_reg, figsize=(6.5 * n_reg, 5), sharey=False, squeeze=False)
+    axes = axes[0]
     fig.suptitle("Best-Response Dynamics: Convergence to Nash Equilibrium",
                  fontsize=14, fontweight="bold")
 
@@ -144,11 +140,10 @@ def plot_02_welfare_trajectory(dynamics_data: dict, outdir: str):
     """
     Symmetric welfare π(mean(x_t), mean(x_t)) vs iteration t.
     Dashed horizontal lines for Nash and SO welfare levels.
-    Footnote: welfare excludes constant c (not absolute log-views).
-    Note: random starts average 0.5 (between Nash and SO), so initial
-    welfare can exceed Nash welfare in Regime A.
     """
-    fig, axes = plt.subplots(1, 3, figsize=(15, 5), sharey=False)
+    n_reg = len(dynamics_data)
+    fig, axes = plt.subplots(1, n_reg, figsize=(6.5 * n_reg, 5), sharey=False, squeeze=False)
+    axes = axes[0]
     fig.suptitle("Welfare Trajectory During Best-Response Dynamics",
                  fontsize=14, fontweight="bold")
 
@@ -207,11 +202,12 @@ def plot_02_welfare_trajectory(dynamics_data: dict, outdir: str):
 def plot_03_mediator_sweep(sweep_data: dict, outdir: str):
     """
     Dual-axis plot: G(λ) deviation gain (left) and R(λ) welfare recovery (right).
-    For Regime A, R(λ) axis extends negative to show convex welfare dip and R=0 crossing;
-    Regimes B and B' have R(λ) starting at 0.
-    One panel per regime; vertical markers at λ_max for each ε.
+    For Regime A, R(λ) axis extends negative to show convex welfare dip and R=0 crossing.
+    Vertical markers at λ_max for each ε.
     """
-    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+    n_reg = len(sweep_data)
+    fig, axes = plt.subplots(1, n_reg, figsize=(7.0 * n_reg, 5), squeeze=False)
+    axes = axes[0]
     fig.suptitle("Platform Mediator: Deviation Gain G(λ) and Welfare Recovery R(λ)",
                  fontsize=14, fontweight="bold")
 
@@ -285,8 +281,8 @@ def plot_04_regime_comparison(summary_rows: list, outdir: str):
       Left:  grouped bars for x_Nash, x_SO, PoA, λ_max(ε=0.01)
       Right: grouped bars for Mean iters (separate y-axis scale)
     """
-    regime_short = ["A", "B", "B'"]
-    colors = [PALETTE["A"], PALETTE["B"], PALETTE["Bp"]]
+    regime_short = [r["regime_key"] for r in summary_rows]
+    colors = [PALETTE[k] for k in regime_short]
 
     main_metrics = {
         "x_Nash": [r["x_nash"] for r in summary_rows],
@@ -297,27 +293,27 @@ def plot_04_regime_comparison(summary_rows: list, outdir: str):
     iters_vals = [r["mean_iters"] for r in summary_rows]
 
     fig, (ax_main, ax_iters) = plt.subplots(
-        1, 2, figsize=(15, 6),
-        gridspec_kw={"width_ratios": [4, 1.2]},
+        1, 2, figsize=(12, 5.5),
+        gridspec_kw={"width_ratios": [3.5, 1.2]},
     )
-    fig.suptitle("Cross-Regime Comparison: Key Equilibrium & Mediator Metrics",
+    fig.suptitle("Key Equilibrium & Mediator Metrics (Regime A Calibrated Baseline)",
                  fontsize=13, fontweight="bold")
 
     # --- Left: main metrics ---
     n_metrics = len(main_metrics)
     x = np.arange(n_metrics)
-    width = 0.22
+    width = 0.35
     for i, (rshort, color) in enumerate(zip(regime_short, colors)):
         vals = [list(main_metrics.values())[m][i] for m in range(n_metrics)]
-        offset = (i - 1) * width
+        offset = (i - (len(regime_short) - 1) / 2.0) * width
         bars = ax_main.bar(x + offset, vals, width,
-                           label=REGIME_LABELS[list(PALETTE.keys())[i]],
+                           label=REGIME_LABELS[rshort],
                            color=color, alpha=0.82)
         for bar, v in zip(bars, vals):
             ax_main.text(bar.get_x() + bar.get_width() / 2,
                          bar.get_height() + 0.01,
                          f"{v:.3f}", ha="center", va="bottom",
-                         fontsize=7.5, fontweight="bold")
+                         fontsize=8.5, fontweight="bold")
 
     ax_main.set_xticks(x)
     ax_main.set_xticklabels(list(main_metrics.keys()), fontsize=11)
@@ -356,7 +352,9 @@ def plot_05_learning_convergence(learning_traj_data: dict, outdir: str):
     xbar_t (mean x over agents) vs round t for each regime.
     Thin = individual trials; bold = mean; dashed = x_nash reference.
     """
-    fig, axes = plt.subplots(1, 3, figsize=(15, 5), sharey=False)
+    n_reg = len(learning_traj_data)
+    fig, axes = plt.subplots(1, n_reg, figsize=(6.5 * n_reg, 5), sharey=False, squeeze=False)
+    axes = axes[0]
     fig.suptitle("RQ2: Payoff-Based Learning — Convergence of Mean Appeal",
                  fontsize=14, fontweight="bold")
 
@@ -410,7 +408,9 @@ def plot_06_learning_welfare(learning_traj_data: dict, outdir: str):
     W_V_t = sum_i exp(pi_i) (noise-free) vs round t.
     Dashed lines for Nash and SO reference W_V.
     """
-    fig, axes = plt.subplots(1, 3, figsize=(15, 5), sharey=False)
+    n_reg = len(learning_traj_data)
+    fig, axes = plt.subplots(1, n_reg, figsize=(6.5 * n_reg, 5), sharey=False, squeeze=False)
+    axes = axes[0]
     fig.suptitle("RQ2: Payoff-Based Learning — View Welfare Trajectory",
                  fontsize=14, fontweight="bold")
 
@@ -469,7 +469,9 @@ def plot_07_learning_dispersion(learning_traj_data: dict, outdir: str):
     with a 10-90% band across trials.
     Shows that while the mean action converges, individual creators keep hovering around Nash.
     """
-    fig, axes = plt.subplots(1, 3, figsize=(15, 5), sharey=True)
+    n_reg = len(learning_traj_data)
+    fig, axes = plt.subplots(1, n_reg, figsize=(6.5 * n_reg, 5), sharey=True, squeeze=False)
+    axes = axes[0]
     fig.suptitle(
         "RQ2: Payoff-Based Learning — Dispersion Around Nash Profile\n"
         r"(Mean $\max_i |x_i - x_{\mathrm{Nash}}|$ with 10–90% Band Across Trials)",
@@ -633,7 +635,7 @@ def main():
 
         learning_traj_data = {}
         for key, game in games.items():
-            label_map = {"A": "A_empirical", "B": "B_hypothetical", "Bp": "Bprime_hypothetical"}
+            label_map = {"A": "A_empirical"}
             lbl = label_map[key]
             # Main run 1: sigma = 0.05
             print(f"  Regime {key}: {game.name} (sigma=0.05)")
