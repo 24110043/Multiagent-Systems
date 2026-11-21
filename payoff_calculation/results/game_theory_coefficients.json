@@ -3,7 +3,7 @@
     "project": "Click Appeal as a Potential Game: Modeling Creator Incentives, Attention Congestion, and Social Welfare in YouTube",
     "component": "Empirical Payoff Function Estimation",
     "course": "CS 329 Multi-Agent Systems, IIT Gandhinagar",
-    "authors": "Bhavya Shah (24110324) - Payoff Estimation | Khushi Shah (24110326) - Game Theory",
+    "component": "Payoff Estimation & Game Theory Calibration",
     "calibration_status": "Post-Test Final Full-Sample Calibration (N = 809 videos, G = 38 channels)",
     "locked_specification": "Model 4-Centered: Strategic Payoff Function with Contemporaneous Peer Appeal",
     "mathematical_note": "Uncentered coefficients (b1_u, b2_u, b3_u, b5_u) are analytically derived from the centered model and represent the true structural payoff parameters for uncentered click appeal x in [0, 1] as defined in Eq. 2."

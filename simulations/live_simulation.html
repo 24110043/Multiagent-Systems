@@ -263,22 +263,22 @@
 
 <div class="nav-tabs">
   <div class="nav-inner">
-    <button class="nav-btn active" onclick="switchTab('creator')">🎬 Creator Studio: What Should I Clickbait?</button>
-    <button class="nav-btn" onclick="switchTab('arena')">🤖 Multi-Agent Arena (Watch 38 Creators Compete)</button>
-    <button class="nav-btn" onclick="switchTab('ta')">🎓 TA & Grading Insights (Core Course Answers)</button>
+    <button class="nav-btn active" onclick="switchTab('creator')">Creator Strategy Simulator</button>
+    <button class="nav-btn" onclick="switchTab('arena')">Multi-Agent Simulation Arena</button>
+    <button class="nav-btn" onclick="switchTab('ta')">Key Findings & Analytical Results</button>
   </div>
 </div>
 
 <div class="container">
 
   <!-- ===================================================================== -->
-  <!-- TAB 1: CREATOR STUDIO (Clear & Intuitive for Creators)                -->
+  <!-- TAB 1: CREATOR STUDIO                                                 -->
   <!-- ===================================================================== -->
   <div id="pane-creator" class="tab-pane active">
     <div class="card">
-      <h2 style="font-size:1.25rem; margin-bottom:0.4rem;">🎬 Creator Perspective: "What Click Intensity Should I Choose?"</h2>
+      <h2 style="font-size:1.25rem; margin-bottom:0.4rem;">Creator Perspective: Individual Decision Model</h2>
       <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.25rem;">
-        If you are a YouTube creator deciding how aggressive to make your thumbnails and titles, this interactive tool lets you test your strategy against competitor behavior.
+        Examine how an individual creator's click-appeal choice interacts with competitor behavior under the empirical payoff model.
       </p>
 
       <div class="grid-2">
@@ -291,27 +291,27 @@
             </div>
             <input type="range" id="sliderOwn" min="0" max="1" step="0.05" value="0.30" oninput="updateCreatorSim()">
             <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;">
-              <span>0.0 (Pure Informative)</span>
-              <span>0.5 (Catchy)</span>
-              <span>1.0 (Extreme Red Arrow & Shocker)</span>
+              <span>0.0 (Informative)</span>
+              <span>0.5 (Moderate)</span>
+              <span>1.0 (Maximum Appeal)</span>
             </div>
           </div>
 
           <div class="slider-box">
             <div class="slider-header">
-              <strong>Competitor Clickbait Environment (<span id="txtCompAppeal">0.30</span>)</strong>
+              <strong>Competitor Click-Appeal Environment (<span id="txtCompAppeal">0.30</span>)</strong>
               <span id="txtCompDesc" style="color:var(--accent-purple); font-weight:600;">Normal Competition</span>
             </div>
             <input type="range" id="sliderComp" min="0" max="1" step="0.05" value="0.30" oninput="updateCreatorSim()">
             <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;">
-              <span>0.0 (Clean Niche)</span>
-              <span>0.5 (Competitive)</span>
-              <span>1.0 (Full Clickbait War)</span>
+              <span>0.0 (Low Competition)</span>
+              <span>0.5 (Moderate)</span>
+              <span>1.0 (Intense Competition)</span>
             </div>
           </div>
 
           <div class="insight-callout" id="calloutBox">
-            <h4 style="margin-bottom:0.3rem;" id="calloutTitle">💡 Dynamic Insight</h4>
+            <h4 style="margin-bottom:0.3rem;" id="calloutTitle">Dynamic Payoff Analysis</h4>
             <p id="calloutText" style="line-height:1.45;"></p>
           </div>
         </div>
@@ -341,18 +341,18 @@
   </div>
 
   <!-- ===================================================================== -->
-  <!-- TAB 2: MULTI-AGENT ARENA (Visual, Guided Simulation)                  -->
+  <!-- TAB 2: MULTI-AGENT ARENA                                              -->
   <!-- ===================================================================== -->
   <div id="pane-arena" class="tab-pane">
     <div class="card" style="padding:1rem 1.5rem;">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
         <div>
-          <h2 style="font-size:1.2rem;">🤖 38 Creators Competing in Real Time</h2>
-          <p style="color:var(--text-muted); font-size:0.85rem;">Each colored node is an autonomous YouTube creator updating their click-appeal based on view feedback.</p>
+          <h2 style="font-size:1.2rem;">38 Creators Competing in Real Time</h2>
+          <p style="color:var(--text-muted); font-size:0.85rem;">Each node represents an autonomous creator adjusting their click-appeal based on observed payoff feedback.</p>
         </div>
         <div style="display:flex; gap:0.5rem; align-items:center;">
-          <button id="btnRunArena" class="btn-primary" onclick="toggleArena()">▶ Start Arena</button>
-          <button class="btn-outline" onclick="resetArena()">↺ Reset</button>
+          <button id="btnRunArena" class="btn-primary" onclick="toggleArena()">Start Arena</button>
+          <button class="btn-outline" onclick="resetArena()">Reset</button>
           <span style="font-size:0.85rem; color:var(--text-muted); font-family:monospace; margin-left:0.5rem;" id="arenaRoundTxt">Round: 0 / 500</span>
         </div>
       </div>
@@ -417,38 +417,40 @@
   </div>
 
   <!-- ===================================================================== -->
-  <!-- TAB 3: TA & GRADING INSIGHTS (Academic Narrative)                     -->
+  <!-- TAB 3: KEY FINDINGS & ANALYTICAL RESULTS                              -->
   <!-- ===================================================================== -->
   <div id="pane-ta" class="tab-pane">
     <div class="card">
-      <h2 style="font-size:1.25rem; margin-bottom:0.4rem;">🎓 Executive Summary & Answers to Core Project Questions</h2>
+      <h2 style="font-size:1.25rem; margin-bottom:0.4rem;">Summary of Core Theoretical & Empirical Results</h2>
       <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">
-        Everything your TA needs to verify your findings from the N=809 calibrated dataset under Option B (cost-augmented κ=8.0).
+        Key takeaways and analytical answers derived from the N=809 calibrated potential game model (Option B, cost-augmented κ=8.0).
       </p>
 
       <div class="ta-card">
-        <h3>1. The Price of Anarchy Paradox (PoA = 2.82)</h3>
+        <h3>1. The Price of Anarchy Gap (PoA = 2.82)</h3>
         <p style="font-size:0.88rem; color:#cbd5e1; line-height:1.6;">
-          <strong>Finding:</strong> In the calibrated empirical game (N=809, κ=8.0), the unique Nash equilibrium is at <strong>x_Nash = 0.0</strong> (zero click-appeal), while the Social Optimum is at <strong>x_SO = 1.0</strong> (maximum click-appeal).<br>
-          <strong>Why this happens:</strong> Individual return on clickbait is negative (β₁ = −2.02 &lt; 0), so isolated creators have no incentive to invest. But strategic complementarity is strong (β₅ = +20.79 &gt; 0): if <em>all</em> creators invest together, social welfare nearly triples (PoA = 2.8166). Without coordination, decentralised creators are trapped at zero.
+          <strong>Finding:</strong> In the calibrated empirical game (N=809, κ=8.0), the unique symmetric Nash equilibrium is at <strong>x_Nash = 0.0</strong> (zero click-appeal), while the Social Optimum is at <strong>x_SO = 1.0</strong> (maximum click-appeal).<br>
+          <strong>Mechanism:</strong> Individual return on clickbait is negative (β₁ = −2.02 &lt; 0), so isolated creators have no incentive to invest. However, strategic complementarity is strong (β₅ = +20.79 &gt; 0): when competitors invest, peer intensity raises own marginal returns. Decentralized creators remain at zero, yielding a Price of Anarchy of 2.8161 (a 182% view expansion under social coordination).
         </p>
       </div>
 
       <div class="ta-card">
-        <h3>2. RQ2 — Can Trial-and-Error Learning (Paper Eq. 16) Converge?</h3>
+        <h3>2. RQ2 — Convergence of Payoff-Based Learning (Eq. 16)</h3>
         <p style="font-size:0.88rem; color:#cbd5e1; line-height:1.6;">
-          <strong>Finding:</strong> With low payoff noise (σ ≤ 0.05), creators successfully discover the Nash equilibrium within ~5 rounds (100% convergence).<br>
-          <strong>The Catch:</strong> At the empirical residual standard error (σ ≈ 1.14 from YouTube data), view feedback is too noisy for simple trial-and-error reversals. Creators wander, dispersion D_T remains high (0.45 to 0.96), and 0% of trials converge. Real creators need clearer algorithmic feedback to reach equilibrium.
+          <strong>Finding:</strong> With low payoff noise (σ ≤ 0.05), creators using trial-and-error adjustment discover the Nash equilibrium within ~5 rounds (100% convergence).<br>
+          <strong>Empirical Limitation:</strong> At the empirical residual standard error (σ ≈ 1.14 from YouTube data), view feedback volatility triggers spurious reversals. Creators wander, strategy dispersion D_T remains high (0.45 to 0.96), and convergence drops to 0%. Decentralized creators require clearer algorithmic feedback than raw views to learn equilibrium.
         </p>
       </div>
 
       <div class="ta-card">
-        <h3>3. RQ1 — Why Platform Mediator Intervention is Ineffective in Regime A</h3>
+        <h3>3. RQ1 — Platform Mediator Intervention and Convex Welfare Dip</h3>
         <p style="font-size:0.88rem; color:#cbd5e1; line-height:1.6;">
-          <strong>Finding:</strong> When YouTube algorithmically recommends x_λ toward the Social Optimum, small recommendations (λ ≤ 0.07) produce <strong>negative</strong> welfare recovery (R(λ) &lt; 0)!<br>
-          <strong>Reason:</strong> Social welfare is convex (B = β₂_eff + β₅ = +8.60 &gt; 0) and the initial marginal externality is negative (E = β₃ = −5.54 &lt; 0). Stepping away from x=0 initially reduces welfare before rising above baseline at λ &gt; 0.145. Thus, weak mediator nudges fail.
+          <strong>Finding:</strong> When a platform mediator recommends x_λ toward the Social Optimum, small recommendations (λ ≤ 0.07) produce <strong>negative</strong> welfare recovery (R(λ) &lt; 0).<br>
+          <strong>Mechanism:</strong> Social welfare is convex (B = β₂_eff + β₅ = +8.60 &gt; 0) and the initial marginal externality is negative (E = β₃ = −5.54 &lt; 0). Moving away from x=0 initially decreases total welfare before rising above baseline at λ &gt; 0.145. Effective mediation requires non-marginal platform incentives.
         </p>
       </div>
+    </div>
+  </div>
     </div>
   </div>
 
@@ -543,20 +545,20 @@ function updateCreatorSim() {
 
   if (own > comp + 0.3) {
     box.className = "insight-callout";
-    title.textContent = "🚀 Solo Clickbait Advantage";
-    text.textContent = "Because your competitors are relatively clean, your bold thumbnail stands out in the feed and grabs attention. You get an immediate short-term view surge.";
+    title.textContent = "Unilateral Differentiation Advantage";
+    text.textContent = "Because competitors maintain relatively low appeal, a higher appeal presentation stands out in the recommendation feed, yielding a short-term view gain.";
   } else if (comp > 0.6 && own < 0.3) {
     box.className = "insight-callout trap";
-    title.textContent = "⚠️ Drowning in the Clickbait Feed";
-    text.textContent = "Competitors are screaming for attention with loud thumbnails. Your modest, honest video gets overlooked by the recommendation algorithm, costing you views.";
+    title.textContent = "Attention Congestion Penalty";
+    text.textContent = "Competitors maintain high click-appeal. A lower appeal presentation experiences reduced relative feed visibility under current peer competition.";
   } else if (comp > 0.6 && own > 0.6) {
     box.className = "insight-callout trap";
-    title.textContent = "⚔️ The Attention Trap (Nash Equilibrium)";
-    text.textContent = "Everyone is clickbaiting. Viewers develop fatigue, lowering overall platform retention. Nobody gets more views than if everyone had stayed clean, yet no creator can afford to unilaterally de-escalate!";
+    title.textContent = "Coordinated Competition Dilemma";
+    text.textContent = "All competitors maintain high appeal. When everyone escalates, audience fatigue lowers retention while individual view advantages are neutralized.";
   } else {
     box.className = "insight-callout";
-    title.textContent = "⚖️ Balanced Equilibrium";
-    text.textContent = "Moderate appeal keeps viewer trust high while remaining visible in recommendations.";
+    title.textContent = "Balanced Competition";
+    text.textContent = "Moderate presentation intensity balances recommendation visibility with audience retention stability.";
   }
 }
 updateCreatorSim();
