@@ -13,6 +13,7 @@ Mathematical References:
 - Project Proposal Equations (2) to (15)
 """
 
+import os
 import json
 from typing import Dict, Any, Tuple, Optional, Union
 import numpy as np
@@ -41,6 +42,7 @@ class PotentialGame:
         name: str = "Empirical YouTube Game",
         cov_matrix: Optional[np.ndarray] = None,
         parameter_names: Optional[list] = None,
+        kappa: float = 0.0,
     ):
         self.beta_1 = float(beta_1)
         self.beta_2 = float(beta_2)
@@ -52,62 +54,127 @@ class PotentialGame:
         self.name = name
         self.cov_matrix = cov_matrix
         self.parameter_names = parameter_names
+        self.kappa = float(kappa)
 
     @classmethod
-    def from_json(cls, json_path: str, n_creators: int = 38) -> "PotentialGame":
-        """Load empirical parameters from estimated payoff JSON."""
+    def from_json(cls, json_path: Optional[str] = None, n_creators: int = 38, kappa: float = 8.0, use_option_b: bool = True) -> "PotentialGame":
+        """Load empirical parameters from estimated payoff JSON (supports both N=809 payoff_calculation and legacy N=186)."""
+        # Resolve candidate paths if json_path does not exist or is None
+        if json_path is None or not os.path.exists(json_path):
+            candidates = []
+            if json_path is not None:
+                candidates.append(json_path)
+            here = os.path.dirname(os.path.abspath(__file__))
+            root = os.path.abspath(os.path.join(here, "..", ".."))
+            candidates.extend([
+                os.path.join(root, "payoff_calculation", "results", "game_theory_coefficients.json"),
+                os.path.join(root, "payoff_estimation", "results", "game_theory_coefficients.json"),
+                os.path.join(here, "..", "..", "payoff_calculation", "results", "game_theory_coefficients.json"),
+                os.path.join(here, "..", "..", "payoff_estimation", "results", "game_theory_coefficients.json"),
+            ])
+            resolved_path = None
+            for cand in candidates:
+                if os.path.exists(cand):
+                    resolved_path = cand
+                    break
+            if resolved_path is None:
+                raise FileNotFoundError(f"Could not locate game_theory_coefficients.json in any expected location (tried: {candidates})")
+            json_path = resolved_path
+
         with open(json_path, "r", encoding="utf-8") as f:
             data = json.load(f)
-            
-        if "point_estimates_uncentered_model_5" not in data:
-            raise KeyError("Missing required section 'point_estimates_uncentered_model_5' in JSON")
-        uncentered = data["point_estimates_uncentered_model_5"]
-        
-        required_keys = [
-            "beta_1_own_click_appeal",
-            "beta_2_quadratic_own_appeal",
-            "beta_3_competitor_click_appeal",
-            "beta_5_strategic_interaction",
-            "beta_0_intercept",
-            "beta_4_log_subscribers",
-        ]
-        for k in required_keys:
-            if k not in uncentered:
-                raise KeyError(f"Missing required parameter '{k}' in JSON payload")
-                
-        beta_1 = uncentered["beta_1_own_click_appeal"]
-        beta_2 = uncentered["beta_2_quadratic_own_appeal"]
-        beta_3 = uncentered["beta_3_competitor_click_appeal"]
-        beta_5 = uncentered["beta_5_strategic_interaction"]
-        beta_0 = uncentered["beta_0_intercept"]
-        beta_4 = uncentered["beta_4_log_subscribers"]
-        
-        # Load covariance matrix if available
-        cov_dict = data.get("parameter_covariance_matrix_cluster_robust")
-        cov_matrix = None
-        param_names = None
-        if cov_dict is not None:
-            param_names = list(cov_dict.keys())
-            p = len(param_names)
-            cov_matrix = np.zeros((p, p))
-            for i, p_row in enumerate(param_names):
-                for j, p_col in enumerate(param_names):
-                    if p_col not in cov_dict[p_row]:
-                        raise KeyError(f"Missing covariance entry for ({p_row}, {p_col}) in JSON")
-                    cov_matrix[i, j] = cov_dict[p_row][p_col]
-                    
-        return cls(
-            beta_1=beta_1,
-            beta_2=beta_2,
-            beta_3=beta_3,
-            beta_5=beta_5,
-            beta_0=beta_0,
-            beta_4=beta_4,
-            n_creators=n_creators,
-            name="Empirical YouTube Potential Game (Model 5)",
-            cov_matrix=cov_matrix,
-            parameter_names=param_names,
-        )
+
+        # Schema 1: N=809 payoff_calculation
+        if "uncentered_structural_coefficients_for_game_theory" in data:
+            sec = data["uncentered_structural_coefficients_for_game_theory"]
+            required_keys = [
+                "b1_u_own_linear_appeal",
+                "b2_u_quadratic_curvature",
+                "b3_u_peer_congestion",
+                "b5_u_strategic_interaction",
+            ]
+            for k in required_keys:
+                if k not in sec:
+                    raise KeyError(f"Missing required parameter '{k}' in JSON payload")
+
+            beta_1 = float(sec["b1_u_own_linear_appeal"])
+            b2_raw = float(sec["b2_u_quadratic_curvature"])
+            beta_3 = float(sec["b3_u_peer_congestion"])
+            beta_5 = float(sec["b5_u_strategic_interaction"])
+            beta_0 = float(sec.get("b0_u_intercept", 0.0))
+            beta_4 = float(sec.get("gamma_subscribers", 0.0))
+
+            eff_kappa = kappa if use_option_b else 0.0
+            eff_beta_2 = b2_raw - (eff_kappa / 2.0)
+
+            cov_matrix = None
+            param_names = sec.get("covariance_matrix_order")
+            if "covariance_matrix_delta_method" in sec:
+                cov_matrix = np.array(sec["covariance_matrix_delta_method"], dtype=float)
+
+            return cls(
+                beta_1=beta_1,
+                beta_2=eff_beta_2,
+                beta_3=beta_3,
+                beta_5=beta_5,
+                beta_0=beta_0,
+                beta_4=beta_4,
+                n_creators=n_creators,
+                name="Empirical YouTube Potential Game (N=809, Option B Cost-Augmented)" if use_option_b else "Empirical YouTube Potential Game (N=809)",
+                cov_matrix=cov_matrix,
+                parameter_names=param_names,
+                kappa=eff_kappa,
+            )
+
+        # Schema 2: Legacy N=186 payoff_estimation
+        if "point_estimates_uncentered_model_5" in data:
+            uncentered = data["point_estimates_uncentered_model_5"]
+            required_keys = [
+                "beta_1_own_click_appeal",
+                "beta_2_quadratic_own_appeal",
+                "beta_3_competitor_click_appeal",
+                "beta_5_strategic_interaction",
+                "beta_0_intercept",
+                "beta_4_log_subscribers",
+            ]
+            for k in required_keys:
+                if k not in uncentered:
+                    raise KeyError(f"Missing required parameter '{k}' in JSON payload")
+
+            beta_1 = uncentered["beta_1_own_click_appeal"]
+            beta_2 = uncentered["beta_2_quadratic_own_appeal"]
+            beta_3 = uncentered["beta_3_competitor_click_appeal"]
+            beta_5 = uncentered["beta_5_strategic_interaction"]
+            beta_0 = uncentered["beta_0_intercept"]
+            beta_4 = uncentered["beta_4_log_subscribers"]
+
+            cov_dict = data.get("parameter_covariance_matrix_cluster_robust")
+            cov_matrix = None
+            param_names = None
+            if cov_dict is not None:
+                param_names = list(cov_dict.keys())
+                p = len(param_names)
+                cov_matrix = np.zeros((p, p))
+                for i, p_row in enumerate(param_names):
+                    for j, p_col in enumerate(param_names):
+                        if p_col not in cov_dict[p_row]:
+                            raise KeyError(f"Missing covariance entry for ({p_row}, {p_col}) in JSON")
+                        cov_matrix[i, j] = cov_dict[p_row][p_col]
+
+            return cls(
+                beta_1=beta_1,
+                beta_2=beta_2,
+                beta_3=beta_3,
+                beta_5=beta_5,
+                beta_0=beta_0,
+                beta_4=beta_4,
+                n_creators=n_creators,
+                name="Empirical YouTube Potential Game (Model 5)",
+                cov_matrix=cov_matrix,
+                parameter_names=param_names,
+            )
+
+        raise KeyError("Unrecognized JSON format: expected 'uncentered_structural_coefficients_for_game_theory' or 'point_estimates_uncentered_model_5'")
 
     # -------------------------------------------------------------------------
     # Mathematical Conditions & Game-Theoretic Well-Posedness (Proposal Eq. 3)
@@ -263,14 +330,23 @@ class PotentialGame:
     def x_so_unclipped(self) -> float:
         """Unclipped Social Optimum score (Eq. 6)."""
         denom = 2.0 * (abs(self.beta_2) - self.beta_5)
-        if denom == 0.0:
-            raise ZeroDivisionError("2(|beta_2| - beta_5) == 0; Social optimum undefined.")
-        return (self.beta_1 + self.beta_3) / denom
+        if denom > 0.0:
+            return (self.beta_1 + self.beta_3) / denom
+        # When welfare is convex, the unclipped interior critical point is a minimum.
+        # Boundary maximum on [0, 1]:
+        w0 = self.social_welfare_symmetric(0.0)
+        w1 = self.social_welfare_symmetric(1.0)
+        return 1.0 if w1 >= w0 else 0.0
 
     @property
     def x_so(self) -> float:
         """Social Optimum score clipped to [0, 1] (Eq. 6)."""
-        return float(np.clip(self.x_so_unclipped, 0.0, 1.0))
+        denom = 2.0 * (abs(self.beta_2) - self.beta_5)
+        if denom > 0.0:
+            return float(np.clip(self.x_so_unclipped, 0.0, 1.0))
+        w0 = self.social_welfare_symmetric(0.0)
+        w1 = self.social_welfare_symmetric(1.0)
+        return 1.0 if w1 >= w0 else 0.0
 
     @property
     def equilibria_interior(self) -> bool:
@@ -317,7 +393,7 @@ class PotentialGame:
         """
         B = abs(self.beta_2) - self.beta_5
         if B <= 0:
-            raise ValueError(f"Welfare not strictly concave (B = {B} <= 0); PoA undefined.")
+            return float("nan")
         E = self.marginal_external_congestion
         exponent = (E ** 2) / (4.0 * B)
         return float(np.exp(exponent))
@@ -353,26 +429,52 @@ class PotentialGame:
     def mediator_max_lambda(self, epsilon: float) -> float:
         """
         Largest admissible mediator strength under epsilon-incentive compatibility (Eq. 13):
-          lambda_max(eps) = min(1, sqrt(eps / |beta_2|) / (kappa * |Delta|))
+          lambda_max(eps) solves G(lambda) <= eps.
+        Matches closed form min(1, sqrt(eps / |beta_2|) / (kappa * |Delta|)) when interior.
         """
         if epsilon <= 0:
             return 0.0
-        s = self.best_response_slope
-        kappa = 1.0 - s
-        delta = abs(self.nash_so_gap)
-        abs_beta_2 = abs(self.beta_2)
-        if kappa <= 0 or delta == 0 or abs_beta_2 == 0:
+        if self.equilibria_interior:
+            s = self.best_response_slope
+            kappa = 1.0 - s
+            delta = abs(self.nash_so_gap)
+            abs_beta_2 = abs(self.beta_2)
+            if kappa <= 0 or delta == 0 or abs_beta_2 == 0:
+                return 1.0
+            val = np.sqrt(epsilon / abs_beta_2) / (kappa * delta)
+            return float(np.clip(val, 0.0, 1.0))
+
+        # When clipped, solve G(lambda) = eps via bisection on [0, 1]
+        lo, hi = 0.0, 1.0
+        if self.mediator_deviation_gain(hi) <= epsilon:
             return 1.0
-        val = np.sqrt(epsilon / abs_beta_2) / (kappa * delta)
-        return float(np.clip(val, 0.0, 1.0))
+        if self.mediator_deviation_gain(lo) > epsilon:
+            return 0.0
+        for _ in range(50):
+            mid = 0.5 * (lo + hi)
+            if self.mediator_deviation_gain(mid) <= epsilon:
+                lo = mid
+            else:
+                hi = mid
+        return float(0.5 * (lo + hi))
 
     def welfare_recovery(self, lam: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
         """
-        Fraction of Nash-Optimum welfare gap recovered by recommendation x_lambda (Eq. 15):
-          R(lambda) = 2 * lambda - lambda^2
-        Concave: lambda = 0.5 recovers 75% of welfare gap.
+        Fraction of Nash-Optimum welfare gap recovered by recommendation x_lambda (Eq. 14-15):
+          R(lambda) = (W(x_lambda) - W(x^Nash)) / (W(x^SO) - W(x^Nash))
+        Under welfare concavity (beta_2 + beta_5 < 0), reduces to 2 * lambda - lambda^2.
+        Under general welfare landscapes, evaluates the exact welfare ratio.
         """
-        return 2.0 * lam - (lam ** 2)
+        if (self.beta_2 + self.beta_5) < 0.0:
+            return 2.0 * lam - (lam ** 2)
+        w_nash = self.social_welfare_symmetric(self.x_nash)
+        w_so = self.social_welfare_symmetric(self.x_so)
+        gap = w_so - w_nash
+        if abs(gap) < 1e-12:
+            return 2.0 * lam - (lam ** 2)
+        x_lam = self.mediator_recommendation(lam)
+        w_lam = self.social_welfare_symmetric(x_lam)
+        return (w_lam - w_nash) / gap
 
     def view_welfare_recovery(self, lam: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
         """
